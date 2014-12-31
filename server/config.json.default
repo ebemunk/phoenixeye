@@ -1,0 +1,34 @@
+{
+	"port": 3000,
+	"dbString": "",
+	"upload": {
+		"maxFiles": 1,
+		"sizeLimit": 8388608,
+		"acceptedTypes": {
+			"image/jpeg": "jpg",
+			"image/pjpeg": "jpg",
+			"image/png": "png",
+			"image/x-png": "png",
+			"image/tiff": "tiff"
+		},
+		"maxDims": 20000000
+	},
+	"defaultAnalysisOpts": {
+		"ela": {
+			"quality": 70
+		},
+		"avgdist": true,
+		"lg": true,
+		"hsv": {
+			"whitebg": false
+		},
+		"labfast": {
+			"whitebg": false
+		},
+		"copymove": {
+			"retain": 4,
+			"qcoeff": 1
+		},
+		"autolevels": false
+	}
+}

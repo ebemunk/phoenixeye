@@ -1,0 +1,5 @@
+images/
+server/node_modules
+server/test/coverage
+tmp/
+server/config.json
