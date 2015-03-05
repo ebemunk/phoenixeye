@@ -11,7 +11,11 @@ module.exports = mongoose.Schema(
 		delay: Date,
 		priority: Number,
 		status: String,
-		enqueued: Date
+		enqueued: Date,
+		dequeued: Date,
+		ended: Date,
+		error: String,
+		stack: String
 	},
 	{
 		versionKey: false
