@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 //Image model schema
-module.exports = mongoose.Schema(
+schema = mongoose.Schema(
 	{
 		//initial submission
 		originalFileName: String,
@@ -44,3 +44,12 @@ module.exports = mongoose.Schema(
 		versionKey: false
 	}
 );
+
+//pre-save hook
+schema.pre('save', function (next) {
+	this.created = this.created || new Date();
+	this.updated = new Date();
+	next();
+});
+
+module.exports = schema;
