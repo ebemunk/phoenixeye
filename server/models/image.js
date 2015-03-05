@@ -181,7 +181,7 @@ Image.prototype.getExiv2Info = function(callback) {
 				//some weird bug causes exiv2 to return -253 code
 				//even when some data is found
 				if( ! (err.code == 253 && stdout) ) {
-					debug('error calling `exiv2 -pa`', err);
+					debug('error calling `exiv2 -pa`', err, stdout);
 					//async doesnt like errors in .parallel
 					return callback(null, {});
 				}
@@ -327,39 +327,5 @@ Image.prototype.queueAnalysis = function(options, callback) {
 		return callback(null, job);
 	});
 };
-
-// Image.prototype.requestAnalysis = function(options) {
-// 	// options = options || config.defaultAnalysisOpts;
-
-// 	var command = 'phoenix';
-// 	//-f filepath flag
-// 	command += ' -f ' + path.join(this.path, this.fileName);
-// 	//-o output path flag
-// 	command += ' -o ' + this.path;
-// 	//json flag
-// 	command += ' -json';
-
-// 	if( options.ela ) {
-// 		var quality = options.ela.quality || config.defaultAnalysisOpts.ela.quality;
-// 		//clamp it between [0-100]
-// 		quality = Math.min(Math.max(quality, 0), 100);
-// 		command += ' -ela ' + quality;
-// 	}
-
-// 	if( options.avgdist ) {
-// 		command += ' -avgdist';
-// 	}
-
-// 	if( options.lg ) {
-// 		command += ' -lg';
-// 	}
-
-// 	if( options.hsv ) {
-// 		var whitebg = typeof options.hsv.whitebg == 'bool' || config.defaultAnalysisOpts.hsv.whitebg;
-// 		command += ' -hsv ' + (whitebg ? '0' : '1');
-// 	}
-// 	console.log('FAF', command);
-
-// };
 
 module.exports = Image;
