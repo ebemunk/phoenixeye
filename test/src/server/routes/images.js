@@ -10,9 +10,10 @@ mockgoose(mongoose);
 var sinon = require('sinon');
 var rewire = require('rewire');
 
-var Image = rewire('../../../models/image.js');
+var serverPath = '../../../../server/';
+var Image = rewire(serverPath + 'models/image.js');
 
-var server = require('../../../server.js').server;
+var server = require(serverPath + 'server.js').server;
 
 var testServer = request(server);
 
@@ -41,7 +42,7 @@ describe('/api/images', function () {
 					}
 				}
 			};
-			rmDirContents('../tmp');
+			rmDirContents('tmp');
 		});
 
 		it('should not accept multiple files', function (done) {

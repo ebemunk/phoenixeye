@@ -1,7 +1,8 @@
 var expect = require('chai').expect;
 var request = require('supertest');
 
-var server = require('../../server.js').server;
+var serverPath = '../../../server/';
+var server = require(serverPath + 'server.js').server;
 
 var testServer = request(server);
 

@@ -11,7 +11,8 @@ mockgoose(mongoose);
 
 var sinon = require('sinon');
 
-var Image = require('../../../models/image.js');
+var serverPath = '../../../../server/';
+var Image = require(serverPath + 'models/image.js');
 
 describe('Image', function () {
 	var testImage = new Image();
