@@ -71,10 +71,11 @@ function workerFunc(params, callback) {
 			child_process.exec(jobString, function (err, stdout, stderr) {
 				if( err ) return callback(err);
 
-				var output = JSON.parse(stdout);
-
-				if( ! output )
+				try {
+					var output = JSON.parse(stdout);
+				} catch (err) {
 					return callback(new Error('cannot parse phoenix output as json'));
+				}
 
 				debug('phoenix', output);
 
