@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 //Image model schema
-schema = mongoose.Schema(
+var schema = mongoose.Schema(
 	{
 		//initial submission
 		originalFileName: String,
