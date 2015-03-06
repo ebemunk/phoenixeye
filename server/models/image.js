@@ -9,6 +9,7 @@ var path = require('path');
 //utility
 var async = require('async');
 var shortId = require('shortid');
+var appRoot = require('app-root-path');
 
 //db
 var mongoose = require('mongoose');
@@ -140,7 +141,7 @@ Image.prototype.fileChecks = function(callback) {
 
 			//assign more properties
 			self.md5 = results[2];
-			self.path = path.join('../images', self.md5);
+			self.path = path.join(appRoot.toString(), 'images', self.md5);
 			self.fileName = self.md5 + '.' + self.type;
 			var filePath = path.join(self.path, self.fileName);
  			self.permalink = shortId.generate();

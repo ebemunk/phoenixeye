@@ -10,6 +10,7 @@ var jsonParser = require('body-parser').json();
 var Busboy = require('busboy');
 var fs = require('fs');
 var path = require('path');
+var appRoot = require('app-root-path');
 
 //model
 var Image = require('../models/image.js');
@@ -30,7 +31,7 @@ router.post('/upload', function (req, res, next) {
 
 	//init image
 	var uploadedImage = new Image();
-	uploadedImage.tmpPath = path.join(process.cwd(), '../tmp', Date.now().toString() + Math.random().toString())
+	uploadedImage.tmpPath = path.join(appRoot.toString(), 'tmp', Date.now().toString() + Math.random().toString())
 	uploadedImage.uploaderIP = req.ip || req.connection.remoteAddress;
 
 	//to check if file limit is reached
