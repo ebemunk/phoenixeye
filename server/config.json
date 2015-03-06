@@ -1,0 +1,37 @@
+{
+	"port": 3000,
+	"dbString": "mongodb://xxx:xxx@xxx.xxx.xxx:555/xxx",
+	"upload": {
+		"maxFiles": 1,
+		"sizeLimit": 8388608,
+		"acceptedTypes": {
+			"image/jpeg": "jpg",
+			"image/pjpeg": "jpg",
+			"image/png": "png",
+			"image/x-png": "png",
+			"image/tiff": "tiff"
+		},
+		"maxDims": 10000000
+	},
+	"defaultAnalysisOpts": {
+		"ela": {
+			"quality": 70
+		},
+		"avgdist": true,
+		"lg": true,
+		"hsv": {
+			"whitebg": false
+		},
+		"labfast": {
+			"whitebg": false
+		},
+		"copymove": {
+			"retain": 4,
+			"qcoeff": 1
+		},
+		"autolevels": false
+	},
+	"bin": {
+		"phoenix": ".\\server\\bin\\phoenix.exe"
+	}
+}
