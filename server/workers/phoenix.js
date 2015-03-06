@@ -2,6 +2,7 @@ var debug = require('debug')('worker:func:phoenix');
 var path = require('path');
 var child_process = require('child_process');
 var async = require('async');
+var appRoot = require('app-root-path');
 
 var config = require('../config.json');
 var Image = require('../models/image.js');
@@ -100,6 +101,7 @@ function workerFunc(params, callback) {
 						analysis.type = key;
 						analysis.fileName = path.basename(output[key].filename);
 						analysis.path = path.dirname(output[key].filename);
+						analysis.path = path.relative(appRoot.toString(), analysis.path);
 						analysis.params = output[key];
 						//dont need the filename
 						delete analysis.params.filename;

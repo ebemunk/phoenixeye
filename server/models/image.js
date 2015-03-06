@@ -142,6 +142,7 @@ Image.prototype.fileChecks = function(callback) {
 			//assign more properties
 			self.md5 = results[2];
 			self.path = path.join(appRoot.toString(), 'images', self.md5);
+			self.path = path.relative(appRoot.toString(), self.path);
 			self.fileName = self.md5 + '.' + self.type;
 			var filePath = path.join(self.path, self.fileName);
  			self.permalink = shortId.generate();
