@@ -4,7 +4,7 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "test": "istanbul cover node_modules/mocha/bin/_mocha --dir ./test/coverage -- --recursive ./test/src"
+    "test": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --dir ./test/coverage -- --recursive ./test/src"
   },
   "author": "Bugra Firat",
   "license": "MIT",
@@ -24,11 +24,12 @@
     "shortid": "~2.1.3"
   },
   "devDependencies": {
-    "mocha": "~2.0.1",
     "chai": "~1.10.0",
-    "supertest": "~0.15.0",
+    "istanbul": "^0.3.7",
+    "mocha": "~2.0.1",
     "mockgoose": "~1.10.7",
+    "rewire": "~2.1.3",
     "sinon": "~1.12.1",
-    "rewire": "~2.1.3"
+    "supertest": "~0.15.0"
   }
 }
