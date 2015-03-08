@@ -1,7 +1,5 @@
 - upload from url
 
-- get job status
-
 - max N of each type of analysis
 - remove old analyses
 - append params to analysis names to differentiate
