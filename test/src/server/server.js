@@ -7,8 +7,6 @@ var server = require(serverPath + 'server.js').server;
 var testServer = request(server);
 
 describe('/api', function () {
-	this.timeout(5000);
-
 	describe('/', function () {
 		it('should return uptime', function (done) {
 			testServer

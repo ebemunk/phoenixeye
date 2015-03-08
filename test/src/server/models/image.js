@@ -1,7 +1,6 @@
 var fs = require('fs');
 var child_process = require('child_process');
 var async = require('async');
-var gm = require('gm').subClass({ imageMagick: true });
 
 var expect = require('chai').expect;
 
@@ -10,6 +9,7 @@ var mockgoose = require('mockgoose');
 mockgoose(mongoose);
 
 var sinon = require('sinon');
+var rewire = require('rewire');
 
 var serverPath = '../../../../server/';
 var Image = require(serverPath + 'models/image.js');
@@ -198,14 +198,22 @@ describe('Image', function () {
 	});
 
 	describe('prototype.getGMInfo', function () {
-		it('should not throw an error if gm returns error', function () {
-			var identifyStub = sinon.stub(gm('test/testfiles/valid.jpg'), 'identify').callsArgWith(0, new Error('stub error'));
+		it('should not throw an error if gm returns error', function (done) {
+			var gmStub = Image.__set__({
+				gm: function(kek) {
+				return {
+					identify: function(cb) {
+						cb(new Error('stub error'));
+					}
+				}
+			}});
 
 			testImage.getGMInfo(function (err, gmInfo) {
-				identifyStub.restore();
+				gmStub();
 
 				expect(err).to.be.null;
 				expect(gmInfo).to.be.empty;
+				done();
 			});
 		});
 	});
@@ -244,8 +252,6 @@ describe('Image', function () {
 		});
 
 		it('should merge default values', function (done) {
-			this.timeout(2500);
-
 			var opts = {
 				ela: true,
 				copymove: {retain: 7},

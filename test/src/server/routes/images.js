@@ -51,7 +51,10 @@ describe('/api/images', function () {
 				.post('/api/images/upload')
 				.attach('image1', 'test/testfiles/empty.jpg')
 				.attach('image2', 'test/testfiles/valid.jpg')
-				.expect(400, done);
+				.end(function (err, res) {
+					expect(res.status).to.equal(400);
+					done();
+				});
 		});
 
 		it('should not accept empty files', function (done) {
