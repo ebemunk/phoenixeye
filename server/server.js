@@ -30,8 +30,15 @@ app.get('/api', function(req, res) {
 app.use('/api/images', require('./routes/images.js'));
 app.use('/api/jobs', require('./routes/jobs.js'));
 
+//error handler
+app.use(function errorHandler(err, req, res, next) {
+	var status = 500;
+	if( err.status ) status = err.status;
+	res.status(status).json({error: err.message});
+});
+
 //init
-var server = app.listen(config.port, function() {
+var server = app.listen(config.port, function () {
 	debug('server running on port ' + config.port);
 });
 
