@@ -52,4 +52,25 @@ schema.pre('save', function (next) {
 	next();
 });
 
+//disable returning sensitive attributes
+var hideFields = function(doc, ret, options) {
+	var doNotReturn = [
+		'uploaderIP'
+	];
+
+	doNotReturn.forEach(function (key) {
+		delete ret[key];
+	});
+
+	return ret;
+}
+
+schema.set('toJSON', {
+	transform: hideFields
+});
+
+schema.set('toObject', {
+	transform: hideFields
+});
+
 module.exports = schema;

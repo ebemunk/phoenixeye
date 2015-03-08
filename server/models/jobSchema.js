@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 //Job model schema
-module.exports = mongoose.Schema(
+var schema = mongoose.Schema(
 	{
 		name: String,
 		params: {},
@@ -21,3 +21,16 @@ module.exports = mongoose.Schema(
 		versionKey: false
 	}
 );
+
+//disable returning sensitive attributes
+schema.set('toJSON', {
+	transform: function(doc, ret, options) {
+		if( ret.params && ret.params.hasOwnProperty('requesterIP') ) {
+			delete ret.params.requesterIP;
+		}
+
+		return ret;
+	}
+});
+
+module.exports = schema;
