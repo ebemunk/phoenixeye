@@ -1,5 +1,5 @@
 ### Server
-- [ ] job status
+- [x] job status
 - [ ] upload from url
 - [ ] max N of each type of analysis
 - [ ] remove old analyses

@@ -1,6 +1,6 @@
 {
 	"port": 3000,
-	"dbString": "",
+	"dbString": "mongodb://xxx:xxx@xxx.xxx.xxx:555/xxx",
 	"upload": {
 		"maxFiles": 1,
 		"sizeLimit": 8388608,
