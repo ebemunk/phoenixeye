@@ -27,7 +27,8 @@ app.get('/api', function(req, res) {
 });
 
 //routes
-app.use('/api/images', require('./routes/images'));
+app.use('/api/images', require('./routes/images.js'));
+app.use('/api/jobs', require('./routes/jobs.js'));
 
 //init
 var server = app.listen(config.port, function() {
