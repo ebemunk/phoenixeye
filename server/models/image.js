@@ -330,4 +330,40 @@ Image.prototype.queueAnalysis = function(options, callback) {
 	});
 };
 
+//process image submission
+Image.prototype.processSubmission = function(callback) {
+	var self = this;
+
+	//get file size
+	var fileStats = fs.statSync(self.tmpPath);
+	self.fileSize = fileStats.size;
+
+	//run file checks and start initial processing
+	self.fileChecks(function (err, image) {
+		//cry if file checks fail
+		if( err ) {
+			return callback(err);
+		}
+
+		if( ! image.duplicate ) {
+			//run meta extraction
+			self.getMetadata(function () {});
+			//run default analyses for the first time
+			self.queueAnalysis(config.defaultAnalysisOpts, function (err, job) {
+				if( err ) return callback(err);
+
+				//respond to request
+				return callback(null, {
+					image: image,
+					jobId: job.data._id
+				});
+			});
+		} else {
+			return callback(null, {
+				image: image
+			});
+		}
+	});
+}
+
 module.exports = Image;
