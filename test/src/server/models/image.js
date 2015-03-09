@@ -272,4 +272,56 @@ describe('Image', function () {
 			});
 		});
 	});
+
+	describe('prototype.processSubmission', function () {
+		it('should return an error if any file checks fail', function (done) {
+			var fakeError = new Error('stub error');
+
+			var fileChecksStub = sinon.stub(Image.prototype, 'fileChecks').callsArgWith(0, fakeError);
+			var unlinkStub = sinon.stub(fs, 'unlink');
+
+			testImage.processSubmission(function (err, image) {
+				fileChecksStub.restore();
+				unlinkStub.restore();
+
+				expect(err).to.exist;
+				expect(image).to.not.exist;
+				done();
+			});
+		});
+
+		it('should get metadata and queue default analysis if image isnt duplicate', function (done) {
+			var getMetadataStub = sinon.stub(Image.prototype, 'getMetadata');
+			var queueAnalysisStub = sinon.stub(Image.prototype, 'queueAnalysis').callsArgWith(1, null, {data:{_id: 5}});
+			var fileChecksStub = sinon.stub(Image.prototype, 'fileChecks').callsArgWith(0, null, testImage);
+
+			testImage.processSubmission(function (err, image) {
+				getMetadataStub.restore();
+				queueAnalysisStub.restore();
+				fileChecksStub.restore();
+
+				expect(getMetadataStub.called).to.be.true;
+				expect(queueAnalysisStub.called).to.be.true;
+				done();
+			});
+		});
+
+		it('should return the image if its a duplicate', function (done) {
+			var getMetadataStub = sinon.stub(Image.prototype, 'getMetadata');
+			var queueAnalysisStub = sinon.stub(Image.prototype, 'queueAnalysis').callsArgWith(1, null, {data:{_id: 5}});
+			testImage.duplicate = true;
+			var fileChecksStub = sinon.stub(Image.prototype, 'fileChecks').callsArgWith(0, null, testImage);
+
+			testImage.processSubmission(function (err, image) {
+				getMetadataStub.restore();
+				queueAnalysisStub.restore();
+				fileChecksStub.restore();
+				delete testImage.duplicate;
+
+				expect(getMetadataStub.called).to.be.false;
+				expect(queueAnalysisStub.called).to.be.false;
+				done();
+			});
+		});
+	});
 });

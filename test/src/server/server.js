@@ -19,4 +19,15 @@ describe('/api', function () {
 				});
 		});
 	});
+
+	it('should return error message if theres an unexpected error', function (done) {
+		testServer
+			.post('/api/images/upload')
+			.set('content-type', 'application/json')
+			.send('wrong')
+			.end(function (err, res) {
+				expect(res.body).to.have.property('error');
+				done();
+			});
+	});
 });

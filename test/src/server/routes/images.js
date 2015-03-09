@@ -1,7 +1,7 @@
 var fs = require('fs');
 
 var expect = require('chai').expect;
-var request = require('supertest');
+var supertest = require('supertest');
 
 var mongoose = require('mongoose');
 var mockgoose = require('mockgoose');
@@ -13,9 +13,11 @@ var rewire = require('rewire');
 var serverPath = '../../../../server/';
 var Image = rewire(serverPath + 'models/image.js');
 
+var request = require('request');
+
 var server = require(serverPath + 'server.js').server;
 
-var testServer = request(server);
+var testServer = supertest(server);
 
 before(function () {
 	//mocking monq.queue.enqueue
@@ -115,6 +117,81 @@ describe('/api/images', function () {
 				.end(function (err, res) {
 					expect(res.status).to.equal(200);
 					expect(res.body.image).to.have.property('duplicate', true);
+					done();
+				});
+		});
+	});
+
+	describe('/submit', function () {
+		it('should not accept invalid url', function (done) {
+			testServer
+				.post('/api/images/submit')
+				.send({url: 'wrong'})
+				.expect(400, done);
+		});
+
+		it('should not accept very large images (dims)', function (done) {
+			var requestStub = sinon.stub(request, 'head').callsArgWith(1, null, {headers:{'content-length': 100000000}}, null);
+
+			testServer
+				.post('/api/images/submit')
+				.send({url: 'toobig'})
+				.end(function (err, res) {
+					requestStub.restore();
+
+					expect(res.status).to.equal(400);
+					done();
+				});
+		});
+
+		it('should not accept very large images (size)', function (done) {
+			var rstream = fs.createReadStream('test/testfiles/toolarge.jpg');
+			var requestHeadStub = sinon.stub(request, 'head').callsArgWith(1, null, {headers:{'content-length': 1}}, null);
+			var requestGetStub = sinon.stub(request, 'get').returns(rstream);
+
+			testServer
+				.post('/api/images/submit')
+				.send({url: 'toolarge'})
+				.end(function (err, res) {
+					requestHeadStub.restore();
+					requestGetStub.restore();
+
+					expect(res.status).to.equal(400);
+					done();
+				});
+		});
+
+		it('should not accept wrong type', function (done) {
+			var rstream = fs.createReadStream('test/testfiles/wrongtype.txt');
+			var requestHeadStub = sinon.stub(request, 'head').callsArgWith(1, null, {headers:{'content-length': 1}}, null);
+			var requestGetStub = sinon.stub(request, 'get').returns(rstream);
+
+			testServer
+				.post('/api/images/submit')
+				.send({url: 'wrongtype'})
+				.end(function (err, res) {
+					requestHeadStub.restore();
+					requestGetStub.restore();
+
+					expect(res.status).to.equal(400);
+					done();
+				});
+		});
+
+		it('should accept valid file', function (done) {
+			var rstream = fs.createReadStream('test/testfiles/valid.jpg');
+			var requestHeadStub = sinon.stub(request, 'head').callsArgWith(1, null, {headers:{'content-length': 1}}, null);
+			var requestGetStub = sinon.stub(request, 'get').returns(rstream);
+
+			testServer
+				.post('/api/images/submit')
+				.send({url: 'valid'})
+				.end(function (err, res) {
+					requestHeadStub.restore();
+					requestGetStub.restore();
+
+					expect(res.status).to.equal(200);
+					expect(res.body.image).to.have.property('fileName')
 					done();
 				});
 		});
