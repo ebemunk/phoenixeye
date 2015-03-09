@@ -12,6 +12,8 @@ var fs = require('fs');
 var path = require('path');
 var appRoot = require('app-root-path');
 
+var request = require('request');
+
 //model
 var Image = require('../models/image.js');
 
@@ -80,36 +82,49 @@ router.post('/upload', function (req, res, next) {
 
 		debug('upload OK', uploadedImage);
 
-		//get file size
-		var fileStats = fs.statSync(uploadedImage.tmpPath);
-		uploadedImage.fileSize = fileStats.size;
-
-		//run file checks and start initial processing
-		uploadedImage.fileChecks(function (err, image) {
-			//cry if file checks fail
+		//go ahead with image submission
+		uploadedImage.processSubmission(function (err, image) {
 			if( err ) {
-				return res.status(400).json({error: err.message});
+				return res.status(400).json(err);
 			}
 
-			if( ! image.duplicate ) {
-				//run meta extraction
-				uploadedImage.getMetadata(function () {});
-				//run default analyses for the first time
-				uploadedImage.queueAnalysis(config.defaultAnalysisOpts, function (err, job) {
-					if( err ) return res.json({error: err});
-
-					//respond to request
-					res.json({
-						image: image,
-						jobId: job.data._id
-					});
-				});
-			} else {
-				res.json({
-					image: image
-				});
-			}
+			return res.json(image);
 		});
+	});
+});
+
+router.post('/submit', jsonParser, function (req, res, next) {
+	var imageUrl = req.body.url;
+
+	//get preliminary info on url
+	request.head(imageUrl, function (err, response, body) {
+		//cry
+		if( err ) return res.status(400).json({error: err.message});
+
+		//too big
+		if( response.headers['content-length'] > config.upload.sizeLimit)
+			return res.status(400).json({error: 'file too big'});
+
+		// init image
+		var uploadedImage = new Image();
+		uploadedImage.tmpPath = path.join(appRoot.toString(), 'tmp', Date.now().toString() + Math.random().toString())
+		uploadedImage.uploaderIP = req.ip || req.connection.remoteAddress;
+
+		//download the image
+		request.get(imageUrl)
+			//pipe to tmp path
+			.pipe(fs.createWriteStream(uploadedImage.tmpPath))
+			//process submission when it's over
+			.on('close', function () {
+				uploadedImage.processSubmission(function (err, image) {
+					if( err ) {
+						return res.status(400).json(err);
+					}
+
+					return res.json(image);
+				});
+			})
+		;
 	});
 });
 
