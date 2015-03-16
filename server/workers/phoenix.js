@@ -1,6 +1,9 @@
 var debug = require('debug')('worker:func:phoenix');
+
 var path = require('path');
 var child_process = require('child_process');
+var fs = require('fs');
+
 var async = require('async');
 var appRoot = require('app-root-path');
 
@@ -12,7 +15,7 @@ var Analysis = require('../models/analysis.js');
 function getJobString(params, filePath, fileName) {
 	var command = config.bin.phoenix;
 	//-f filepath flag
-	command += ' -f ' + path.join(filePath, fileName);
+	command += ' -f ' + path.join(appRoot.toString(), filePath, fileName);
 	//-o output path flag
 	command += ' -o ' + filePath;
 	//json flag
@@ -56,6 +59,72 @@ function getJobString(params, filePath, fileName) {
 	return command;
 }
 
+function saveAnalyses(imageId, output, callback) {
+	//loop through analyses with async
+	var analyses = Object.keys(output);
+	async.each(
+		analyses,
+		function(key, callback) {
+			//rename analysis file with param names
+			var newFilePath = output[key].filename.split('.');
+			var appendedParams = '';
+			for( var param in output[key] ) {
+				if( param == 'filename' ) continue;
+
+				var paramVal = output[key][param]
+				if( output[key][param] == 'true' || output[key][param] == 'false' ) {
+					paramVal = output[key][param] ? '1' : '0';
+				}
+
+				appendedParams += '_' + paramVal;
+			}
+			newFilePath[0] += appendedParams;
+			newFilePath = newFilePath.join('.');
+			fs.renameSync(output[key].filename, newFilePath);
+
+			//construct new Analysis object
+			var analysis = new Analysis();
+			analysis.type = key;
+			analysis.fileName = path.basename(newFilePath);
+			analysis.path = path.dirname(newFilePath);
+			analysis.path = path.relative(appRoot.toString(), analysis.path);
+			analysis.params = output[key];
+			analysis.imageId = imageId;
+
+			//dont need the filename
+			delete analysis.params.filename;
+
+			debug('analysis:', analysis);
+
+			Analysis.find(
+				{type: analysis.type},
+				null,
+				{sort: {created: 'asc'}},
+				function (err, existingAnalyses) {
+					if( err ) return callback(err);
+
+					//try to save analysis
+					analysis.save(function(err) {
+						if( err ) return callback(err);
+
+						if( existingAnalyses.length > 2 ) {
+							existingAnalyses[0].remove();
+						}
+
+						return callback();
+					});
+				}
+			);
+		},
+		//something went wrong
+		function(err) {
+			if( err ) debug('error in analysis loop', err);
+
+			return callback(err);
+		}
+	);
+}
+
 //phoenix worker function - makes the call to phoenix & saves resulting analyses
 function workerFunc(params, callback) {
 	debug('got job', params);
@@ -78,8 +147,6 @@ function workerFunc(params, callback) {
 					return callback(new Error('cannot parse phoenix output as json'));
 				}
 
-				debug('phoenix', output);
-
 				//save estimates & qtables if available
 				image.imagemagickQuality = output.imagick_estimate || image.imagick_estimate || null;
 				image.hackerfactorQuality = output.hf_estimate || image.hf_estimate || null;
@@ -91,35 +158,9 @@ function workerFunc(params, callback) {
 				delete output.imagick_estimate;
 				delete output.qtables;
 
-				//loop through analyses with async
-				var analyses = Object.keys(output);
-				async.each(
-					analyses,
-					function(key, callback) {
-						//construct new Analysis object
-						var analysis = new Analysis();
-						analysis.type = key;
-						analysis.fileName = path.basename(output[key].filename);
-						analysis.path = path.dirname(output[key].filename);
-						analysis.path = path.relative(appRoot.toString(), analysis.path);
-						analysis.params = output[key];
-						//dont need the filename
-						delete analysis.params.filename;
-
-						debug('analysis:', analysis);
-
-						//try to save analysis
-						analysis.save(function(err) {
-							return callback(err);
-						});
-					},
-					//something went wrong
-					function(err) {
-						if( err ) debug('error in analysis loop', err);
-
-						return callback(err);
-					}
-				);
+				saveAnalyses(image._id, output, function (err, saved) {
+					return callback(err);
+				});
 			});
 		});
 	} catch (err) {
