@@ -129,8 +129,8 @@ router.post('/submit', jsonParser, function (req, res, next) {
 });
 
 //submit an analysis request to the job queue for an image
-router.post('/analysis/:permalink', jsonParser, function (req, res, next) {
-	debug('/images/analysis/:permalink');
+router.post('/:permalink/analysis', jsonParser, function (req, res, next) {
+	debug('/images/:permalink/analysis');
 
 	//try to get image by permalink
 	Image.findOne(
