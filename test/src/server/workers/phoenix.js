@@ -1,4 +1,5 @@
 var child_process = require('child_process');
+var fs = require('fs');
 
 var expect = require('chai').expect;
 
@@ -10,6 +11,7 @@ var sinon = require('sinon');
 
 var serverPath = '../../../../server/';
 var Image = require(serverPath + 'models/image.js');
+var Analysis = require(serverPath + 'models/analysis.js');
 var phoenixWorker = require(serverPath + 'workers/phoenix.js');
 var config = require(serverPath + 'config.json');
 
@@ -18,7 +20,7 @@ describe('phoenix-worker', function () {
 		it('should construct cmd with correct params', function () {
 			var cmd = phoenixWorker.getJobString(config.defaultAnalysisOpts, 'mypath', 'myname');
 
-			expect(cmd).to.contain('-f mypath');
+			// expect(cmd).to.contain('-f mypath');
 			expect(cmd).to.contain('-o mypath');
 			expect(cmd).to.contain('-json');
 			expect(cmd).to.contain('-ela ' + config.defaultAnalysisOpts.ela.quality);
@@ -126,6 +128,7 @@ describe('phoenix-worker', function () {
 			});
 
 			var execStub = sinon.stub(child_process, 'exec').callsArgWith(1, null, fakeOutput);
+			var renameStub = sinon.stub(fs, 'renameSync').returns(true);
 
 			Image.create(
 				{
@@ -140,13 +143,91 @@ describe('phoenix-worker', function () {
 						function (err, result) {
 							expect(err).to.not.exist;
 
-							image.remove();
-							execStub.restore();
-							done();
+							Analysis.find({imageId: image._id}, function (err, analyses) {
+								expect(err).to.not.exist;
+								expect(analyses.length).to.equal(6);
+
+								image.remove();
+								execStub.restore();
+								renameStub.restore();
+
+								done();
+							});
 						}
 					);
 				}
 			);
+		});
+
+		it('should remove the oldest analysis if theres more than 3 of same type', function (done) {
+			var fakeOutput = JSON.stringify({
+				ela: {
+					quality: 28,
+					filename: 'a_ela.png'
+				}
+			});
+
+			var randImageId = mongoose.Types.ObjectId();
+
+			var fakeAnalyses = [
+				{
+					imageId: randImageId,
+					type: 'ela',
+					params: {quality: 25},
+					created: new Date(0),
+					path: 'mypath',
+					fileName: 'filename'
+				},
+				{
+					imageId: randImageId,
+					type: 'ela',
+					params: {quality: 26},
+					created: new Date(50)
+				},
+				{
+					imageId: randImageId,
+					type: 'ela',
+					params: {quality: 27},
+					created: new Date(100)
+				}
+			];
+
+			var execStub = sinon.stub(child_process, 'exec').callsArgWith(1, null, fakeOutput);
+			var renameStub = sinon.stub(fs, 'renameSync').returns(true);
+			var unlinkStub = sinon.stub(fs, 'unlink').returns(true);
+
+
+			Analysis.create(fakeAnalyses, function (err, analyses) {
+				Image.create(
+					{
+						path: 'mypath',
+						fileName: 'myfile',
+						_id: randImageId
+					},
+					function (err, image) {
+						phoenixWorker.workerFunc(
+							{
+								imageId: randImageId,
+								ela: {quality: 28}
+							},
+							function (err, result) {
+								expect(err).to.not.exist;
+
+								Analysis.find({imageId: randImageId, type:'ela', 'params.quality': 25}, function (err, analysis) {
+									expect(err).to.not.exist;
+									expect(analysis).to.be.empty;
+
+									image.remove();
+									execStub.restore();
+									renameStub.restore();
+
+									done();
+								});
+							}
+						);
+					}
+				);
+			});
 		});
 	});
 });

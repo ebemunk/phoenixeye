@@ -197,7 +197,7 @@ describe('/api/images', function () {
 		});
 	});
 
-	describe('/analysis/:permalink', function () {
+	describe('/:permalink/analysis', function () {
 		before(function (done) {
 			Image.create({
 				permalink: 'testPermalink',
@@ -209,20 +209,20 @@ describe('/api/images', function () {
 
 		it('should return error if permalink doesnt exist', function (done) {
 			testServer
-				.post('/api/images/analysis/wrong')
+				.post('/api/images/wrong/analysis')
 				.expect(400, done);
 		});
 
 		it('should return error if no valid params found', function (done) {
 			testServer
-				.post('/api/images/analysis/testPermalink')
+				.post('/api/images/testPermalink/analysis')
 				.send({wrong: 'nope', lolo: 'kekek'})
 				.expect(400, done);			
 		});
 
 		it('should enqueue job if valid params', function (done) {
 			testServer
-				.post('/api/images/analysis/testPermalink')
+				.post('/api/images/testPermalink/analysis')
 				.send({ela: true, hsv: {whitebg: true}})
 				.end(function (err, res) {
 					expect(res.status).to.equal(200);
