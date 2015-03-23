@@ -1,7 +1,10 @@
 var debug = require('debug')('server:main');
 var config = require('./config.json');
 
+var path = require('path');
+
 var express = require('express');
+var appRoot = require('app-root-path');
 
 //connect to mongo
 var mongoose = require('mongoose');
@@ -29,6 +32,9 @@ app.get('/api', function(req, res) {
 //routes
 app.use('/api/images', require('./routes/images.js'));
 app.use('/api/jobs', require('./routes/jobs.js'));
+
+app.use('/images', express.static(path.join(appRoot.toString(), 'images'), {index: 'false'}));
+app.use(express.static(path.join(appRoot.toString(), 'client')));
 
 //error handler
 app.use(function errorHandler(err, req, res, next) {
