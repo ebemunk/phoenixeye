@@ -16,7 +16,12 @@ var files = {
 	js: {
 		dependencies: [
 			'bower_components/angular/angular.min.js',
-			'bower_components/angular-ui-router/release/angular-ui-router.min.js'
+			'bower_components/angular-animate/angular-animate.min.js',
+			'bower_components/angular-sanitize/angular-sanitize.min.js',
+
+			'bower_components/angular-ui-router/release/angular-ui-router.min.js',
+			'bower_components/ng-file-upload/angular-file-upload.min.js',
+			'bower_components/ngtoast/dist/ngToast.min.js'
 		],
 		files: [
 			'client/js/phoenixeye.js',
@@ -28,8 +33,7 @@ var files = {
 	],
 	html: [
 		'client/index.html',
-		'client/templates/*.html',
-		'client/partials/*.html'
+		'client/html/**/*.html'
 	]
 };
 
