@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('phoenixeye', [
-	'ui.router'
+	'ui.router',
+	'angularFileUpload',
+	'ngToast'
 ]);
 
 angular.module('phoenixeye')
@@ -9,14 +11,23 @@ angular.module('phoenixeye')
 	'$stateProvider',
 	'$urlRouterProvider',
 	'$locationProvider',
-	function ($stateProvider, $urlRouterProvider, $locationProvider) {
+	function config($stateProvider, $urlRouterProvider, $locationProvider) {
 		$locationProvider.html5Mode(true);
 
 		$stateProvider
 			.state('home', {
 				url: '/',
-				templateUrl: 'templates/home.html',
+				templateUrl: 'html/templates/home.html',
 				controller: 'HomeCtrl as home'
+			})
+			.state('image', {
+				url: '/image/:permalink',
+				templateUrl: 'html/templates/image.html',
+				controller: 'ImageCtrl as image',
+				params: {
+					image: null,
+					jobId: null
+				}
 			})
 		;
 	}
@@ -26,7 +37,7 @@ angular.module('phoenixeye')
 .run([
 	'$rootScope',
 	'$state',
-	function ($rootScope, $state) {
+	function run($rootScope, $state) {
 		$rootScope.$state = $state;
 	}
 ]);
