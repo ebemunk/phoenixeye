@@ -38,8 +38,14 @@ app.get('/api', function(req, res) {
 app.use('/api/images', require('./routes/images.js'));
 app.use('/api/jobs', require('./routes/jobs.js'));
 
+//static files
 app.use('/images', express.static(path.join(appRoot.toString(), 'images'), {index: 'false'}));
 app.use(express.static(path.join(appRoot.toString(), 'client')));
+
+//redirect anything else to index.html
+app.use('/*', function indexRedirect(req, res, next) {
+	res.sendFile(path.join(appRoot.toString(), 'client', 'index.html'));
+});
 
 //error handler
 app.use(function errorHandler(err, req, res, next) {
