@@ -1,0 +1,23 @@
+home
+
+<div
+	ng-model="file"
+
+	ng-file-drop
+	ng-file-select
+	ng-multiple="false"
+	allow-dir="false"
+	ng-file-change="home.upload($files)"
+
+	drag-over-class="dragover"
+	accept="image/jpeg,image/pjpeg,image/png,image/x-png,image/tiff"
+>
+Drop pdfs or images here or click to upload
+</div>
+
+<div>
+	<input ng-model="home.url">
+	<button ng-click="home.submit(home.url)">Get from URL</button>
+</div>
+
+{{file}}
