@@ -85,7 +85,7 @@ router.post('/upload', function (req, res, next) {
 		//go ahead with image submission
 		uploadedImage.processSubmission(function (err, image) {
 			if( err ) {
-				return res.status(400).json(err);
+				return res.status(400).json({error:err.message});
 			}
 
 			return res.json(image);
