@@ -4,6 +4,8 @@ var config = require('./config.json');
 var path = require('path');
 
 var express = require('express');
+var compression = require('compression');
+
 var appRoot = require('app-root-path');
 
 //connect to mongo
@@ -20,6 +22,9 @@ mongoose.connection.once('open', function mongooseOpen() {
 var app = express();
 app.enable('trust proxy');
 app.disable('x-powered-by');
+app.use(compression({
+	threshold: 0
+}));
 
 //return api uptime
 app.get('/api', function(req, res) {
