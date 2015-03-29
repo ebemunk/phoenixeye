@@ -1,5 +1,9 @@
 var mongoose = require('mongoose');
 
+var fs = require('fs');
+var path = require('path');
+var appRoot = require('app-root-path');
+
 //Analysis model schema
 var schema = mongoose.Schema(
 	{
@@ -23,6 +27,11 @@ var schema = mongoose.Schema(
 schema.pre('save', function (next) {
 	this.created = this.created || new Date();
 	next();
+});
+
+//post remove: delete file on disk after removal
+schema.post('remove', function (doc) {
+	fs.unlink(path.join(appRoot.toString(), this.path, this.fileName));
 });
 
 module.exports = schema;
