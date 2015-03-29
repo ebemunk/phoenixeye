@@ -25,7 +25,7 @@ router.get('/:imageId', function (req, res, next) {
 
 			//more tears
 			if( ! analyses )
-				return res.status(404).json({error: 'no analyses found for this image id ' + req.params.id});
+				return res.status(200).json({error: 'no analyses found for this image id ' + req.params.id});
 
 			//return analyses
 			res.json({
