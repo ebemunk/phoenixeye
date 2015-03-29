@@ -4,7 +4,9 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "test": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage -- --recursive ./test/src && cat ./test/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "test": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage/server -- --recursive ./test/src/server",
+    "test-ci": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage/server -- --recursive ./test/src/server",
+    "posttest-ci": "cat ./test/coverage/server/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "author": "ebemunk <ebemunk@gmail.com>",
   "license": "MIT",
@@ -39,6 +41,8 @@
     "gulp-sourcemaps": "^1.5.1",
     "gulp-uglify": "^1.1.0",
     "istanbul": "^0.3.7",
+    "karma": "^0.12.31",
+    "karma-mocha": "^0.1.10",
     "mocha": "~2.0.1",
     "mockgoose": "~1.10.7",
     "rewire": "~2.1.3",
