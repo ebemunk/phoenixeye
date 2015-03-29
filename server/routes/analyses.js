@@ -7,7 +7,7 @@ var router = require('express').Router();
 var appRoot = require('app-root-path');
 
 //model
-var Analysis = require('../models/Analysis.js');
+var Analysis = require('../models/analysis.js');
 
 //get analyses by their imageId
 router.get('/:imageId', function (req, res, next) {
