@@ -8,7 +8,7 @@ angular.module('phoenixeye')
 	'ngToast',
 	'$state',
 	function HomeCtrl($scope, $upload, $http, ngToast, $state) {
-		this.upload = function(file) {
+		$scope.upload = function(file) {
 			if( file && file.length ) {
 				$upload.upload({
 					url: '/api/images/upload',
@@ -29,7 +29,7 @@ angular.module('phoenixeye')
 			}
 		};
 
-		this.submit = function(url) {
+		$scope.submit = function(url) {
 			$http({
 				method: 'POST',
 				url: 'api/images/submit',

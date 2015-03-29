@@ -18,12 +18,12 @@ angular.module('phoenixeye')
 			.state('home', {
 				url: '/',
 				templateUrl: 'html/templates/home.html',
-				controller: 'HomeCtrl as home'
+				controller: 'HomeCtrl'
 			})
 			.state('image', {
 				url: '/image/:permalink',
 				templateUrl: 'html/templates/image.html',
-				controller: 'ImageCtrl as image',
+				controller: 'ImageCtrl',
 				params: {
 					image: null,
 					jobId: null
