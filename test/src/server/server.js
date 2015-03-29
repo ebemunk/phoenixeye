@@ -31,3 +31,14 @@ describe('/api', function () {
 			});
 	});
 });
+
+describe('/', function () {
+	it('should return index.html for any non-matching route', function (done) {
+		testServer
+			.get('/test')
+			.end(function (err, res) {
+				expect(res.text).to.contain('<!doctype html>');
+				done();
+			});
+	});
+});
