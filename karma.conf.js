@@ -16,7 +16,8 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'client/dist/dependencies.js',
-      'client/dist/phoenixeye.js',
+      'client/js/phoenixeye.js',
+      'client/js/**/*.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'test/src/client/js/**/*.js'
     ],
@@ -43,7 +44,7 @@ module.exports = function(config) {
       // source files, that you wanna generate coverage for
       // do not include tests or libraries
       // (these files will be instrumented by Istanbul)
-      'test/src/client/js/**/*.js': ['coverage']
+      'client/js/**/*.js': ['coverage']
     },
 
 
