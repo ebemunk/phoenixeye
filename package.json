@@ -4,9 +4,11 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "test": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage/server -- --recursive ./test/src/server",
-    "test-ci": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage/server -- --recursive ./test/src/server",
-    "posttest-ci": "cat ./test/coverage/server/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "test-server": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage/server --report lcovonly -- --recursive ./test/src/server",
+    "test-client": "node ./node_modules/karma/bin/karma start",
+    "test": "npm run-script test-server && npm run-script test-client",
+    "test-ci": "npm run-script test-server && npm run-script test-client",
+    "posttest-ci": "node node_modules/lcov-result-merger/bin/lcov-result-merger.js ./test/coverage/**/lcov.info | node ./node_modules/coveralls/bin/coveralls.js"
   },
   "author": "ebemunk <ebemunk@gmail.com>",
   "license": "MIT",
@@ -23,7 +25,7 @@
     "gm": "~1.17.0",
     "image-size": "~0.3.5",
     "md5-file": "~1.1.10",
-    "mongoose": "^3.8.25",
+    "mongoose": "^3.9.7",
     "monq": "~0.3.1",
     "request": "^2.53.0",
     "shortid": "^2.2.1"
@@ -42,7 +44,13 @@
     "gulp-uglify": "^1.1.0",
     "istanbul": "^0.3.7",
     "karma": "^0.12.31",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-coverage": "^0.2.7",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-ie-launcher": "^0.1.5",
     "karma-mocha": "^0.1.10",
+    "lcov-result-merger": "^1.0.2",
     "mocha": "~2.0.1",
     "mockgoose": "~1.10.7",
     "rewire": "~2.1.3",

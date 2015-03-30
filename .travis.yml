@@ -5,8 +5,7 @@ node_js:
   - "iojs"
 
 before_script: 
-  - "npm install -g istanbul"
   - "mv server/config.json.default server/config.json"
 
 script:
-  - "npm test-ci"
+  - "npm run-script test-ci"
