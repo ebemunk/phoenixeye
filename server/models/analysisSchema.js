@@ -31,7 +31,7 @@ schema.pre('save', function (next) {
 
 //post remove: delete file on disk after removal
 schema.post('remove', function (doc) {
-	fs.unlink(path.join(appRoot.toString(), this.path, this.fileName));
+	fs.unlink(path.join(appRoot.toString(), doc.path, doc.fileName));
 });
 
 module.exports = schema;
