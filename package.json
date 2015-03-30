@@ -9,7 +9,7 @@
     "test-client": "node ./node_modules/karma/bin/karma start",
     "test": "npm run-script test-server && npm run-script test-client",
     "test-ci": "npm run-script test-server && npm run-script test-client",
-    "posttest-ci": "node node_modules/lcov-result-merger/bin/lcov-result-merger.js ./test/coverage/**/lcov.info | node ./node_modules/coveralls/bin/coveralls.js"
+    "posttest-ci": "node node_modules/lcov-result-merger/bin/lcov-result-merger.js './test/coverage/**/lcov.info' gae.e | node ./node_modules/coveralls/bin/coveralls.js"
   },
   "author": "ebemunk <ebemunk@gmail.com>",
   "license": "MIT",
