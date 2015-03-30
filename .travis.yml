@@ -15,3 +15,4 @@ script:
 
 after_script:
   - node node_modules/lcov-result-merger/bin/lcov-result-merger.js ./test/coverage/**/lcov.info
+  - ls -l test/coverage/**/*
