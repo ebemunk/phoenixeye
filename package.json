@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "postinstall": "node ./node_modules/bower/bin/bower install && node ./node_modules/gulp/bin/gulp.js",
-    "test-server": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage/server --report lcovonly -- --recursive ./test/src/server",
+    "test-server": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage/server -- --recursive ./test/src/server",
     "test-client": "node ./node_modules/karma/bin/karma start",
     "test": "npm run-script test-server && npm run-script test-client",
     "test-ci": "npm run-script test-server && npm run-script test-client",
@@ -52,6 +52,7 @@
     "karma-firefox-launcher": "^0.1.4",
     "karma-ie-launcher": "^0.1.5",
     "karma-mocha": "^0.1.10",
+    "karma-sinon": "^1.0.4",
     "lcov-result-merger": "^1.0.2",
     "mocha": "~2.0.1",
     "mockgoose": "~1.10.7",
