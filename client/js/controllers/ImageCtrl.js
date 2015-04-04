@@ -13,6 +13,19 @@ angular.module('phoenixeye')
 		console.log('stateParams', $stateParams);
 
 		$scope.image = $stateParams.image;
+		$scope.displayedImage = $stateParams.image;
+
+		$scope.analyses = {
+			ela: [],
+			lg: [],
+			avgdist: [],
+			copymove: []
+		};
+
+		$scope.histograms = {
+			hsv: [],
+			lab_fast: []
+		};
 
 		if( $stateParams.jobId ) {
 			PollSvc.pollUntil({
@@ -21,7 +34,7 @@ angular.module('phoenixeye')
 			}, function (resp) {
 				return resp.job.status == 'complete';
 			}).promise.then(function (resp) {
-				console.log('job resolved', resp);
+				console.log('job poll resolved', resp);
 				getAnalyses();
 			});
 		}
@@ -32,8 +45,9 @@ angular.module('phoenixeye')
 		}, function (resp) {
 			return resp.image.metaComplete;
 		}).promise.then(function (resp) {
-			console.log('image resolved', resp);
+			console.log('image poll resolved', resp);
 			$scope.image = resp.image;
+			$scope.displayedImage = resp.image;
 			getAnalyses();
 		});
 
@@ -43,10 +57,20 @@ angular.module('phoenixeye')
 				url: 'api/analyses/' + $scope.image._id
 			}).success(function (resp, status) {
 				console.log('analyses', resp);
-				$scope.analyses = resp.analyses;
+				resp.analyses.forEach(function (analysis) {
+					if( analysis.type == 'hsv' || analysis.type == 'lab_fast' ) {
+						$scope.histograms[analysis.type].push(analysis);
+					} else {
+						$scope.analyses[analysis.type].push(analysis);
+					}
+				});
 			}).error(function (resp, status) {
 				console.log('error analyses', resp);
 			});
 		}
+
+		$scope.displayImage = function(image) {
+			$scope.displayedImage = image;
+		};
 	}
 ]);

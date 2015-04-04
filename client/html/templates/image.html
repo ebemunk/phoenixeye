@@ -1,7 +1,24 @@
-image.html
+image.html <a href ui-sref="home">Home</a>
 <br><br>
+
+<div class="analysis-menu">
+	<div ng-repeat="(analysisType, analyses) in analyses">
+		{{analysisType}}
+		<div ng-repeat="analysis in analyses">
+			{{analysis}}
+			<a href ng-click="displayImage(analysis)">{{analysis.type}} {{analysis.params}}</a>
+		</div>
+	</div>
+</div>
+
+<div class="image-display">
+	<img ng-src="{{displayedImage.path + '/' + displayedImage.fileName}}">
+</div>
+
+{{displayedImage}}
+<!-- <br><br>
 {{image}}
 <br><br>
 {{jobId}}
 <br><br>
-{{analyses}}
+{{analyses}} -->
