@@ -52,8 +52,8 @@ schema.pre('save', function (next) {
 	next();
 });
 
-//disable returning sensitive attributes
-var hideFields = function(doc, ret, options) {
+//transform before converting to obj or json
+var transform = function(doc, ret, options) {
 	var doNotReturn = [
 		'uploaderIP'
 	];
@@ -62,15 +62,27 @@ var hideFields = function(doc, ret, options) {
 		delete ret[key];
 	});
 
+	var qtables = {};
+	for( var tableIndex in ret.qtables ) {
+		qtables[tableIndex] = [];
+
+		var qt = ret.qtables[tableIndex].split(',');
+		while( qt.length ) {
+			qtables[tableIndex].push(qt.splice(0,8));
+		}
+	}
+
+	ret.qtables = qtables;
+
 	return ret;
 }
 
 schema.set('toJSON', {
-	transform: hideFields
+	transform: transform
 });
 
 schema.set('toObject', {
-	transform: hideFields
+	transform: transform
 });
 
 module.exports = schema;
