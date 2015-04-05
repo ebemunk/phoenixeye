@@ -1,3 +1,5 @@
+'use strict';
+
 describe('PollSvc', function () {
 	var PollSvc;
 	var $httpBackend,
