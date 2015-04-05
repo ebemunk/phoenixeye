@@ -78,7 +78,9 @@ function saveAnalyses(imageId, output, callback) {
 
 				appendedParams += '_' + paramVal;
 			}
-			newFilePath[0] += appendedParams;
+			var now = new Date();
+
+			newFilePath[0] += appendedParams + '_' + now.getTime();
 			newFilePath = newFilePath.join('.');
 			fs.renameSync(output[key].filename, newFilePath);
 
@@ -103,6 +105,7 @@ function saveAnalyses(imageId, output, callback) {
 				function (err, existingAnalyses) {
 					if( err ) return callback(err);
 
+					debug('existing', existingAnalyses);
 					//try to save analysis
 					analysis.save(function(err) {
 						if( err ) return callback(err);
