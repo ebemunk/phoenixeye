@@ -1,2 +1,25 @@
 @import "../../bower_components/bootstrap/less/bootstrap.less";
 @import "../../bower_components/ngtoast/dist/ngToast.min.css";
+
+@import "../../bower_components/font-awesome/less/font-awesome.less";
+
+@grid-float-breakpoint: 0;
+
+//fix responsiveness to md or above
+.container {
+	min-width: @screen-md !important;
+}
+
+//abbr cursors to pointers
+a abbr {
+	cursor: pointer !important;
+}
+
+//dropdown menu active element
+.dropdown-menu > li > a.active {
+	background-color: @dropdown-link-hover-bg;
+}
+
+.collapser {
+	cursor: pointer;
+}
