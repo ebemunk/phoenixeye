@@ -3,7 +3,8 @@
 angular.module('phoenixeye', [
 	'ui.router',
 	'angularFileUpload',
-	'ngToast'
+	'ngToast',
+	'ui.bootstrap'
 ]);
 
 angular.module('phoenixeye')
