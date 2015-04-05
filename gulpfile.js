@@ -15,13 +15,16 @@ var browserSync = require('browser-sync');
 var files = {
 	js: {
 		dependencies: [
+			'bower_components/jquery/dist/jquery.min.js',
 			'bower_components/angular/angular.min.js',
 			'bower_components/angular-animate/angular-animate.min.js',
 			'bower_components/angular-sanitize/angular-sanitize.min.js',
 
 			'bower_components/angular-ui-router/release/angular-ui-router.min.js',
 			'bower_components/ng-file-upload/angular-file-upload.min.js',
-			'bower_components/ngtoast/dist/ngToast.min.js'
+			'bower_components/ngtoast/dist/ngToast.min.js',
+
+			'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
 		],
 		files: [
 			'client/js/phoenixeye.js',
@@ -69,6 +72,11 @@ gulp.task('less', function () {
 	;
 });
 
+gulp.task('fonts', function() {
+	return gulp.src('bower_components/font-awesome/fonts/*')
+	.pipe(gulp.dest('client/fonts'));
+});
+
 gulp.task('browser-sync', function () {
 	browserSync({
 		proxy: 'localhost:3000',
@@ -83,4 +91,4 @@ gulp.task('watch', ['browser-sync'], function () {
 	gulp.watch(files.html).on('change', browserSync.reload);
 });
 
-gulp.task('default', ['js-dependencies', 'js', 'less']);
+gulp.task('default', ['js-dependencies', 'js', 'less', 'icons']);
