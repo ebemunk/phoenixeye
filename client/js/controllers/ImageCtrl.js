@@ -5,11 +5,10 @@ angular.module('phoenixeye')
 	'$scope',
 	'$http',
 	'ngToast',
-	'$state',
 	'$stateParams',
 	'$timeout',
 	'PollSvc',
-	function ImageCtrl($scope, $http, ngToast, $state, $stateParams, $timeout, PollSvc) {
+	function ImageCtrl($scope, $http, ngToast, $stateParams, $timeout, PollSvc) {
 		console.log('stateParams', $stateParams);
 
 		$scope.image = $stateParams.image;
@@ -27,6 +26,9 @@ angular.module('phoenixeye')
 			lab_fast: []
 		};
 
+		$scope.collapsedPanels = {};
+
+		//poll for jobId if its a fresh submission
 		if( $stateParams.jobId ) {
 			PollSvc.pollUntil({
 				method: 'get',
@@ -39,6 +41,7 @@ angular.module('phoenixeye')
 			});
 		}
 
+		//poll until image metadata gathering is complete
 		PollSvc.pollUntil({
 			method: 'get',
 			url: 'api/images/' + $stateParams.permalink
@@ -51,6 +54,7 @@ angular.module('phoenixeye')
 			getAnalyses();
 		});
 
+		//get analyses and separate them by type between histograms/analyses
 		function getAnalyses() {
 			$http({
 				method: 'get',
@@ -64,11 +68,26 @@ angular.module('phoenixeye')
 						$scope.analyses[analysis.type].push(analysis);
 					}
 				});
+
+				//sort by most recent created date
+				for( var type in $scope.analyses ) {
+					$scope.analyses[type] = $scope.analyses[type].sort(function (a, b) {
+						return a.created < b.created;
+					});
+				}
+
+				//sort by most recent created date
+				for( var type in $scope.histograms ) {
+					$scope.histograms[type] = $scope.histograms[type].sort(function (a, b) {
+						return a.created < b.created;
+					});
+				}
 			}).error(function (resp, status) {
 				console.log('error analyses', resp);
 			});
 		}
 
+		//switch displayed image
 		$scope.displayImage = function(image) {
 			$scope.displayedImage = image;
 		};
