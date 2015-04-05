@@ -1,24 +1,278 @@
-image.html <a href ui-sref="home">Home</a>
-<br><br>
+<div class="row">
+	<div class="col-xs-4">
 
-<div class="analysis-menu">
-	<div ng-repeat="(analysisType, analyses) in analyses">
-		{{analysisType}}
-		<div ng-repeat="analysis in analyses">
-			{{analysis}}
-			<a href ng-click="displayImage(analysis)">{{analysis.type}} {{analysis.params}}</a>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Basic Info</h3>
+			</div>
+			<div class="panel-body">
+				<div><strong>Original Filename</strong> {{image.originalFileName}}</div>
+				<div><strong>Location</strong> {{image.url || 'Uploaded'}}</div>
+				<div><strong>Size</strong> {{image.fileSize | bytes}}</div>
+				<div><strong>Dimensions</strong> {{image.size.width}}x{{image.size.height}}</div>
+				<div ng-if="image.channelStatistics.Pixels"><strong>Pixels</strong> {{image.channelStatistics.Pixels | number}}</div>
+				<div><strong>Last Save Quality (<abbr title="Hackerfactor Estimation Method">HF</abbr>)</strong> {{image.hackerfactorQuality | number : 0}}%</div>
+				<div><strong>Last Save Quality (<abbr title="ImageMagick Estimation Method">IM</abbr>)</strong> {{image.imagemagickQuality}}%</div>
+				<div><strong>Submitted</strong> {{image.created | date : 'MMM d, yy @ h:mm a'}}</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">3D RGB Colorspace</h3>
+			</div>
+			<div class="panel-body">
+
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">HSV Histogram
+				<i ng-click="collapsedPanels.hsv = !collapsedPanels.hsv" class="collapser fa pull-right" ng-class="{
+						'fa-chevron-down': !collapsedPanels.hsv,
+						'fa-chevron-right': collapsedPanels.hsv
+					}" title="Toggle Collapse"></i>
+					<i class="fa fa-question-circle"
+						tooltip="HSV histogram visualization.">
+					</i>
+				</h3>
+			</div>
+			<div class="panel-body" collapse-when="collapsedPanels.hsv">
+				<img class="img-responsive" ng-src="{{histograms.hsv ? histograms.hsv[0].path + '/' + histograms.hsv[0].fileName : ''}}">
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Lab Histogram</h3>
+			</div>
+			<div class="panel-body">
+
+			</div>
+		</div>
+
+		<div class="panel panel-default" ng-if="image.type == 'jpg'">
+			<div class="panel-heading">
+				<h3 class="panel-title">Quantization Tables
+					<i ng-click="collapsedPanels.qtables = !collapsedPanels.qtables" class="collapser fa pull-right" ng-class="{
+						'fa-chevron-down': !collapsedPanels.qtables,
+						'fa-chevron-right': collapsedPanels.qtables
+					}" title="Toggle Collapse"></i>
+					<i class="fa fa-question-circle"
+						tooltip="Quantization Tables extracted from the image.">
+					</i>
+				</h3>
+			</div>
+			<div class="panel-body" collapse-when="collapsedPanels.qtables">
+				<div ng-repeat="(tableIndex, qt) in image.qtables">
+					<h4>{{tableIndex == '1' ? 'Chrominance' : 'Luminance'}}</h4>
+					<table class="table table-bordered table-condensed">
+						<tr ng-repeat="row in qt">
+							<td ng-repeat="q in row track by $index">{{q}}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>
 
-<div class="image-display">
-	<img ng-src="{{displayedImage.path + '/' + displayedImage.fileName}}">
-</div>
+	<div class="col-xs-8">
+		<nav class="navbar navbar-default">
+			<ul class="nav navbar-nav">
+				<form class="navbar-form navbar-left">
 
-{{displayedImage}}
-<!-- <br><br>
-{{image}}
-<br><br>
-{{jobId}}
-<br><br>
-{{analyses}} -->
+					<li class="btn-group" dropdown>
+						<a class="btn btn-default"
+							ng-click="displayImage(image)"
+							ng-class="{active: displayedImage == image}"
+						>
+							Original
+						</a>
+					</li>
+
+					<li class="btn-group" dropdown>
+						<a class="btn btn-default"
+							ng-click="displayImage(analyses.ela[0])"
+							ng-class="{
+								active: displayedImage.type == 'ela',
+								disabled: analyses.ela.length < 1
+								}
+							"
+						>
+								<abbr title="Error Level Analysis">ELA</abbr>
+							</a>
+						<a class="btn btn-default dropdown-toggle"
+							dropdown-toggle
+							ng-class="{disabled: analyses.ela.length < 1}"
+						>
+							<i class="fa fa-caret-down"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="analysis in analyses.ela">
+								<a href
+									ng-click="displayImage(analysis)"
+									ng-class="{active: displayedImage == analysis}"
+								>
+									Quality: {{analysis.params.quality}}% | <small>{{analysis.created | date : 'MMM d, yy @ h:mm a'}}</small>
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<li class="btn-group" dropdown>
+						<a class="btn btn-default"
+							ng-click="displayImage(analyses.lg[0])"
+							ng-class="{
+								active: displayedImage.type == 'lg',
+								disabled: analyses.lg.length < 1
+								}
+							"
+						>
+							<abbr title="Luminance Gradient">LG</abbr>
+						</a>
+						<a class="btn btn-default dropdown-toggle"
+							dropdown-toggle
+							ng-class="{disabled: analyses.lg.length < 1}"
+						>
+							<i class="fa fa-caret-down"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="analysis in analyses.lg">
+								<a href
+									ng-click="displayImage(analysis)"
+									ng-class="{active: displayedImage == analysis}"
+								>
+									<small>{{analysis.created | date : 'MMM d, yy @ h:mm a'}}</small>
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<li class="btn-group" dropdown>
+						<a class="btn btn-default"
+							ng-click="displayImage(analyses.avgdist[0])"
+							ng-class="{
+								active: displayedImage.type == 'avgdist',
+								disabled: analyses.avgdist.length < 1
+								}
+							"
+						>
+							<abbr title="Average Distance">AD</abbr>
+						</a>
+						<a class="btn btn-default dropdown-toggle"
+							dropdown-toggle
+							ng-class="{disabled: analyses.avgdist.length < 1}"
+						>
+							<i class="fa fa-caret-down"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="analysis in analyses.avgdist">
+								<a href
+									ng-click="displayImage(analysis)"
+									ng-class="{active: displayedImage == analysis}"
+								>
+									<small>{{analysis.created | date : 'MMM d, yy @ h:mm a'}}</small>
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<li class="btn-group" dropdown>
+						<a class="btn btn-default"
+							ng-click="displayImage(analyses.copymove[0])"
+							ng-class="{
+								active: displayedImage.type == 'copymove',
+								disabled: analyses.copymove.length < 1
+								}
+							"
+						>
+							<abbr title="Copy-Move Detection">CM</abbr>
+						</a>
+						<a class="btn btn-default dropdown-toggle"
+							dropdown-toggle
+							ng-class="{disabled: analyses.copymove.length < 1}"
+						>
+							<i class="fa fa-caret-down"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="analysis in analyses.copymove">
+								<a href
+									ng-click="displayImage(analysis)"
+									ng-class="{active: displayedImage == analysis}"
+								>
+									Retain: {{analysis.params.retain}}, QCoeff: {{analysis.params.qcoeff}} | <small>{{analysis.created | date : 'MMM d, yy @ h:mm a'}}</small>
+								</a>
+							</li>
+						</ul>
+					</li>
+				</form>
+			</ul>
+
+			<form class="navbar-form navbar-right">
+				<a class="btn btn-default">Request Analysis</a>
+			</form>
+		</nav>
+
+		<div class="image-display">
+			<img class="img-responsive" ng-src="{{displayedImage ? displayedImage.path + '/' + displayedImage.fileName : ''}}">
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Extended Info
+					<i ng-click="collapsedPanels.extendedInfo = !collapsedPanels.extendedInfo" class="collapser fa pull-right" ng-class="{
+						'fa-chevron-down': !collapsedPanels.extendedInfo,
+						'fa-chevron-right': collapsedPanels.extendedInfo
+					}" title="Toggle Collapse"></i>
+					<i class="fa fa-question-circle"
+						tooltip="Extended information and statistics about the image.">
+					</i>
+				</h3>
+			</div>
+			<div class="panel-body" collapse-when="collapsedPanels.extendedInfo">
+				<div class="row">
+					<div class="col-xs-6">
+						<div ng-if="image.imageStatistics">
+							<h4>Image Statistics</h4>
+							<div><strong>Max</strong> {{image.imageStatistics.max}}</div>
+							<div><strong>Min</strong> {{image.imageStatistics.min}}</div>
+							<div><strong>Mean</strong> {{image.imageStatistics.mean}}</div>
+							<div><strong><abbr title="Standard Deviation">Stdev.</abbr></strong> {{image.imageStatistics['standard deviation']}}</div>
+							<div><strong>Skewness</strong> {{image.imageStatistics.skewness}}</div>
+							<div><strong>Entropy</strong> {{image.imageStatistics.entropy}}</div>
+							<div><strong>Kurtosis</strong> {{image.imageStatistics.kurtosis}}</div>
+						</div>
+					</div>
+
+					<div class="col-xs-6">
+						<div ng-if="image.chromaticity">
+							<h4>Chromaticity</h4>
+							<div><strong>White Point</strong> {{image.chromaticity['white point']}}</div>
+							<div><strong>Red Primary</strong> {{image.chromaticity['red primary']}}</div>
+							<div><strong>Green Primary</strong> {{image.chromaticity['green primary']}}</div>
+							<div><strong>Blue Primary</strong> {{image.chromaticity['blue primary']}}</div>
+						</div>
+					</div>
+				</div>
+
+				<div ng-if="image.channelStatistics">
+					<h4>Channel Statistics</h4>
+					<div class="row">
+						<div ng-repeat="(channel, stats) in image.channelStatistics" ng-if="channel != 'Pixels'" class="col-xs-4">
+							<h5>{{channel}}</h5>
+							<div><strong>Max</strong> {{stats.max}}</div>
+							<div><strong>Min</strong> {{stats.min}}</div>
+							<div><strong>Mean</strong> {{stats.mean}}</div>
+							<div><strong><abbr title="Standard Deviation">Stdev.</abbr></strong> {{stats['standard deviation']}}</div>
+							<div><strong>Skewness</strong> {{stats.skewness}}</div>
+							<div><strong>Entropy</strong> {{stats.entropy}}</div>
+							<div><strong>Kurtosis</strong> {{stats.kurtosis}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
