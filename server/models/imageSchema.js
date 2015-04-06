@@ -74,6 +74,8 @@ var transform = function(doc, ret, options) {
 
 	ret.qtables = qtables;
 
+	ret.path = ret.path.replace(/\\/g, '/');
+
 	return ret;
 }
 

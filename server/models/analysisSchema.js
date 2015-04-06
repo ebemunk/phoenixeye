@@ -34,4 +34,19 @@ schema.post('remove', function (doc) {
 	fs.unlink(path.join(appRoot.toString(), doc.path, doc.fileName));
 });
 
+//transform before converting to obj or json
+var transform = function(doc, ret, options) {
+	ret.path = ret.path.replace(/\\/g, '/');
+
+	return ret;
+}
+
+schema.set('toJSON', {
+	transform: transform
+});
+
+schema.set('toObject', {
+	transform: transform
+});
+
 module.exports = schema;
