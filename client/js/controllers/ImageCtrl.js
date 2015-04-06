@@ -13,6 +13,8 @@ angular.module('phoenixeye')
 
 		$scope.image = $stateParams.image;
 		$scope.displayedImage = $stateParams.image;
+		$scope.displayedHSV = null;
+		$scope.displayedLab = null;
 
 		$scope.analyses = {
 			ela: [],
@@ -82,6 +84,9 @@ angular.module('phoenixeye')
 						return a.created < b.created;
 					});
 				}
+
+				$scope.displayedHSV = $scope.histograms.hsv[0];
+				$scope.displayedLab = $scope.histograms.lab_fast[0];
 			}).error(function (resp, status) {
 				console.log('error analyses', resp);
 			});

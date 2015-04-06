@@ -1,11 +1,12 @@
 <div class="row">
 	<div class="col-xs-4">
-
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">Basic Info</h3>
+				<h3 class="panel-title">Basic Info
+					<collapse-toggle toggle="collapsedPanels.basic"></collapse-toggle>
+				</h3>
 			</div>
-			<div class="panel-body">
+			<div class="panel-body" collapse-when="collapsedPanels.basic">
 				<div><strong>Original Filename</strong> {{image.originalFileName}}</div>
 				<div><strong>Location</strong> {{image.url || 'Uploaded'}}</div>
 				<div><strong>Size</strong> {{image.fileSize | bytes}}</div>
@@ -29,36 +30,37 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">HSV Histogram
-				<i ng-click="collapsedPanels.hsv = !collapsedPanels.hsv" class="collapser fa pull-right" ng-class="{
-						'fa-chevron-down': !collapsedPanels.hsv,
-						'fa-chevron-right': collapsedPanels.hsv
-					}" title="Toggle Collapse"></i>
+					<collapse-toggle toggle="collapsedPanels.hsv"></collapse-toggle>
 					<i class="fa fa-question-circle"
 						tooltip="HSV histogram visualization.">
 					</i>
 				</h3>
 			</div>
 			<div class="panel-body" collapse-when="collapsedPanels.hsv">
-				<img class="img-responsive" ng-src="{{histograms.hsv ? histograms.hsv[0].path + '/' + histograms.hsv[0].fileName : ''}}">
+				<select ng-model="displayedHSV" ng-options="hsv as (hsv.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (hsv.created | date:'MMM dd, yy @ h:mm a') for hsv in histograms.hsv"></select>
+				<img class="img-responsive" ng-src="{{displayedHSV ? displayedHSV.path + '/' + displayedHSV.fileName : ''}}">
 			</div>
 		</div>
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">Lab Histogram</h3>
+				<h3 class="panel-title">Lab Histogram
+					<collapse-toggle toggle="collapsedPanels.lab_fast"></collapse-toggle>
+					<i class="fa fa-question-circle"
+						tooltip="Lab histogram visualization.">
+					</i>
+				</h3>
 			</div>
-			<div class="panel-body">
-
+			<div class="panel-body" collapse-when="collapsedPanels.lab_fast">
+				<select ng-model="displayedLab" ng-options="lab_fast as (lab_fast.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (lab_fast.created | date:'MMM dd, yy @ h:mm a') for lab_fast in histograms.lab_fast"></select>
+				<img class="img-responsive" ng-src="{{displayedLab ? displayedLab.path + '/' + displayedLab.fileName : ''}}">
 			</div>
 		</div>
 
 		<div class="panel panel-default" ng-if="image.type == 'jpg'">
 			<div class="panel-heading">
 				<h3 class="panel-title">Quantization Tables
-					<i ng-click="collapsedPanels.qtables = !collapsedPanels.qtables" class="collapser fa pull-right" ng-class="{
-						'fa-chevron-down': !collapsedPanels.qtables,
-						'fa-chevron-right': collapsedPanels.qtables
-					}" title="Toggle Collapse"></i>
+					<collapse-toggle toggle="collapsedPanels.qtables"></collapse-toggle>
 					<i class="fa fa-question-circle"
 						tooltip="Quantization Tables extracted from the image.">
 					</i>
@@ -81,7 +83,6 @@
 		<nav class="navbar navbar-default">
 			<ul class="nav navbar-nav">
 				<form class="navbar-form navbar-left">
-
 					<li class="btn-group" dropdown>
 						<a class="btn btn-default"
 							ng-click="displayImage(image)"
@@ -93,12 +94,11 @@
 
 					<li class="btn-group" dropdown>
 						<a class="btn btn-default"
-							ng-click="displayImage(analyses.ela[0])"
+							ng-click="displayedImage = analyses.ela[0]"
 							ng-class="{
 								active: displayedImage.type == 'ela',
 								disabled: analyses.ela.length < 1
-								}
-							"
+							}"
 						>
 								<abbr title="Error Level Analysis">ELA</abbr>
 							</a>
@@ -122,12 +122,11 @@
 
 					<li class="btn-group" dropdown>
 						<a class="btn btn-default"
-							ng-click="displayImage(analyses.lg[0])"
+							ng-click="displayedImage = analyses.lg[0]"
 							ng-class="{
 								active: displayedImage.type == 'lg',
 								disabled: analyses.lg.length < 1
-								}
-							"
+							}"
 						>
 							<abbr title="Luminance Gradient">LG</abbr>
 						</a>
@@ -151,12 +150,11 @@
 
 					<li class="btn-group" dropdown>
 						<a class="btn btn-default"
-							ng-click="displayImage(analyses.avgdist[0])"
+							ng-click="displayedImage = analyses.avgdist[0]"
 							ng-class="{
 								active: displayedImage.type == 'avgdist',
 								disabled: analyses.avgdist.length < 1
-								}
-							"
+							}"
 						>
 							<abbr title="Average Distance">AD</abbr>
 						</a>
@@ -180,12 +178,11 @@
 
 					<li class="btn-group" dropdown>
 						<a class="btn btn-default"
-							ng-click="displayImage(analyses.copymove[0])"
+							ng-click="displayedImage = analyses.copymove[0]"
 							ng-class="{
 								active: displayedImage.type == 'copymove',
 								disabled: analyses.copymove.length < 1
-								}
-							"
+							}"
 						>
 							<abbr title="Copy-Move Detection">CM</abbr>
 						</a>
@@ -221,10 +218,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">Extended Info
-					<i ng-click="collapsedPanels.extendedInfo = !collapsedPanels.extendedInfo" class="collapser fa pull-right" ng-class="{
-						'fa-chevron-down': !collapsedPanels.extendedInfo,
-						'fa-chevron-right': collapsedPanels.extendedInfo
-					}" title="Toggle Collapse"></i>
+					<collapse-toggle toggle="collapsedPanels.extendedInfo"></collapse-toggle>
 					<i class="fa fa-question-circle"
 						tooltip="Extended information and statistics about the image.">
 					</i>
@@ -274,5 +268,18 @@
 			</div>
 		</div>
 
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">EXIF Info
+					<collapse-toggle toggle="collapsedPanels.exifInfo"></collapse-toggle>
+					<i class="fa fa-question-circle"
+						tooltip="Extended information and statistics about the image.">
+					</i>
+				</h3>
+			</div>
+			<div class="panel-body" collapse-when="collapsedPanels.exifInfo">
+				aega
+			</div>
+		</div>
 	</div>
 </div>
