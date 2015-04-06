@@ -14,4 +14,15 @@ angular.module('phoenixeye')
 			}
 		}
 	}
+])
+.directive('collapseToggle', [
+	function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'html/partials/collapseToggle.html',
+			scope: {
+				toggle: '='
+			}
+		}
+	}
 ]);
