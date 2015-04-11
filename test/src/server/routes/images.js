@@ -30,24 +30,6 @@ before(function () {
 
 describe('/api/images', function () {
 	describe('/upload', function () {
-		after(function () {
-			var rmDirContents = function(dirPath) {
-				try { var files = fs.readdirSync(dirPath); }
-				catch(e) { return; }
-				if (files.length > 0) {
-					for (var i = 0; i < files.length; i++) {
-						var filePath = dirPath + '/' + files[i];
-						if(filePath == 'tmp/.gitignore') continue;
-						if (fs.statSync(filePath).isFile())
-							fs.unlinkSync(filePath);
-						else
-							rmDir(filePath);
-					}
-				}
-			};
-			rmDirContents('tmp');
-		});
-
 		it('should not accept multiple files', function (done) {
 			testServer
 				.post('/api/images/upload')
