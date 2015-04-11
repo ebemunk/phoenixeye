@@ -91,4 +91,4 @@ gulp.task('watch', ['browser-sync'], function () {
 	gulp.watch(files.html).on('change', browserSync.reload);
 });
 
-gulp.task('default', ['js-dependencies', 'js', 'less', 'icons']);
+gulp.task('default', ['js-dependencies', 'js', 'less', 'fonts']);
