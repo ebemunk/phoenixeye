@@ -56,6 +56,24 @@ angular.module('phoenixeye')
 			getAnalyses();
 		});
 
+		$scope.$watch('image', function (newV) {
+			if( ! newV ) return;
+
+			$scope.metaList = {};
+			if( newV.xmp ) {
+				$scope.metaList.xmp = newV.xmp;
+			}
+
+			if( newV.exif ) {
+				$scope.metaList.exif = newV.exif;
+			}
+
+			if( newV.iptc ) {
+				$scope.metaList.iptc = newV.iptc;
+			}
+
+			}
+		});
 		//get analyses and separate them by type between histograms/analyses
 		function getAnalyses() {
 			$http({
