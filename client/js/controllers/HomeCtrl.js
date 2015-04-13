@@ -36,6 +36,12 @@ angular.module('phoenixeye')
 				data: {url: url}
 			}).success(function (data, status) {
 				console.log('success', data, status);
+				var jobId = data.jobId || null;
+				$state.go('image', {
+					image: data.image,
+					jobId: jobId,
+					permalink: data.image.permalink
+				});
 			}).error(function (data, status) {
 				console.log('error', data, status);
 			});
