@@ -18,6 +18,25 @@
 			</div>
 		</div>
 
+		<div class="panel panel-default" ng-if="gps">
+			<div class="panel-heading">
+				<h3 class="panel-title">GPS Map
+					<collapse-toggle toggle="collapsedPanels.map"></collapse-toggle>
+				</h3>
+			</div>
+			<div class="panel-body" collapse-when="collapsedPanels.map">
+				<div map-lazy-load="http://maps.google.com/maps/api/js">
+					<map center="{{gps.lat}}, {{gps.lng}}" zoom="5">
+						<marker
+							position="[{{gps.lat}}, {{gps.lng}}]"
+							title="Image GPS Location"
+							visible="true"
+						></marker>
+					</map>
+				</div>
+			</div>
+		</div>
+
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">3D RGB Colorspace</h3>
@@ -270,7 +289,7 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">EXIF Info
+				<h3 class="panel-title">Metadata
 					<collapse-toggle toggle="collapsedPanels.exifInfo"></collapse-toggle>
 					<i class="fa fa-question-circle"
 						tooltip="Extended information and statistics about the image.">
@@ -278,7 +297,23 @@
 				</h3>
 			</div>
 			<div class="panel-body" collapse-when="collapsedPanels.exifInfo">
-				aega
+				<fuzzy-search list="metaList" filtered="metaFiltered"></fuzzy-search>
+				<div ng-repeat="(title, meta) in metaFiltered">
+					<h4>{{title | uppercase}}</h4>
+					<table ng-repeat="(heading, section) in meta" class="table table-condensed">
+						<thead>
+							<tr>
+								<th colspan="2">{{heading}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="(key, value) in section">
+								<td>{{key}}</td>
+								<td>{{value}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
