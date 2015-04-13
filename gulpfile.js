@@ -23,8 +23,11 @@ var files = {
 			'bower_components/angular-ui-router/release/angular-ui-router.min.js',
 			'bower_components/ng-file-upload/angular-file-upload.min.js',
 			'bower_components/ngtoast/dist/ngToast.min.js',
+			'bower_components/ngmap/build/scripts/ng-map.js',
 
-			'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
+			'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+
+			'bower_components/fuse/src/fuse.min.js'
 		],
 		files: [
 			'client/js/phoenixeye.js',
