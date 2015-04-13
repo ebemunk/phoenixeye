@@ -13,7 +13,9 @@ angular.module('phoenixeye')
 		var pollers = [];
 
 		//stop all pollers on state change
-		$rootScope.$on('$stateChangeSuccess', function () {
+		$rootScope.$on('$stateChangeSuccess', function (event, toState) {
+			if( toState.name === 'image' ) return;
+
 			pollers.forEach(function (poller) {
 				poller.stopped = true;
 			});
