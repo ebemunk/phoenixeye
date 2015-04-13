@@ -105,6 +105,16 @@ angular.module('phoenixeye')
 
 				$scope.displayedHSV = $scope.histograms.hsv[0];
 				$scope.displayedLab = $scope.histograms.lab_fast[0];
+
+				//get qtables for jpg after analysis complete
+				if( $scope.image.type == 'jpg' && Object.keys($scope.image.qtables).length == 0 ) {
+					$http({
+						method: 'get',
+						url: 'api/images/' + $stateParams.permalink
+					}).then(function (resp) {
+						$scope.image = resp.data.image;
+					});
+				}
 			}).error(function (resp, status) {
 				console.log('error analyses', resp);
 			});
