@@ -20,10 +20,16 @@ var server = require(serverPath + 'server.js').server;
 var testServer = supertest(server);
 
 before(function () {
-	//mocking monq.queue.enqueue
-	Image.__set__('queue', {
-		enqueue: function(a,b,c) {
-			return c(null, {data:{params:b, _id:5}});
+	//mock monq
+	Image.__set__('monq', function (dbString) {
+		return {
+			queue: function (queueName) {
+				return {
+					enqueue: function(a,b,c) {
+						return c(null, {data:{params:b, _id:5}});
+					}
+				}
+			}
 		}
 	});
 });

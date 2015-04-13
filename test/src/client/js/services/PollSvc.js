@@ -132,12 +132,42 @@ describe('PollSvc', function () {
 			$httpBackend.flush();
 			$timeout.flush();
 
-			$rootScope.$emit('$stateChangeSuccess');
+			$rootScope.$emit('$stateChangeSuccess', {name: 'home'});
 
 			$httpBackend.flush();
 			$timeout.flush();
 
 			expect(rejected).to.be.true;
+
+			done();
+		});
+
+		it('should not stop poll if new state change is image', function (done) {
+			$httpBackend.when('GET', '/api/images/permalink')
+				.respond(200, {condition: false});
+
+			var rejected = false;
+
+			PollSvc.pollUntil({
+				method: 'get',
+				url: '/api/images/permalink'
+			}, function (resp) {
+				return false;
+			}).promise.catch(
+				function (resp) {
+					rejected = true;
+				}
+			);
+
+			$httpBackend.flush();
+			$timeout.flush();
+
+			$rootScope.$emit('$stateChangeSuccess', {name: 'image'});
+
+			$httpBackend.flush();
+			$timeout.flush();
+
+			expect(rejected).to.not.be.true;
 
 			done();
 		});

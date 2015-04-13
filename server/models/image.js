@@ -21,7 +21,8 @@ var dataobjectParser = require('dataobject-parser');
 var gm = require('gm').subClass({ imageMagick: true });
 
 //queue
-var queue = require('monq')(config.dbString).queue('phoenix');
+var monq = require('monq')(config.dbString);
+var queue = monq.queue('phoenix');
 
 var Image = mongoose.model('Image', require('./imageSchema.js'));
 

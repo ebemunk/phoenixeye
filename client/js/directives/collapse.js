@@ -1,6 +1,6 @@
 angular.module('phoenixeye')
 .directive('collapseWhen', [
-	function () {
+	function collapseWhen() {
 		return {
 			restrict: 'A',
 			link: function(scope, elem, attrs) {
@@ -16,7 +16,7 @@ angular.module('phoenixeye')
 	}
 ])
 .directive('collapseToggle', [
-	function () {
+	function collapseToggle() {
 		return {
 			restrict: 'E',
 			templateUrl: 'html/partials/collapseToggle.html',
