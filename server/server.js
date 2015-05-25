@@ -56,9 +56,9 @@ app.use(function errorHandler(err, req, res, next) {
 });
 
 //init
-var server = app.listen(config.port, function () {
+app.listen(config.port, function () {
 	debug('server running on port ' + config.port);
 });
 
 //export server for testing
-module.exports.server = server;
+module.exports.server = app;
