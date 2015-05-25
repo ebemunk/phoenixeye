@@ -41,7 +41,7 @@ describe('/api/jobs', function () {
 				.get('/api/jobs/' + jobId)
 				.end(function(err, res) {
 					expect(res.status).to.equal(200);
-					expect(res.body.job).to.have.property('_id');
+					expect(res.body.job).to.have.property('name');
 					done();
 				});
 		})

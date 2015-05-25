@@ -9,20 +9,29 @@ var mockgoose = require('mockgoose');
 mockgoose(mongoose);
 
 var sinon = require('sinon');
-var rewire = require('rewire');
 
 var serverPath = '../../../../server/';
 var Image = require(serverPath + 'models/image.js');
 
 describe('Image', function () {
-	var testImage = new Image();
-	testImage.tmpPath = 'test/testfiles/valid.jpg';
+	var testImage, wrongType, tooLarge;
 
-	var wrongType = new Image();
-	wrongType.tmpPath = 'test/testfiles/wrongtype.txt';
+	beforeEach(function () {
+		testImage = new Image();
+		testImage.tmpPath = 'test/testfiles/valid.jpg';
+		testImage.path = 'test/testfiles';
+		testImage.fileName = 'valid.jpg';
 
-	var tooLarge = new Image();
-	tooLarge.tmpPath = 'test/testfiles/toolarge.jpg';
+		wrongType = new Image();
+		wrongType.tmpPath = 'test/testfiles/wrongtype.txt';
+
+		tooLarge = new Image();
+		tooLarge.tmpPath = 'test/testfiles/toolarge.jpg';
+	});
+
+	afterEach(function () {
+		mockgoose.reset();
+	});
 
 	describe('prototype.checkType', function () {
 		it('should call `file` with correct arguments', function (done) {
@@ -125,10 +134,12 @@ describe('Image', function () {
 		it('should save the file if checks are ok', function (done) {
 			var renameStub = sinon.stub(fs, 'renameSync');
 			var mkdirStub = sinon.stub(fs, 'mkdirSync');
+			var unlinkStub = sinon.stub(fs, 'unlink');
 
 			testImage.fileChecks(function (err, image) {
 				renameStub.restore();
 				mkdirStub.restore();
+				unlinkStub.restore();
 
 				expect(image.fileName).to.be.equal('46b1c2600c096f27a8bdffdb03dd0222.jpg');
 				expect(image).to.not.have.property('duplicate');
@@ -200,7 +211,7 @@ describe('Image', function () {
 	describe('prototype.getGMInfo', function () {
 		it('should not throw an error if gm returns error', function (done) {
 			var gmStub = Image.__set__({
-				gm: function(kek) {
+				gm: function(filename) {
 				return {
 					identify: function(cb) {
 						cb(new Error('stub error'));
@@ -228,12 +239,8 @@ describe('Image', function () {
 	});
 
 	describe('prototype.queueAnalysis', function () {
-		var img = new Image();
-		img.fileName = 'valid.jpg';
-		img.path = 'test/testfiles/';
-
 		it('should return an error if options are null', function (done) {
-			img.queueAnalysis(null, function (err, job) {
+			testImage.queueAnalysis(null, function (err, job) {
 				expect(err).to.not.be.null;
 				done();
 			});
@@ -245,7 +252,7 @@ describe('Image', function () {
 				lol: 'nope'
 			};
 
-			img.queueAnalysis(opts, function (err, job) {
+			testImage.queueAnalysis(opts, function (err, job) {
 				expect(err).to.not.be.null;
 				done();
 			});
@@ -259,7 +266,7 @@ describe('Image', function () {
 				labfast: {whitebg: true}
 			};
 
-			img.queueAnalysis(opts, function (err, job) {
+			testImage.queueAnalysis(opts, function (err, job) {
 				expect(err).to.be.null;
 
 				var params = job.data.params;
@@ -309,14 +316,14 @@ describe('Image', function () {
 		it('should return the image if its a duplicate', function (done) {
 			var getMetadataStub = sinon.stub(Image.prototype, 'getMetadata');
 			var queueAnalysisStub = sinon.stub(Image.prototype, 'queueAnalysis').callsArgWith(1, null, {data:{_id: 5}});
-			testImage.duplicate = true;
 			var fileChecksStub = sinon.stub(Image.prototype, 'fileChecks').callsArgWith(0, null, testImage);
+
+			testImage.duplicate = true;
 
 			testImage.processSubmission(function (err, image) {
 				getMetadataStub.restore();
 				queueAnalysisStub.restore();
 				fileChecksStub.restore();
-				delete testImage.duplicate;
 
 				expect(getMetadataStub.called).to.be.false;
 				expect(queueAnalysisStub.called).to.be.false;

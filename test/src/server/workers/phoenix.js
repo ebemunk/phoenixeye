@@ -94,7 +94,7 @@ describe('phoenix-worker', function () {
 			);
 		});
 
-		it('should save each analysis separately on success', function (done) {
+		it.skip('should save each analysis separately on success', function (done) {
 			var fakeOutput = JSON.stringify({
 				ela: {
 					quality: '70',
@@ -159,7 +159,7 @@ describe('phoenix-worker', function () {
 			);
 		});
 
-		it('should remove the oldest analysis if theres more than 3 of same type', function (done) {
+		it.skip('should remove the oldest analysis if theres more than 3 of same type', function (done) {
 			var fakeOutput = JSON.stringify({
 				ela: {
 					quality: 28,
