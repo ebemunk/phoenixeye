@@ -8,7 +8,8 @@ angular.module('phoenixeye')
 	'$stateParams',
 	'$timeout',
 	'PollSvc',
-	function ImageCtrl($scope, $http, ngToast, $stateParams, $timeout, PollSvc) {
+	'$modal',
+	function ImageCtrl($scope, $http, ngToast, $stateParams, $timeout, PollSvc, $modal) {
 		console.log('stateParams', $stateParams);
 
 		$scope.image = $stateParams.image;
@@ -152,5 +153,19 @@ angular.module('phoenixeye')
 			console.log(dd);
 			return dd;
 		}
+
+		$scope.requestAnalysis = function() {
+			var modal = $modal.open({
+				animation: true,
+				templateUrl: 'html/partials/requestAnalysis.html',
+				controller: 'RequestAnalysisCtrl'
+			});
+
+			modal.result.then(function (wat,a ,b,c) {
+				console.log('KEKEKE', wat,a,b,c);
+			}).catch(function (a,b,c) {
+				console.log('CKATAE', a,b,c);
+			});
+		};
 	}
 ]);
