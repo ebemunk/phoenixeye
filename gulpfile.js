@@ -21,11 +21,12 @@ var files = {
 			'bower_components/angular-sanitize/angular-sanitize.min.js',
 
 			'bower_components/angular-ui-router/release/angular-ui-router.min.js',
-			'bower_components/ng-file-upload/angular-file-upload.min.js',
+			'bower_components/ng-file-upload/ng-file-upload.min.js',
 			'bower_components/ngtoast/dist/ngToast.min.js',
 			'bower_components/ngmap/build/scripts/ng-map.js',
 
 			'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+			'bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js',
 
 			'bower_components/fuse/src/fuse.min.js'
 		],
@@ -37,13 +38,16 @@ var files = {
 	less: [
 		'client/less/*.less'
 	],
+	css: [
+		'bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css'
+	],
 	html: [
 		'client/index.html',
 		'client/html/**/*.html'
 	]
 };
 
-gulp.task('js-dependencies', function () {
+gulp.task('js-deps', function () {
 	return gulp.src(files.js.dependencies)
 		.pipe(plumber())
 		.pipe(concat('dependencies.js'))
@@ -75,6 +79,15 @@ gulp.task('less', function () {
 	;
 });
 
+gulp.task('css-deps', function () {
+	return gulp.src(files.css)
+		.pipe(plumber())
+		.pipe(minifyCSS())
+		.pipe(autoprefixer()).pipe(concat('dependencies.css'))
+		.pipe(gulp.dest('client/dist'))
+	;
+});
+
 gulp.task('fonts', function() {
 	return gulp.src('bower_components/font-awesome/fonts/*')
 	.pipe(gulp.dest('client/fonts'));
@@ -94,4 +107,4 @@ gulp.task('watch', ['browser-sync'], function () {
 	gulp.watch(files.html).on('change', browserSync.reload);
 });
 
-gulp.task('default', ['js-dependencies', 'js', 'less', 'fonts']);
+gulp.task('default', ['js-deps', 'js', 'less', 'css-deps', 'fonts']);
