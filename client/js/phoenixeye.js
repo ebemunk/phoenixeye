@@ -2,9 +2,10 @@
 
 angular.module('phoenixeye', [
 	'ui.router',
-	'angularFileUpload',
+	'ngFileUpload',
 	'ngToast',
 	'ui.bootstrap',
+	'ui.bootstrap-slider',
 	'ngMap'
 ]);
 
@@ -32,6 +33,8 @@ angular.module('phoenixeye')
 				}
 			})
 		;
+
+		$urlRouterProvider.otherwise('/');
 	}
 ]);
 

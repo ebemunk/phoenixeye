@@ -3,14 +3,14 @@
 angular.module('phoenixeye')
 .controller('HomeCtrl', [
 	'$scope',
-	'$upload',
+	'Upload',
 	'$http',
 	'ngToast',
 	'$state',
-	function HomeCtrl($scope, $upload, $http, ngToast, $state) {
+	function HomeCtrl($scope, Upload, $http, ngToast, $state) {
 		$scope.upload = function(file) {
 			if( file && file.length ) {
-				$upload.upload({
+				Upload.upload({
 					url: '/api/images/upload',
 					file: file
 				}).progress(function (event) {
