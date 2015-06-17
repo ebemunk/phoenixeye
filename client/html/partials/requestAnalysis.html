@@ -1,0 +1,41 @@
+<div class="modal-header">
+	<h3 class="modal-title">Request Analysis</h3>
+</div>
+
+<div class="modal-body">
+	<div>
+		<label>
+			<input type="checkbox" ng-model="analysis.ela"> Error Level Analysis
+		</label>
+		<slider ng-model="ela.quality" min="0" step="1" max="100" ng-disabled="analysis.ela" slider-tooltip="always"></slider>
+
+	</div>
+
+	<div>
+		<label>
+			<input type="checkbox" ng-model="analysis.lg"> Luminance Gradient
+		</label>
+	</div>
+
+	<div>
+		<label>
+			<input type="checkbox" ng-model="analysis.avgdist"> Average Distance
+		</label>
+	</div>
+
+	<div>
+		<label>
+			<input type="checkbox" ng-model="analysis.copymove"> Copy-Move Detection
+		</label>
+		<input ng-model="copymove.retain" type="number">
+		<input ng-model="copymove.qcoeff" type="number">
+	</div>
+</div>
+
+{{analysis}}
+{{ela}}
+
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="ok()">OK</button>
+	<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>
