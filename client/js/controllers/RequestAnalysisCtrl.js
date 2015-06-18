@@ -7,13 +7,16 @@ angular.module('phoenixeye')
 	'$http',
 	'$stateParams',
 	function RequestAnalysisCtrl($scope, $modalInstance, $http, $stateParams) {
-		console.log('YUP!');
-
 		$scope.analysis = {};
 		$scope.ela = {
 			quality: 70
 		};
-		$scope.copymove = {};
+		$scope.copymove = {
+			retain: 4,
+			qcoeff: 1
+		};
+		$scope.hsv = {whitebg: false};
+		$scope.labfast = {whitebg: false};
 
 		$scope.ok = function () {
 			if( $scope.analysis.ela && $scope.ela.quality ) {
@@ -29,8 +32,14 @@ angular.module('phoenixeye')
 					$scope.analysis.copymove.retain = $scope.copymove.retain;
 
 				if( $scope.copymove.qcoeff )
-					$scope.analysis.coppymove.qcoeff = $scope.copymove.qcoeff;
+					$scope.analysis.copymove.qcoeff = $scope.copymove.qcoeff;
 			}
+
+			if( $scope.hsv.whitebg )
+				$scope.analysis.hsv = {whitebg: true};
+
+			if( $scope.labfast.whitebg )
+				$scope.analysis.labfast = {whitebg: true};
 
 			var requestPromise = $http({
 				method: 'post',
