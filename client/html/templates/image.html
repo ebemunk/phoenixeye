@@ -26,7 +26,7 @@
 			</div>
 			<div class="panel-body" collapse-when="collapsedPanels.map">
 				<div map-lazy-load="http://maps.google.com/maps/api/js">
-					<map center="{{gps.lat}}, {{gps.lng}}" zoom="5">
+					<map center="{{gps.lat}}, {{gps.lng}}" zoom="6" scrollwheel="false">
 						<marker
 							position="[{{gps.lat}}, {{gps.lng}}]"
 							title="Image GPS Location"
