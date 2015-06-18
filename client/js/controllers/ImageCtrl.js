@@ -17,31 +17,11 @@ angular.module('phoenixeye')
 		$scope.displayedHSV = null;
 		$scope.displayedLab = null;
 
-		$scope.analyses = {
-			ela: [],
-			lg: [],
-			avgdist: [],
-			copymove: []
-		};
-
-		$scope.histograms = {
-			hsv: [],
-			lab_fast: []
-		};
-
 		$scope.collapsedPanels = {};
 
 		//poll for jobId if its a fresh submission
 		if( $stateParams.jobId ) {
-			PollSvc.pollUntil({
-				method: 'get',
-				url: 'api/jobs/' + $stateParams.jobId
-			}, function (resp) {
-				return resp.job.status == 'complete';
-			}).promise.then(function (resp) {
-				console.log('job poll resolved', resp);
-				getAnalyses();
-			});
+			pollForJob($stateParams.jobId);
 		}
 
 		//poll until image metadata gathering is complete
@@ -84,6 +64,20 @@ angular.module('phoenixeye')
 		//get analyses and separate them by type between histograms/analyses
 		function getAnalyses() {
 			console.log('get analysis start', $scope.image);
+
+			//reset objects
+			$scope.analyses = {
+				ela: [],
+				lg: [],
+				avgdist: [],
+				copymove: []
+			};
+
+			$scope.histograms = {
+				hsv: [],
+				lab_fast: []
+			};
+
 			$http({
 				method: 'get',
 				url: 'api/analyses/' + $scope.image._id
@@ -128,6 +122,18 @@ angular.module('phoenixeye')
 			});
 		}
 
+		function pollForJob(jobId) {
+			PollSvc.pollUntil({
+				method: 'get',
+				url: 'api/jobs/' + jobId
+			}, function (resp) {
+				return resp.job.status == 'complete';
+			}).promise.then(function (resp) {
+				console.log('job poll resolved', resp);
+				getAnalyses();
+			});
+		}
+
 		//switch displayed image
 		$scope.displayImage = function(image) {
 			$scope.displayedImage = image;
@@ -161,10 +167,12 @@ angular.module('phoenixeye')
 				controller: 'RequestAnalysisCtrl'
 			});
 
-			modal.result.then(function (wat,a ,b,c) {
-				console.log('KEKEKE', wat,a,b,c);
-			}).catch(function (a,b,c) {
-				console.log('CKATAE', a,b,c);
+			modal.result.then(function (resp) {
+				console.log('requestAnalysis response', resp);
+
+				pollForJob(resp.data.jobId);
+			}).catch(function (err) {
+				console.log('requestAnalysis fail', err);
 			});
 		};
 	}
