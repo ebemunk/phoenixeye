@@ -6,7 +6,8 @@ angular.module('phoenixeye', [
 	'ngToast',
 	'ui.bootstrap',
 	'ui.bootstrap-slider',
-	'ngMap'
+	'ngMap',
+	'angular-loading-bar'
 ]);
 
 angular.module('phoenixeye')

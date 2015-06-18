@@ -26,6 +26,7 @@ var files = {
 			'bower_components/ng-file-upload/ng-file-upload.min.js',
 			'bower_components/ngtoast/dist/ngToast.min.js',
 			'bower_components/ngmap/build/scripts/ng-map.js',
+			'bower_components/angular-loading-bar/build/loading-bar.js',
 
 			//bootstrap & related
 			'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
@@ -33,8 +34,8 @@ var files = {
 
 			//misc libs
 			'bower_components/fuse/src/fuse.min.js',
-
-			'bower_components/visionmedia-debug/dist/debug.js'
+			'bower_components/visionmedia-debug/dist/debug.js',
+			'bower_components/three.js/three.js'
 		],
 		files: [
 			'client/js/phoenixeye.js',
@@ -45,7 +46,8 @@ var files = {
 		'client/less/*.less'
 	],
 	css: [
-		'bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css'
+		'bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css',
+		'bower_components/angular-loading-bar/build/loading-bar.css',
 	],
 	html: [
 		'client/index.html',
