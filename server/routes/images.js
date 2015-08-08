@@ -1,24 +1,27 @@
 var debug = require('debug')('server:routes:images');
 var config = require('../config.json');
 
-//router
-var router = require('express').Router();
+var Promise = require('bluebird');
 
+var router = require('express').Router();
 var jsonParser = require('body-parser').json();
 
 //upload related
 var Busboy = require('busboy');
 var fs = require('fs');
-var path = require('path');
-var appRoot = require('app-root-path');
 
 var request = require('request');
 
+var HTTPError = require('node-http-error');
+
 //model
-var Image = require('../models/image.js');
+var submittedFile = require('../models/submittedFile.js');
+var image = require('../models/image.js');
 
 //handle image upload
 router.post('/upload', function (req, res, next) {
+	debug('/upload');
+
 	//prepare busboy for upload
 	var busboy = new Busboy({
 		headers: req.headers,
@@ -32,8 +35,7 @@ router.post('/upload', function (req, res, next) {
 	req.pipe(busboy);
 
 	//init image
-	var uploadedImage = new Image();
-	uploadedImage.tmpPath = path.join(appRoot.toString(), 'tmp', Date.now().toString() + Math.random().toString())
+	var uploadedImage = new submittedFile();
 	uploadedImage.uploaderIP = req.ip || req.connection.remoteAddress;
 
 	//to check if file limit is reached
@@ -54,7 +56,7 @@ router.post('/upload', function (req, res, next) {
 	//file limit handler
 	busboy.on('filesLimit', function () {
 		debug('on file limit');
-		fs.unlink(uploadedImage.tmpPath);
+		uploadedImage.unlink();
 		fileLimitReached = true;
 	});
 
@@ -69,127 +71,104 @@ router.post('/upload', function (req, res, next) {
 
 		//cry if more than 1 file submitted
 		if( fileLimitReached ) {
-			return res.status(400).json({error: 'only 1 file allowed'});
+			return next(new HTTPError(400, 'only 1 file allowed'));
 		}
 
 		//cry if there was an error or file is too big
 		if( ! uploadedImage.file ) {
-			return res.status(500).json({error: 'error uploading the file'});
+			return next(new HTTPError(500, 'error while uploading the file'));
 		} else if( uploadedImage.file.truncated ) {
-			fs.unlink(uploadedImage.tmpPath);
-			return res.status(400).json({error: 'file too big'});
+			uploadedImage.unlink();
+			return next(new HTTPError(413, 'file too big'));
 		}
 
 		debug('upload OK', uploadedImage);
 
 		//go ahead with image submission
-		uploadedImage.processSubmission(function (err, image) {
-			if( err ) {
-				return res.status(400).json({error:err.message});
-			}
-
-			return res.json(image);
+		uploadedImage.fileChecks(req.app.models.image)
+		.then(function (image) {
+			// image.getMetadata();
+			return res.json({
+				image: image,
+				jobId: ''
+			});
+		})
+		.catch(function (err) {
+			return next(err);
 		});
 	});
 });
 
+//submit url
 router.post('/submit', jsonParser, function (req, res, next) {
+	debug('/submit');
+
 	var imageUrl = req.body.url;
 
+	if( ! imageUrl ) {
+		return next(new HTTPError(400, 'url is required'));
+	}
+
+	// init image
+	var downloadedImage = new submittedFile();
+	downloadedImage.uploaderIP = req.ip || req.connection.remoteAddress;
+	downloadedImage.url = imageUrl;
+
 	//get preliminary info on url
-	request.head(imageUrl, function (err, response, body) {
-		//cry
-		if( err ) return res.status(400).json({error: err.message});
-
+	Promise.fromNode(function (callback) {
+		return request.head(imageUrl, callback);
+	})
+	.spread(function (response, body) {
 		//too big
-		if( response.headers['content-length'] > config.upload.sizeLimit)
-			return res.status(400).json({error: 'file too big'});
-
-		// init image
-		var uploadedImage = new Image();
-		uploadedImage.tmpPath = path.join(appRoot.toString(), 'tmp', Date.now().toString() + Math.random().toString())
-		uploadedImage.uploaderIP = req.ip || req.connection.remoteAddress;
+		if( response.headers['content-length'] > config.upload.sizeLimit) {
+			return next(new HTTPError(413, 'file too big'));
+		}
 
 		//download the image
 		request.get(imageUrl)
-			//pipe to tmp path
-			.pipe(fs.createWriteStream(uploadedImage.tmpPath))
-			//process submission when it's over
-			.on('close', function () {
-				uploadedImage.processSubmission(function (err, image) {
-					if( err ) {
-						return res.status(400).json(err);
-					}
-
-					return res.json(image);
+		//pipe to tmp path
+		.pipe(fs.createWriteStream(downloadedImage.tmpPath))
+		//process submission when it's over
+		.on('close', function () {
+			downloadedImage.fileChecks(req.app.models.image)
+			.then(function (image) {
+				return res.json({
+					image: image,
+					jobId: ''
 				});
 			})
-		;
-	});
-});
-
-//submit an analysis request to the job queue for an image
-router.post('/:permalink/analysis', jsonParser, function (req, res, next) {
-	debug('/images/:permalink/analysis');
-
-	//try to get image by permalink
-	Image.findOne(
-		{
-			permalink: req.params.permalink
-		},
-		function (err, image) {
-			//cry
-			if( err )
-				return res.status(400).json({error: err.message});
-
-			//more tears
-			if( ! image )
-				return res.status(400).json({error: 'no image found with this id ' + req.params.id});
-
-			//get requesters ip just in case
-			req.body.requesterIP = req.ip || req.connection.remoteAddress;
-
-			//submit analysis request
-			image.queueAnalysis(req.body, function (err, job) {
-				if( err )
-					return res.status(400).json({error: err.message});
-
-				//return success
-				res.json({
-					success: true,
-					jobId: job.data._id
-				});
+			.catch(function (err) {
+				return next(err);
 			});
-		}
-	);
+		});
+	})
+	.catch(function (err) {
+		return next(err);
+	});
 });
 
 //get an image by its permalink
 router.get('/:permalink', function (req, res, next) {
-	debug('/images/:permalink');
+	debug('/:permalink');
 
 	//try to get image by permalink
-	Image.findOne(
-		{
-			permalink: req.params.permalink
-		},
-		function (err, image) {
-			//cry
-			if( err )
-				return res.status(500).json({error: err.message});
-
-			//more tears
-			if( ! image )
-				return res.status(404).json({error: 'no image found with this id ' + req.params.id});
-
-			//return image
-			res.json({
-				image: image
-			});
+	req.app.models.image.findOne({
+		permalink: req.params.permalink
+	})
+	.then(function (image) {
+		//404
+		if( ! image ) {
+			return next(new HTTPError(404, 'no image with this permalink'));
 		}
-	);
+image.queueAnalysis();
+		//return image
+		return res.json({
+			image: image
+		});
+	})
+	.catch(function (err) {
+		return next(err);
+	});
 });
 
-module.exports = function() {
-	return router;
-}();
+module.exports = router;

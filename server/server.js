@@ -1,22 +1,10 @@
 var debug = require('debug')('server:main');
 var config = require('./config.json');
 
-var path = require('path');
-
 var express = require('express');
 var compression = require('compression');
 
-var appRoot = require('app-root-path');
-
-//connect to mongo
-var mongoose = require('mongoose');
-mongoose.connect(config.dbString);
-mongoose.connection.on('error', function mongoError(err) {
-	debug('Cannot connect to mongo', err);
-});
-mongoose.connection.once('open', function mongooseOpen() {
-	debug('Connected to mongo');
-});
+var orm = require('./orm.js');
 
 //init app
 var app = express();
@@ -27,7 +15,7 @@ app.use(compression({
 }));
 
 //return api uptime
-app.get('/api', function(req, res) {
+app.get('/api', function (req, res) {
 	res.json({
 		status: 'running',
 		uptime: process.uptime()
@@ -36,29 +24,37 @@ app.get('/api', function(req, res) {
 
 //routes
 app.use('/api/images', require('./routes/images.js'));
-app.use('/api/analyses', require('./routes/analyses.js'));
-app.use('/api/jobs', require('./routes/jobs.js'));
+// app.use('/api/analyses', require('./routes/analyses.js'));
+// app.use('/api/jobs', require('./routes/jobs.js'));
 
 //static files
-app.use('/images', express.static(path.join(appRoot.toString(), 'images'), {index: 'false'}));
-app.use(express.static(path.join(appRoot.toString(), 'client')));
+app.use('/images', express.static('images', {index: 'false'}));
+app.use(express.static('client'));
 
 //redirect anything else to index.html
 app.use('/*', function indexRedirect(req, res, next) {
-	res.sendFile(path.join(appRoot.toString(), 'client', 'index.html'));
+	res.sendFile('client/index.html', {root: __dirname + '/../'});
 });
 
 //error handler
 app.use(function errorHandler(err, req, res, next) {
-	var status = 500;
-	if( err.status ) status = err.status;
-	res.status(status).json({error: err.message});
+	res.status(err.status || 500).json({
+		error: err.message,
+		stack: err.stack
+	});
 });
 
-//init
-app.listen(config.port, function () {
-	debug('server running on port ' + config.port);
-});
+module.exports = orm()
+.then(function (models) {
+	app.models = models.collections;
+	app.connections = models.connections;
 
-//export server for testing
-module.exports.server = app;
+	app.listen(config.port, function () {
+		debug('server running on port ' + config.port);
+	});
+
+	return app;
+})
+.catch(function (err) {
+	console.log('fatal error', err);
+});

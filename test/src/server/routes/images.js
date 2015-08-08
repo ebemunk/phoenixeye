@@ -1,130 +1,135 @@
-var fs = require('fs');
-
-var expect = require('chai').expect;
-var supertest = require('supertest');
-
-var mongoose = require('mongoose');
-var mockgoose = require('mockgoose');
-mockgoose(mongoose);
+var chai = require('chai');
+chai.should();
 
 var sinon = require('sinon');
+var supertest = require('supertest');
 
-var serverPath = '../../../../server/';
-var Image = require(serverPath + 'models/image.js');
-
+var fs = require('fs');
 var request = require('request');
 
-var server = require(serverPath + 'server.js').server;
+var serverPath = '../../../../server/';
+var testServer;
+var models;
 
-var testServer = supertest(server);
+before(function (done) {
+	process.env.NODE_ENV = 'test';
+
+	require(serverPath + 'server.js')
+	.then(function (app) {
+		models = app.models;
+		testServer = supertest(app);
+		done();
+	});
+});
 
 describe('/api/images', function () {
-	afterEach(function () {
-		mockgoose.reset();
-	});
-
 	describe('/upload', function () {
 		it('should not accept multiple files', function (done) {
 			testServer
-				.post('/api/images/upload')
-				.attach('image1', 'test/testfiles/empty.jpg')
-				.attach('image2', 'test/testfiles/valid.jpg')
-				.end(function (err, res) {
-					expect(res.status).to.equal(400);
-					done();
-				});
+			.post('/api/images/upload')
+			.attach('image1', 'test/testfiles/empty.jpg')
+			.attach('image2', 'test/testfiles/valid.jpg')
+			.end(function (err, res) {
+				res.status.should.equal(400);
+				done();
+			});
 		});
 
 		it('should not accept empty files', function (done) {
-			var statStub = sinon.stub(fs, 'statSync').returns({size: 0});
 			testServer
-				.post('/api/images/upload')
-				.attach('image', 'test/testfiles/empty.jpg')
-				.end(function (err, res) {
-					expect(res.status).to.equal(400);
+			.post('/api/images/upload')
+			.attach('image', 'test/testfiles/empty.jpg')
+			.end(function (err, res) {
+				res.status.should.equal(415);
 
-					statStub.restore();
-					done();
-				});
+				done();
+			});
 		});
 
 		it('should not accept wrong type', function (done) {
 			testServer
-				.post('/api/images/upload')
-				.attach('image', 'test/testfiles/wrongtype.txt')
-				.expect(400, done);
+			.post('/api/images/upload')
+			.attach('image', 'test/testfiles/wrongtype.txt')
+			.expect(415, done);
 		});
 
 		it('should not accept very large images (dims)', function (done) {
 			testServer
-				.post('/api/images/upload')
-				.attach('image', 'test/testfiles/toolarge.jpg')
-				.expect(400, done);
+			.post('/api/images/upload')
+			.attach('image', 'test/testfiles/toolarge.jpg')
+			.expect(413, done);
 		});
 
 		it('should accept valid file', function (done) {
-			var existsStub = sinon.stub(fs, 'existsSync').returns(true);
-			var renameStub = sinon.stub(fs, 'renameSync').returns(true);
-			var statStub = sinon.stub(fs, 'statSync').returns({size: 1});
+			var mkdirStub = sinon.stub(fs, 'mkdirAsync').resolves(true);
+			var renameStub = sinon.stub(fs, 'renameAsync').resolves(true);
 
 			testServer
-				.post('/api/images/upload')
-				.attach('image', 'test/testfiles/valid.jpg')
-				.end(function (err, res) {
-					expect(res.status).to.equal(200);
-					expect(res.body.image).to.have.property('fileName', '46b1c2600c096f27a8bdffdb03dd0222.jpg')
-					expect(res.body.image).not.to.have.property('duplicate');
-					expect(res.body).to.have.property('jobId');
+			.post('/api/images/upload')
+			.attach('image', 'test/testfiles/valid.jpg')
+			.end(function (err, res) {
+				renameStub.restore();
+				mkdirStub.restore();
 
-					Image.findOne({md5: '46b1c2600c096f27a8bdffdb03dd0222'}, function (err, image) {
-						expect(image).to.not.be.undefined;
+				res.status.should.equal(200);
+				res.body.image.should.have.property('md5', '46b1c2600c096f27a8bdffdb03dd0222')
+				res.body.image.should.not.have.property('duplicate');
+				res.body.should.have.property('jobId');
 
-						existsStub.restore();
-						renameStub.restore();
-						statStub.restore();
-						done();
-					});
+				models.image.findOne({
+					md5: '46b1c2600c096f27a8bdffdb03dd0222'
+				})
+				.then(function (image) {
+					image.should.exist;
+					done();
 				});
+			});
 		});
 
 		it('should return image info if duplicate', function (done) {
-			Image.create(
-				{
-					md5: '46b1c2600c096f27a8bdffdb03dd0222'
-				},
-				function (err, image) {
-					testServer
-						.post('/api/images/upload')
-						.attach('image', 'test/testfiles/valid.jpg')
-						.end(function (err, res) {
-							expect(res.status).to.equal(200);
-							expect(res.body.image).to.have.property('duplicate', true);
-							done();
-						});
+			models.image.create({
+				md5: '46b1c2600c096f27a8bdffdb03dd0222'
+			})
+			.then(function (image) {
+				testServer
+				.post('/api/images/upload')
+				.attach('image', 'test/testfiles/valid.jpg')
+				.end(function (err, res) {
+					res.status.should.equal(200);
+					res.body.image.should.have.property('duplicate');
+					done();
+				});
 			});
 		});
 	});
 
 	describe('/submit', function () {
+		it('should require url', function (done) {
+			testServer
+			.post('/api/images/submit')
+			.send({derp: 'lol'})
+			.expect(400, done);
+		});
+
 		it('should not accept invalid url', function (done) {
 			testServer
-				.post('/api/images/submit')
-				.send({url: 'wrong'})
-				.expect(400, done);
+			.post('/api/images/submit')
+			.send({url: 'wrong'})
+			.expect(500, done);
 		});
 
 		it('should not accept very large images (dims)', function (done) {
 			var requestStub = sinon.stub(request, 'head').callsArgWith(1, null, {headers:{'content-length': 100000000}}, null);
 
 			testServer
-				.post('/api/images/submit')
-				.send({url: 'toobig'})
-				.end(function (err, res) {
-					requestStub.restore();
+			.post('/api/images/submit')
+			.send({url: 'toobig'})
+			.end(function (err, res) {
+				requestStub.restore();
 
-					expect(res.status).to.equal(400);
-					done();
-				});
+				res.status.should.equal(413);
+				done();
+			});
 		});
 
 		it('should not accept very large images (size)', function (done) {
@@ -133,15 +138,15 @@ describe('/api/images', function () {
 			var requestGetStub = sinon.stub(request, 'get').returns(rstream);
 
 			testServer
-				.post('/api/images/submit')
-				.send({url: 'toolarge'})
-				.end(function (err, res) {
-					requestHeadStub.restore();
-					requestGetStub.restore();
+			.post('/api/images/submit')
+			.send({url: 'toolarge'})
+			.end(function (err, res) {
+				requestHeadStub.restore();
+				requestGetStub.restore();
 
-					expect(res.status).to.equal(400);
-					done();
-				});
+				res.status.should.equal(413);
+				done();
+			});
 		});
 
 		it('should not accept wrong type', function (done) {
@@ -150,94 +155,61 @@ describe('/api/images', function () {
 			var requestGetStub = sinon.stub(request, 'get').returns(rstream);
 
 			testServer
-				.post('/api/images/submit')
-				.send({url: 'wrongtype'})
-				.end(function (err, res) {
-					requestHeadStub.restore();
-					requestGetStub.restore();
+			.post('/api/images/submit')
+			.send({url: 'wrongtype'})
+			.end(function (err, res) {
+				requestHeadStub.restore();
+				requestGetStub.restore();
 
-					expect(res.status).to.equal(400);
-					done();
-				});
+				res.status.should.equal(415);
+				done();
+			});
 		});
 
 		it('should accept valid file', function (done) {
 			var rstream = fs.createReadStream('test/testfiles/valid.jpg');
 			var requestHeadStub = sinon.stub(request, 'head').callsArgWith(1, null, {headers:{'content-length': 1}}, null);
 			var requestGetStub = sinon.stub(request, 'get').returns(rstream);
+			var mkdirStub = sinon.stub(fs, 'mkdirAsync').resolves(true);
+			var renameStub = sinon.stub(fs, 'renameAsync').resolves(true);
 
 			testServer
-				.post('/api/images/submit')
-				.send({url: 'valid'})
-				.end(function (err, res) {
-					requestHeadStub.restore();
-					requestGetStub.restore();
+			.post('/api/images/submit')
+			.send({url: 'valid'})
+			.end(function (err, res) {
+				requestHeadStub.restore();
+				requestGetStub.restore();
+				renameStub.restore();
+				mkdirStub.restore();
 
-					expect(res.status).to.equal(200);
-					expect(res.body.image).to.have.property('fileName')
-					done();
-				});
-		});
-	});
-
-	describe('/:permalink/analysis', function () {
-		beforeEach(function (done) {
-			Image.create({
-				permalink: 'testPermalink'
-			}, function (err, image) {
+				res.status.should.equal(200);
+				res.body.image.should.have.property('fileName')
 				done();
 			});
-		});
-
-		it('should return error if permalink doesnt exist', function (done) {
-			testServer
-				.post('/api/images/wrong/analysis')
-				.expect(400, done);
-		});
-
-		it('should return error if no valid params found', function (done) {
-			testServer
-				.post('/api/images/testPermalink/analysis')
-				.send({wrong: 'nope', lolo: 'kekek'})
-				.expect(400, done);			
-		});
-
-		it('should enqueue job if valid params', function (done) {
-			testServer
-				.post('/api/images/testPermalink/analysis')
-				.send({ela: true, hsv: {whitebg: true}})
-				.end(function (err, res) {
-					expect(res.status).to.equal(200);
-					expect(res.body).to.have.property('jobId');
-
-					done();
-				});
 		});
 	});
 
 	describe('/:permalink', function () {
-		beforeEach(function (done) {
-			Image.create({
+		beforeEach(function () {
+			return models.image.create({
 				permalink: 'testPermalink'
-			}, function (err, image) {
-				done();
 			});
 		});
 
 		it('should return error if permalink doesnt exist', function (done) {
 			testServer
-				.get('/api/images/wrong')
-				.expect(404, done);
+			.get('/api/images/wrong')
+			.expect(404, done);
 		});
 
 		it('should return image data if permalink exists', function (done) {
 			testServer
-				.get('/api/images/testPermalink')
-				.end(function(err, res) {
-					expect(res.status).to.equal(200);
-					expect(res.body.image).to.have.property('created');
-					done();
-				});
+			.get('/api/images/testPermalink')
+			.end(function(err, res) {
+				res.status.should.equal(200);
+				res.body.image.should.have.property('createdAt');
+				done();
+			});
 		})
 	});
 });

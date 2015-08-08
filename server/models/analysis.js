@@ -1,11 +1,35 @@
 var debug = require('debug')('server:models:analysis');
 
-var fs = require('fs');
+var Promise = require('bluebird');
+
 var path = require('path');
+var child_process = require('child_process');
 
-var mongoose = require('mongoose');
-var appRoot = require('app-root-path');
+var gm = require('gm').subClass({imageMagick: true});
+var dataobjectParser = require('dataobject-parser');
 
-var Analysis = mongoose.model('Analysis', require('./analysisSchema.js'));
+var Waterline = require('waterline');
 
-module.exports = Analysis;
+var analysis = Waterline.Collection.extend({
+	identity: 'analysis',
+	tableName: 'analyses',
+	connection: 'default',
+	migrate: 'safe',
+
+	attributes: {
+		//data
+		type: 'string',
+		fileName: 'string',
+		path: 'string',
+		params: 'json',
+
+		image: {
+			model: 'image'
+		},
+
+		//meta
+		requesterIP: 'string'
+	}
+});
+
+module.exports = analysis;
