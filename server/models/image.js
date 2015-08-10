@@ -70,31 +70,31 @@ var image = Waterline.Collection.extend({
 			var dotParser = new dataobjectParser();
 			var filePath = this.filePath();
 
-			return Promise.fromNode(function (callback) {
-				child_process.exec('exiv2 -pa ' + filePath, callback);
-			})
-			.spread(function (stdout, stderr) {
-				//parsing exiv2 output
-				var lines = stdout.split(/\r?\n/);
-				for( var i = 0; i < lines.length; i++ ) {
-					if( ! lines[i] ) {
-						continue;
+			// return Promise.fromNode(function (callback) {
+			return new Promise(function (resolve, reject) {
+				child_process.exec('exiv2 -pa ' + filePath, function (err, stdout, stderr) {
+					//handle exiv2 bug where it returns code 253 even when there is data
+					if( err && ! (err.code == 253 && stdout) ) {
+						return reject(err);
 					}
 
-					var line = lines[i].replace(/\s+/g, ' ');
-					var parsed = line.split(' ');
+					//parsing exiv2 output
+					var lines = stdout.split(/\r?\n/);
+					for( var i = 0; i < lines.length; i++ ) {
+						if( ! lines[i] ) {
+							continue;
+						}
 
-					var key = parsed[0];
-					var value = parsed.slice(3).join(' ');
-					dotParser.set(key, value);
-				}
+						var line = lines[i].replace(/\s+/g, ' ');
+						var parsed = line.split(' ');
 
-				return dotParser.data();
-			})
-			.catch(function (err) {
-				debug('error calling `exiv2 -pa`', err);
+						var key = parsed[0];
+						var value = parsed.slice(3).join(' ');
+						dotParser.set(key, value);
+					}
 
-				throw err;
+					return resolve(dotParser.data());
+				});
 			});
 		},
 		queueAnalysis: function(options) {
