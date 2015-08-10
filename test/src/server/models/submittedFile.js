@@ -105,12 +105,12 @@ describe('submittedFile', function () {
 	describe('prototype.checkMD5', function () {
 		it('should return md5 if image doesnt exist in db', function () {
 			return testImage.checkMD5(models.image)
-			.should.eventually.equal('46b1c2600c096f27a8bdffdb03dd0222');
+			.should.eventually.equal('4aba1a2b880a3760b368c9bbd5acccf1');
 		});
 
 		it('should return image data if image is already in db', function () {
 			return models.image.create({
-				md5: '46b1c2600c096f27a8bdffdb03dd0222'
+				md5: '4aba1a2b880a3760b368c9bbd5acccf1'
 			})
 			.then(function (image) {
 				return testImage.checkMD5(models.image);
@@ -142,7 +142,7 @@ describe('submittedFile', function () {
 			var unlinkStub = sinon.stub(testImage, 'unlink');
 
 			return models.image.create({
-				md5: '46b1c2600c096f27a8bdffdb03dd0222'
+				md5: '4aba1a2b880a3760b368c9bbd5acccf1'
 			})
 			.then(function (image) {
 				return testImage.fileChecks(models.image)

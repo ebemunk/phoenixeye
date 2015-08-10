@@ -72,12 +72,12 @@ describe('/api/images', function () {
 				mkdirStub.restore();
 
 				res.status.should.equal(200);
-				res.body.image.should.have.property('md5', '46b1c2600c096f27a8bdffdb03dd0222')
+				res.body.image.should.have.property('md5', '4aba1a2b880a3760b368c9bbd5acccf1')
 				res.body.image.should.not.have.property('duplicate');
 				res.body.should.have.property('jobId');
 
 				models.image.findOne({
-					md5: '46b1c2600c096f27a8bdffdb03dd0222'
+					md5: '4aba1a2b880a3760b368c9bbd5acccf1'
 				})
 				.then(function (image) {
 					image.should.exist;
@@ -88,7 +88,7 @@ describe('/api/images', function () {
 
 		it('should return image info if duplicate', function (done) {
 			models.image.create({
-				md5: '46b1c2600c096f27a8bdffdb03dd0222'
+				md5: '4aba1a2b880a3760b368c9bbd5acccf1',
 			})
 			.then(function (image) {
 				testServer
