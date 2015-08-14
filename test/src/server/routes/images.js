@@ -238,14 +238,14 @@ describe('/api/images', function () {
 		it('should return error if permalink doesnt exist', function (done) {
 			testServer
 			.post('/api/images/wrong/analysis')
-			.expect(400, done);
+			.expect(404, done);
 		});
 
 		it('should return error if no valid params found', function (done) {
 			testServer
 			.post('/api/images/testPermalink/analysis')
 			.send({wrong: 'nope', lolo: 'kekek'})
-			.expect(400, done);			
+			.expect(500, done);			
 		});
 
 		it('should enqueue job if valid params', function (done) {
@@ -253,8 +253,7 @@ describe('/api/images', function () {
 			.post('/api/images/testPermalink/analysis')
 			.send({ela: true, hsv: {whitebg: true}})
 			.end(function (err, res) {
-				expect(res.status).to.equal(200);
-				expect(res.body).to.have.property('jobId');
+				res.body.should.have.property('jobId');
 
 				done();
 			});
