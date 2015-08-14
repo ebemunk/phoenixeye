@@ -4,7 +4,7 @@ var monq = require('monq');
 var monqConn;
 
 //this is kinda sad but i cant find any other way to mock it in tests
-if( process.env.NODE_ENV !== 'test' ) {
+if( process.env.NODE_ENV === 'test' ) {
 	monqConn = {
 		queue: function () {
 			return {
