@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';
+
 var chai = require('chai');
 chai.should();
 
@@ -7,8 +9,6 @@ var serverPath = '../../../server/';
 var testServer;
 
 before(function (done) {
-	process.env.NODE_ENV = 'test';
-
 	require(serverPath + 'server.js')
 	.then(function (app) {
 		testServer = supertest(app);

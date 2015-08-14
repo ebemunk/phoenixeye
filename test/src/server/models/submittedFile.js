@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';
+
 var child_process = require('child_process');
 var fs = require('fs');
 
