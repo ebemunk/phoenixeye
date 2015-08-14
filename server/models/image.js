@@ -8,7 +8,7 @@ var child_process = require('child_process');
 var gm = require('gm').subClass({imageMagick: true});
 var dataobjectParser = require('dataobject-parser');
 
-var siteConfig = require('../config.json');
+var config = require('../config.json');
 var queue = require('../queue.js');
 
 var Waterline = require('waterline');
@@ -73,7 +73,6 @@ var image = Waterline.Collection.extend({
 			var dotParser = new dataobjectParser();
 			var filePath = this.filePath();
 
-			// return Promise.fromNode(function (callback) {
 			return new Promise(function (resolve, reject) {
 				child_process.exec('exiv2 -pa ' + filePath, function (err, stdout, stderr) {
 					//handle exiv2 bug where it returns code 253 even when there is data
@@ -107,7 +106,7 @@ var image = Waterline.Collection.extend({
 			var params = {};
 
 			if( options.ela ) {
-				var quality = options.ela.quality || siteConfig.defaultAnalysisOpts.ela.quality;
+				var quality = options.ela.quality || config.defaultAnalysisOpts.ela.quality;
 				//clamp it between [0-100]
 				params.ela = {
 					quality: Math.min(Math.max(quality, 0), 100)
@@ -123,18 +122,18 @@ var image = Waterline.Collection.extend({
 			}
 
 			if( options.hsv ) {
-				var whitebg = (typeof options.hsv.whitebg == 'boolean' ? options.hsv.whitebg : siteConfig.defaultAnalysisOpts.hsv.whitebg);
+				var whitebg = (typeof options.hsv.whitebg == 'boolean' ? options.hsv.whitebg : config.defaultAnalysisOpts.hsv.whitebg);
 				params.hsv = {whitebg: whitebg};
 			}
 
 			if( options.labfast ) {
-				var whitebg = (typeof options.labfast.whitebg == 'boolean' ? options.labfast.whitebg : siteConfig.defaultAnalysisOpts.labfast.whitebg);
+				var whitebg = (typeof options.labfast.whitebg == 'boolean' ? options.labfast.whitebg : config.defaultAnalysisOpts.labfast.whitebg);
 				params.labfast = {whitebg: whitebg};
 			}
 
 			if( options.copymove ) {
-				var retain = options.copymove.retain || siteConfig.defaultAnalysisOpts.copymove.retain;
-				var qcoeff = options.copymove.qcoeff || siteConfig.defaultAnalysisOpts.copymove.qcoeff;
+				var retain = options.copymove.retain || config.defaultAnalysisOpts.copymove.retain;
+				var qcoeff = options.copymove.qcoeff || config.defaultAnalysisOpts.copymove.qcoeff;
 
 				params.copymove = {
 					//clamp between [1,16]
