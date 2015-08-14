@@ -7,22 +7,32 @@ var supertest = require('supertest');
 var fs = require('fs');
 var request = require('request');
 
+var Promise = require('bluebird');
+
 var serverPath = '../../../../server/';
-var testServer;
 var models;
 
-before(function (done) {
-	process.env.NODE_ENV = 'test';
-
-	require(serverPath + 'server.js')
-	.then(function (app) {
-		models = app.models;
-		testServer = supertest(app);
-		done();
-	});
-});
-
 describe('/api/images', function () {
+	var models;
+	var testServer;
+	var afterCreate;
+
+	before(function (done) {
+		require(serverPath + 'server.js')
+		.then(function (app) {
+			models = app.models;
+			testServer = supertest(app);
+			afterCreate = models.image._callbacks.afterCreate;
+			done();
+		});
+	});
+
+	afterEach(function () {
+		Promise.map(Object.keys(models), function (model) {
+			return models[model].destroy({});
+		});
+	});
+
 	describe('/upload', function () {
 		it('should not accept multiple files', function (done) {
 			testServer
@@ -89,6 +99,9 @@ describe('/api/images', function () {
 		it('should return image info if duplicate', function (done) {
 			models.image.create({
 				md5: '4aba1a2b880a3760b368c9bbd5acccf1',
+				path: 'test/testfiles',
+				fileName: 'valid.jpg',
+				permalink: 'permalink'
 			})
 			.then(function (image) {
 				testServer
