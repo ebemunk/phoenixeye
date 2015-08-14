@@ -8,6 +8,9 @@ var child_process = require('child_process');
 var gm = require('gm').subClass({imageMagick: true});
 var dataobjectParser = require('dataobject-parser');
 
+var siteConfig = require('../config.json');
+var queue = require('../queue.js');
+
 var Waterline = require('waterline');
 
 var image = Waterline.Collection.extend({
@@ -104,7 +107,7 @@ var image = Waterline.Collection.extend({
 			var params = {};
 
 			if( options.ela ) {
-				var quality = options.ela.quality || config.defaultAnalysisOpts.ela.quality;
+				var quality = options.ela.quality || siteConfig.defaultAnalysisOpts.ela.quality;
 				//clamp it between [0-100]
 				params.ela = {
 					quality: Math.min(Math.max(quality, 0), 100)
@@ -120,18 +123,18 @@ var image = Waterline.Collection.extend({
 			}
 
 			if( options.hsv ) {
-				var whitebg = (typeof options.hsv.whitebg == 'boolean' ? options.hsv.whitebg : config.defaultAnalysisOpts.hsv.whitebg);
+				var whitebg = (typeof options.hsv.whitebg == 'boolean' ? options.hsv.whitebg : siteConfig.defaultAnalysisOpts.hsv.whitebg);
 				params.hsv = {whitebg: whitebg};
 			}
 
 			if( options.labfast ) {
-				var whitebg = (typeof options.labfast.whitebg == 'boolean' ? options.labfast.whitebg : config.defaultAnalysisOpts.labfast.whitebg);
+				var whitebg = (typeof options.labfast.whitebg == 'boolean' ? options.labfast.whitebg : siteConfig.defaultAnalysisOpts.labfast.whitebg);
 				params.labfast = {whitebg: whitebg};
 			}
 
 			if( options.copymove ) {
-				var retain = options.copymove.retain || config.defaultAnalysisOpts.copymove.retain;
-				var qcoeff = options.copymove.qcoeff || config.defaultAnalysisOpts.copymove.qcoeff;
+				var retain = options.copymove.retain || siteConfig.defaultAnalysisOpts.copymove.retain;
+				var qcoeff = options.copymove.qcoeff || siteConfig.defaultAnalysisOpts.copymove.qcoeff;
 
 				params.copymove = {
 					//clamp between [1,16]
@@ -145,22 +148,22 @@ var image = Waterline.Collection.extend({
 				params.autolevels = true;
 			}
 
-			// if( Object.keys(params).length < 1 ) {
-			// 	return callback(new Error('no valid params found'));
-			// }
+			if( Object.keys(params).length < 1 ) {
+				return Promise.reject(new Error('no valid params found'));
+			}
 
 			//job meta
 			params.imageId = this.id;
 			params.requesterIP = options.requesterIP || null;
 
-			debug('u wot m8', this, this.analyses.add);
 			//put the job in the queue
-			// queue.enqueue('phoenix', params, function (err, job) {
-			// 	if( err ) return callback(err);
-
-			// 	debug('enqueued', job.data._id);
-			// 	return callback(null, job);
-			// });
+			return Promise.fromNode(function (callback) {
+				return queue.enqueue('phoenix', params, callback);
+			})
+			.then(function (job) {
+				debug('enqueued', job.data._id);
+				return job;
+			});
 		}
 	},
 
