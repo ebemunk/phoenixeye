@@ -123,7 +123,7 @@ router.post('/submit', jsonParser, function (req, res, next) {
 	.spread(function (response, body) {
 		//too big
 		if( response.headers['content-length'] > config.upload.sizeLimit) {
-			return next(new HTTPError(413, 'file too big'));
+			throw new HTTPError(413, 'file too big');
 		}
 
 		//download the image
@@ -163,7 +163,7 @@ router.get('/:permalink', function (req, res, next) {
 	.then(function (image) {
 		//404
 		if( ! image ) {
-			return next(new HTTPError(404, 'no image with this permalink'));
+			throw new HTTPError(404, 'no image with this permalink');
 		}
 
 		//return image
@@ -187,7 +187,7 @@ router.post('/:permalink/analysis', jsonParser, function (req, res, next) {
 	.then(function (image) {
 		//404
 		if( ! image ) {
-			return next(new HTTPError(404, 'no image with this permalink'));
+			throw new HTTPError(404, 'no image with this permalink');
 		}
 
 		//get requesters ip just in case
