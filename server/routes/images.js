@@ -87,10 +87,12 @@ router.post('/upload', function (req, res, next) {
 		//go ahead with image submission
 		uploadedImage.fileChecks(req.app.models.image)
 		.then(function (image) {
-			// image.getMetadata();
+			return [image, image.queueAnalysis(config.defaultAnalysisOpts)];
+		})
+		.spread(function (image, job) {
 			return res.json({
 				image: image,
-				jobId: ''
+				jobId: job.data._id
 			});
 		})
 		.catch(function (err) {
@@ -132,9 +134,12 @@ router.post('/submit', jsonParser, function (req, res, next) {
 		.on('close', function () {
 			downloadedImage.fileChecks(req.app.models.image)
 			.then(function (image) {
+				return [image, image.queueAnalysis(config.defaultAnalysisOpts)];
+			})
+			.spread(function (image, job) {
 				return res.json({
 					image: image,
-					jobId: ''
+					jobId: job.data._id
 				});
 			})
 			.catch(function (err) {
@@ -160,7 +165,7 @@ router.get('/:permalink', function (req, res, next) {
 		if( ! image ) {
 			return next(new HTTPError(404, 'no image with this permalink'));
 		}
-image.queueAnalysis();
+
 		//return image
 		return res.json({
 			image: image
