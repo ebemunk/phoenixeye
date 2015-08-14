@@ -108,12 +108,11 @@ describe('image', function () {
 			models.image._callbacks.afterCreate = afterCreate;
 
 			return models.image.create({
-				path: 'path',
-				fileName: 'fileName',
+				path: 'test/testfiles',
+				fileName: 'valid.jpg',
 				permalink: 'permalink'
 			})
 			.then(function (img) {
-				console.log(img.getGMInfo);
 				return models.image.findOne({
 					permalink: 'permalink'
 				});
@@ -122,6 +121,58 @@ describe('image', function () {
 	});
 
 	describe('queueAnalysis', function () {
+		var imagePromise;
 
+		before(function () {
+			Promise.onPossiblyUnhandledRejection(function () {});
+
+			imagePromise = models.image.create({
+				path: 'path',
+				fileName: 'fileName',
+				permalink: 'permalink'
+			});
+
+			return imagePromise;
+		});
+
+		it('should return an error if options are null', function () {
+			return imagePromise
+			.then(function (img) {
+				return img.queueAnalysis();
+			}).should.be.rejected;
+		});
+
+		it('should return an error if there are no valid options', function () {
+			var opts = {
+				faf: 'wrong',
+				lol: 'nope'
+			};
+
+			return imagePromise
+			.then(function (img) {
+				return img.queueAnalysis();
+			}).should.be.rejected;
+		});
+
+		it('should merge default values', function () {
+			var opts = {
+				ela: true,
+				copymove: {retain: 7},
+				hsv: false,
+				labfast: {whitebg: true}
+			};
+
+			return imagePromise
+			.then(function (img) {
+				return img.queueAnalysis(opts);
+			})
+			.then(function (job) {
+				var params = job.data.params;
+				params.ela.quality.should.equal(70);
+				params.copymove.retain.should.equal(7);
+				params.should.not.have.property('hsv');
+				params.labfast.whitebg.should.be.true;
+			});
+		});
 	});
 });
