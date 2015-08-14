@@ -176,4 +176,34 @@ router.get('/:permalink', function (req, res, next) {
 	});
 });
 
+//submit an analysis request to the job queue for an image
+router.post('/:permalink/analysis', jsonParser, function (req, res, next) {
+	debug('/:permalink/analysis');
+
+	//try to get image by permalink
+	req.app.models.image.findOne({
+		permalink: req.params.permalink
+	})
+	.then(function (image) {
+		//404
+		if( ! image ) {
+			return next(new HTTPError(404, 'no image with this permalink'));
+		}
+
+		//get requesters ip just in case
+		req.body.requesterIP = req.ip || req.connection.remoteAddress;
+
+		//submit analysis request
+		return image.queueAnalysis(req.body);
+	})
+	.then(function (job) {
+		return res.json({
+			jobId: job.data._id
+		});
+	})
+	.catch(function (err) {
+		return next(err);
+	});
+});
+
 module.exports = router;
