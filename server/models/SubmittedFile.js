@@ -12,8 +12,6 @@ var shortId = require('shortid');
 
 var HTTPError = require('node-http-error');
 
-var image = require('../models/image.js');
-
 function SubmittedFile() {
 	this.tmpPath = 'tmp/' + Date.now().toString() + '_' + Math.random().toString();
 }
