@@ -6,7 +6,7 @@ var child_process = require('child_process');
 var fs = require('fs');
 
 var config = require('../config.json');
-var ORM = require('../orm.js');
+var ORM = require('../ORM.js');
 
 function PhoenixWorker() {
 	var self = this;

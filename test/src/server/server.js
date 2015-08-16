@@ -24,13 +24,7 @@ describe('/api', function () {
 
 	after(function () {
 		app.listener.close();
-		delete require.cache[require.resolve(serverPath + 'server.js')];
-
-		return Promise.map(Object.keys(app.connections), function (connection) {
-			return new Promise(function (resolve) {
-				app.connections[connection]._adapter.teardown(null, resolve);
-			});
-		});
+		return app.orm.destroy();
 	});
 
 	describe('/', function () {

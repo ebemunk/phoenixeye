@@ -1,4 +1,4 @@
-var debug = require('debug')('server:main');
+var debug = require('debug')('server:ORM');
 var config = require('./config.json');
 
 var Waterline = require('waterline');

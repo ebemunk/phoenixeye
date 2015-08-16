@@ -1,4 +1,5 @@
-var siteConfig = require('./config.json');
+var debug = require('debug')('server:queue');
+var config = require('./config.json');
 
 var monq = require('monq');
 var monqConn;
@@ -20,7 +21,7 @@ if( process.env.NODE_ENV === 'test' ) {
 		}
 	};
 } else {
-	monqConn = monq(siteConfig.dbString);
+	monqConn = monq(config.dbString);
 }
 
 var queue = monqConn.queue('phoenix');
