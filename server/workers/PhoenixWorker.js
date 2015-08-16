@@ -6,7 +6,7 @@ var child_process = require('child_process');
 var fs = require('fs');
 
 var config = require('../config.json');
-var ORM = require('../ORM.js');
+var ORM = require('../includes/ORM.js');
 
 function PhoenixWorker() {
 	var self = this;
@@ -17,9 +17,6 @@ function PhoenixWorker() {
 	.then(function (orm) {
 		self.models = orm.collections;
 		self.connections = orm.connections;
-		// worker.register({
-		// 	phoenix: worker
-		// });
 
 		return self;
 	})
@@ -161,35 +158,38 @@ PhoenixWorker.prototype.getJobString = function(params, filePath, fileName) {
 PhoenixWorker.prototype.handleJob = function(params, callback) {
 	debug('worker', params);
 
-	models.image.findOne({
+	var image;
+
+	this.models.image.findOne({
 		id: params.imageId
 	})
-	.then(function (image) {
+	.then(function (img) {
 		if( ! image ) {
 			throw new Error('no image found with this id');
 		}
 
+		image = img;
+
 		var jobString = getJobString(params, image.path, image.fileName);
+
+		return Promise.fromNode(function (callback) {
+			return child_process.exec(jobString, callback);
+		});
 	})
-	.catch(function (err) {
-		debug('error in job', err);
-	});
-		//call phoenix with the job cmd
-		// child_process.exec(jobString, function (err, stdout, stderr) {
-		// 	if( err ) return callback(err);
-
-		// 	try {
-		// 		var output = JSON.parse(stdout);
-		// 	} catch (err) {
-		// 		return callback(new Error('cannot parse phoenix output as json'));
-		// 	}
-
-		// 	//save estimates & qtables if available
-		// 	image.imagemagickQuality = output.imagick_estimate || image.imagick_estimate || null;
-		// 	image.hackerfactorQuality = output.hf_estimate || image.hf_estimate || null;
-		// 	image.qtables = output.qtables || image.qtables || null;
-		// 	image.save();
-
+	.then(function (stdout, stderr) {
+		return Promise.try(function () {
+			return JSON.parse(stdout);
+		});
+	})
+	.then(function (output) {
+		//save estimates & qtables if available
+		image.imagemagickQuality = output.imagick_estimate || image.imagick_estimate || null;
+		image.hackerfactorQuality = output.hf_estimate || image.hf_estimate || null;
+		image.qtables = output.qtables || image.qtables || null;
+		return image.save();
+	})
+	.then(function (wot) {
+		console.log('savin bro');
 		// 	//remove img meta from output
 		// 	delete output.hf_estimate;
 		// 	delete output.imagick_estimate;
@@ -198,7 +198,10 @@ PhoenixWorker.prototype.handleJob = function(params, callback) {
 		// 	saveAnalyses(image._id, output, function (err, saved) {
 		// 		return callback(err);
 		// 	});
-		// });
+	})
+	.catch(function (err) {
+		debug('error in job', err);
+	});
 };
 
 module.exports = PhoenixWorker;

@@ -15,7 +15,7 @@ require('sinon-as-promised')(Promise);
 
 var serverPath = '../../../../server/';
 var SubmittedFile = rewire(serverPath + 'models/SubmittedFile.js');
-var ORM = require(serverPath + 'ORM.js');
+var ORM = require(serverPath + 'includes/ORM.js');
 
 describe('SubmittedFile', function () {
 	var testImage, wrongType, tooLarge;

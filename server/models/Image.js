@@ -9,7 +9,7 @@ var gm = require('gm').subClass({imageMagick: true});
 var dataobjectParser = require('dataobject-parser');
 
 var config = require('../config.json');
-var queue = require('../queue.js');
+var queue = require('../includes/queue.js');
 
 module.exports = {
 	identity: 'image',

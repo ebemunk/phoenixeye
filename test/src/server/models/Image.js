@@ -14,7 +14,7 @@ var sinon = require('sinon');
 require('sinon-as-promised')(Promise);
 
 var serverPath = '../../../../server/';
-var ORM = require(serverPath + 'ORM.js');
+var ORM = require(serverPath + 'includes/ORM.js');
 
 describe('Image', function () {
 	var orm;

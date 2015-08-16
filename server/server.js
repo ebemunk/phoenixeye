@@ -4,7 +4,7 @@ var config = require('./config.json');
 var express = require('express');
 var compression = require('compression');
 
-var ORM = require('./ORM.js');
+var ORM = require('./includes/ORM.js');
 
 //init app
 var app = express();
