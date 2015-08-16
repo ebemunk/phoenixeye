@@ -1,5 +1,5 @@
 var debug = require('debug')('server:main');
-var siteConfig = require('./config.json');
+var config = require('./config.json');
 
 var Waterline = require('waterline');
 var mongoAdapter = require('sails-mongo');
@@ -7,13 +7,12 @@ var memoryAdapter = require('sails-memory');
 
 var Promise = require('bluebird');
 
-var image = require('./models/image.js');
-var analysis = require('./models/analysis.js');
+var Image = require('./models/Image.js');
+var Analysis = require('./models/Analysis.js');
 
-function init() {
-	var orm = new Waterline();
-
-	var config = {
+function ORM() {
+	this.orm = new Waterline();
+	this.config = {
 		adapters: {
 			mongo: mongoAdapter,
 			memory: memoryAdapter
@@ -29,20 +28,35 @@ function init() {
 	};
 
 	if( process.env.NODE_ENV !== 'test' ) {
-		config.connections.mongoLab = {
+		this.config.connections.mongoLab = {
 			adapter: 'mongo',
-			url: siteConfig.dbString
+			url: config.dbString
 		};
 
-		config.connections['default'] = config.connections.mongoLab;
+		this.config.connections['default'] = config.connections.mongoLab;
 	}
 
-	orm.loadCollection(image);
-	orm.loadCollection(analysis);
+	this.orm.loadCollection(Waterline.Collection.extend(Image));
+	this.orm.loadCollection(Waterline.Collection.extend(Analysis));
 
-	return Promise.fromNode(function (callback) {
-		return orm.initialize(config, callback);
-	});
 }
 
-module.exports = init;
+ORM.prototype.init = function () {
+	var self = this;
+
+	return Promise.fromNode(function (callback) {
+		return self.orm.initialize(self.config, callback);
+	});
+};
+
+ORM.prototype.destroy = function() {
+	var self = this;
+
+	return Promise.map(Object.keys(self.orm.connections), function (connection) {
+		return new Promise(function (resolve) {
+			self.orm.connections[connection]._adapter.teardown(null, resolve);
+		});
+	});
+};
+
+module.exports = ORM;
