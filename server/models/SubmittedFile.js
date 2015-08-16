@@ -1,4 +1,4 @@
-var debug = require('debug')('server:models:file');
+var debug = require('debug')('server:models:SubmittedFile');
 var config = require('../config.json');
 
 var Promise = require('bluebird');
@@ -14,20 +14,20 @@ var HTTPError = require('node-http-error');
 
 var image = require('../models/image.js');
 
-function submittedFile() {
+function SubmittedFile() {
 	this.tmpPath = 'tmp/' + Date.now().toString() + '_' + Math.random().toString();
 }
 
 //remove file from temporary location
-submittedFile.prototype.unlink = function () {
-	debug('submittedFile.prototype.unlink');
+SubmittedFile.prototype.unlink = function () {
+	debug('SubmittedFile.prototype.unlink');
 
 	return fs.unlinkAsync(this.tmpPath);
 };
 
 //check image mime type using `file` command
-submittedFile.prototype.checkType = function () {
-	debug('submittedFile.prototype.checkType');
+SubmittedFile.prototype.checkType = function () {
+	debug('SubmittedFile.prototype.checkType');
 
 	return exec('file --mime-type ' + this.tmpPath)
 	.spread(function (stdout, stderr) {
@@ -51,8 +51,8 @@ submittedFile.prototype.checkType = function () {
 };
 
 //check if file dimensions exceed max allowed
-submittedFile.prototype.checkDims = function() {
-	debug('submittedFile.prototype.checkDims');
+SubmittedFile.prototype.checkDims = function() {
+	debug('SubmittedFile.prototype.checkDims');
 
 	//get image size and calculate area
 	return imageSize(this.tmpPath)
@@ -75,8 +75,8 @@ submittedFile.prototype.checkDims = function() {
 };
 
 //calculate file md5 and check if it already exists in db
-submittedFile.prototype.checkMD5 = function(imageModel) {
-	debug('submittedFile.prototype.checkMD5');
+SubmittedFile.prototype.checkMD5 = function(imageModel) {
+	debug('SubmittedFile.prototype.checkMD5');
 
 	var fileMd5;
 
@@ -100,8 +100,8 @@ submittedFile.prototype.checkMD5 = function(imageModel) {
 };
 
 //do file checks for acceptance and save if valid
-submittedFile.prototype.fileChecks = function(imageModel) {
-	debug('submittedFile.prototype.fileChecks');
+SubmittedFile.prototype.fileChecks = function(imageModel) {
+	debug('SubmittedFile.prototype.fileChecks');
 
 	var self = this;
 
@@ -163,4 +163,4 @@ submittedFile.prototype.fileChecks = function(imageModel) {
 	});
 };
 
-module.exports = submittedFile;
+module.exports = SubmittedFile;

@@ -1,16 +1,6 @@
-var debug = require('debug')('server:models:analysis');
+var debug = require('debug')('server:models:Analysis');
 
-var Promise = require('bluebird');
-
-var path = require('path');
-var child_process = require('child_process');
-
-var gm = require('gm').subClass({imageMagick: true});
-var dataobjectParser = require('dataobject-parser');
-
-var Waterline = require('waterline');
-
-var analysis = Waterline.Collection.extend({
+module.exports = {
 	identity: 'analysis',
 	tableName: 'analyses',
 	connection: 'default',
@@ -30,6 +20,4 @@ var analysis = Waterline.Collection.extend({
 		//meta
 		requesterIP: 'string'
 	}
-});
-
-module.exports = analysis;
+};

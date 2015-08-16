@@ -1,4 +1,4 @@
-var debug = require('debug')('server:models:image');
+var debug = require('debug')('server:models:Image');
 
 var Promise = require('bluebird');
 
@@ -11,9 +11,7 @@ var dataobjectParser = require('dataobject-parser');
 var config = require('../config.json');
 var queue = require('../queue.js');
 
-var Waterline = require('waterline');
-
-var image = Waterline.Collection.extend({
+module.exports = {
 	identity: 'image',
 	tableName: 'images',
 	connection: 'default',
@@ -206,6 +204,4 @@ var image = Waterline.Collection.extend({
 			next();
 		});
 	}
-});
-
-module.exports = image;
+};

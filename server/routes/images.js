@@ -15,8 +15,7 @@ var request = require('request');
 var HTTPError = require('node-http-error');
 
 //model
-var submittedFile = require('../models/submittedFile.js');
-var image = require('../models/image.js');
+var SubmittedFile = require('../models/SubmittedFile.js');
 
 //handle image upload
 router.post('/upload', function (req, res, next) {
@@ -35,7 +34,7 @@ router.post('/upload', function (req, res, next) {
 	req.pipe(busboy);
 
 	//init image
-	var uploadedImage = new submittedFile();
+	var uploadedImage = new SubmittedFile();
 	uploadedImage.uploaderIP = req.ip || req.connection.remoteAddress;
 
 	//to check if file limit is reached
@@ -112,7 +111,7 @@ router.post('/submit', jsonParser, function (req, res, next) {
 	}
 
 	// init image
-	var downloadedImage = new submittedFile();
+	var downloadedImage = new SubmittedFile();
 	downloadedImage.uploaderIP = req.ip || req.connection.remoteAddress;
 	downloadedImage.url = imageUrl;
 
