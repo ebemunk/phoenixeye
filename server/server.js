@@ -4,7 +4,7 @@ var config = require('./config.json');
 var express = require('express');
 var compression = require('compression');
 
-var orm = require('./orm.js');
+var ORM = require('./ORM.js');
 
 //init app
 var app = express();
@@ -44,12 +44,14 @@ app.use(function errorHandler(err, req, res, next) {
 	});
 });
 
-module.exports = orm()
+app.orm = new ORM();
+
+module.exports = app.orm.init()
 .then(function (models) {
 	app.models = models.collections;
 	app.connections = models.connections;
 
-	app.listen(config.port, function () {
+	app.listener = app.listen(config.port, function () {
 		debug('server running on port ' + config.port);
 	});
 
