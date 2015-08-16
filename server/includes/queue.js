@@ -1,5 +1,5 @@
 var debug = require('debug')('server:queue');
-var config = require('./config.json');
+var config = require('../config.json');
 
 var monq = require('monq');
 var monqConn;

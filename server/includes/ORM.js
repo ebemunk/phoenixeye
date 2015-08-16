@@ -1,5 +1,5 @@
 var debug = require('debug')('server:ORM');
-var config = require('./config.json');
+var config = require('../config.json');
 
 var Waterline = require('waterline');
 var mongoAdapter = require('sails-mongo');
@@ -7,8 +7,8 @@ var memoryAdapter = require('sails-memory');
 
 var Promise = require('bluebird');
 
-var Image = require('./models/Image.js');
-var Analysis = require('./models/Analysis.js');
+var Image = require('../models/Image.js');
+var Analysis = require('../models/Analysis.js');
 
 function ORM() {
 	this.orm = new Waterline();
@@ -33,7 +33,7 @@ function ORM() {
 			url: config.dbString
 		};
 
-		this.config.connections['default'] = config.connections.mongoLab;
+		this.config.connections['default'] = this.config.connections.mongoLab;
 	}
 
 	this.orm.loadCollection(Waterline.Collection.extend(Image));
