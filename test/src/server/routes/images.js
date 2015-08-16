@@ -15,22 +15,27 @@ var serverPath = '../../../../server/';
 var models;
 
 describe('/api/images', function () {
-	var models;
+	var app;
 	var testServer;
-	var afterCreate;
+	var models;
 
 	before(function (done) {
 		require(serverPath + 'server.js')
-		.then(function (app) {
+		.then(function (express) {
+			app = express;
 			models = app.models;
-			testServer = supertest(app);
-			afterCreate = models.image._callbacks.afterCreate;
+			testServer = supertest(express);
 			done();
 		});
 	});
 
+	after(function () {
+		app.listener.close();
+		return app.orm.destroy();
+	});
+
 	afterEach(function () {
-		Promise.map(Object.keys(models), function (model) {
+		return Promise.map(Object.keys(models), function (model) {
 			return models[model].destroy({});
 		});
 	});
@@ -207,6 +212,8 @@ describe('/api/images', function () {
 	describe('/:permalink', function () {
 		beforeEach(function () {
 			return models.image.create({
+				path: 'path',
+				fileName: 'fileName',
 				permalink: 'testPermalink'
 			});
 		});
@@ -231,6 +238,8 @@ describe('/api/images', function () {
 	describe('/:permalink/analysis', function () {
 		beforeEach(function () {
 			return models.image.create({
+				path: 'path',
+				fileName: 'fileName',
 				permalink: 'testPermalink'
 			});
 		});

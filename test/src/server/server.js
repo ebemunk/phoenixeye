@@ -5,18 +5,34 @@ chai.should();
 
 var supertest = require('supertest');
 
-var serverPath = '../../../server/';
-var testServer;
+var Promise = require('bluebird');
 
-before(function (done) {
-	require(serverPath + 'server.js')
-	.then(function (app) {
-		testServer = supertest(app);
-		done();
-	});
-});
+var serverPath = '../../../server/';
 
 describe('/api', function () {
+	var app;
+	var testServer;
+
+	before(function (done) {
+		require(serverPath + 'server.js')
+		.then(function (express) {
+			app = express;
+			testServer = supertest(express);
+			done();
+		});
+	});
+
+	after(function () {
+		app.listener.close();
+		delete require.cache[require.resolve(serverPath + 'server.js')];
+
+		return Promise.map(Object.keys(app.connections), function (connection) {
+			return new Promise(function (resolve) {
+				app.connections[connection]._adapter.teardown(null, resolve);
+			});
+		});
+	});
+
 	describe('/', function () {
 		it('should return uptime', function (done) {
 			testServer
@@ -43,6 +59,29 @@ describe('/api', function () {
 });
 
 describe('/', function () {
+	var app;
+	var testServer;
+
+	before(function (done) {
+		require(serverPath + 'server.js')
+		.then(function (express) {
+			app = express;
+			testServer = supertest(express);
+			done();
+		});
+	});
+
+	after(function () {
+		app.listener.close();
+		delete require.cache[require.resolve(serverPath + 'server.js')];
+
+		return Promise.map(Object.keys(app.connections), function (connection) {
+			return new Promise(function (resolve) {
+				app.connections[connection]._adapter.teardown(null, resolve);
+			});
+		});
+	});
+
 	it('should return index.html for any non-matching route', function (done) {
 		testServer
 		.get('/test')

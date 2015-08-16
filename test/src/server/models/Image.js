@@ -14,22 +14,29 @@ var sinon = require('sinon');
 require('sinon-as-promised')(Promise);
 
 var serverPath = '../../../../server/';
+var ORM = require(serverPath + 'ORM.js');
 
-describe('image', function () {
+describe('Image', function () {
+	var orm;
 	var models;
 	var afterCreate;
 
 	before(function (done) {
-		require(serverPath + 'server.js')
-		.then(function (app) {
-			models = app.models;
+		orm = new ORM();
+		orm.init()
+		.then(function (waterline) {
+			models = waterline.collections;
 			afterCreate = models.image._callbacks.afterCreate;
 			done();
 		});
 	});
 
+	after(function () {
+		return orm.destroy();
+	});
+
 	afterEach(function () {
-		Promise.map(Object.keys(models), function (model) {
+		return Promise.map(Object.keys(models), function (model) {
 			return models[model].destroy({});
 		});
 	});

@@ -14,36 +14,43 @@ var sinon = require('sinon');
 require('sinon-as-promised')(Promise);
 
 var serverPath = '../../../../server/';
-var submittedFile = rewire(serverPath + 'models/submittedFile.js');
+var SubmittedFile = rewire(serverPath + 'models/SubmittedFile.js');
+var ORM = require(serverPath + 'ORM.js');
 
-describe('submittedFile', function () {
+describe('SubmittedFile', function () {
 	var testImage, wrongType, tooLarge;
+	var orm;
 	var models;
 
 	before(function (done) {
-		require(serverPath + 'server.js')
-		.then(function (app) {
-			models = app.models;
+		orm = new ORM();
+		orm.init()
+		.then(function (waterline) {
+			models = waterline.collections;
 			delete models.image._callbacks.afterCreate;
 			done();
 		});
 	});
 
+	after(function () {
+		return orm.destroy();
+	});
+
 	beforeEach(function () {
-		testImage = new submittedFile();
+		testImage = new SubmittedFile();
 		testImage.tmpPath = 'test/testfiles/valid.jpg';
 		testImage.path = 'test/testfiles';
 		testImage.fileName = 'valid.jpg';
 
-		wrongType = new submittedFile();
+		wrongType = new SubmittedFile();
 		wrongType.tmpPath = 'test/testfiles/wrongtype.txt';
 
-		tooLarge = new submittedFile();
+		tooLarge = new SubmittedFile();
 		tooLarge.tmpPath = 'test/testfiles/toolarge.jpg';
 	});
 
 	afterEach(function () {
-		Promise.map(Object.keys(models), function (model) {
+		return Promise.map(Object.keys(models), function (model) {
 			return models[model].destroy({});
 		});
 	});
@@ -51,7 +58,7 @@ describe('submittedFile', function () {
 	describe('prototype.checkType', function () {
 		it('should call `file` with correct arguments', function (done) {
 			var execStub = sinon.stub().resolves(['a: image/jpeg', '']);
-			var restore = submittedFile.__set__('exec', execStub);
+			var restore = SubmittedFile.__set__('exec', execStub);
 
 			testImage.checkType()
 			.then(function (mime) {
@@ -68,7 +75,7 @@ describe('submittedFile', function () {
 
 		it('should return error if file type is not accepted', function () {
 			var execStub = sinon.stub().resolves(['a: wrong/mime', '']);
-			var restore = submittedFile.__set__('exec', execStub);
+			var restore = SubmittedFile.__set__('exec', execStub);
 
 			return wrongType.checkType()
 			.should.be.rejected
@@ -79,7 +86,7 @@ describe('submittedFile', function () {
 	describe('prototype.checkDims', function () {
 		it('should return image dimensions', function () {
 			var sizeStub = sinon.stub().resolves({height: 1, width: 1, derpy: 1});
-			var restore = submittedFile.__set__('imageSize', sizeStub);
+			var restore = SubmittedFile.__set__('imageSize', sizeStub);
 
 			return testImage.checkDims()
 			.then(function (dims) {
@@ -96,7 +103,7 @@ describe('submittedFile', function () {
 
 		it('should return error if file dims are too big', function () {
 			var sizeStub = sinon.stub().resolves({height: 10000, width: 100000});
-			var restore = submittedFile.__set__('imageSize', sizeStub);
+			var restore = SubmittedFile.__set__('imageSize', sizeStub);
 
 			return tooLarge.checkDims()
 			.should.be.rejected
