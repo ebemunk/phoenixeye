@@ -57,7 +57,7 @@ module.exports = {
 			return path.join(this.path, this.fileName);
 		},
 		getGMInfo: function () {
-			debug('image.getGMInfo');
+			debug('Image.getGMInfo');
 
 			var filePath = this.filePath();
 
@@ -66,7 +66,7 @@ module.exports = {
 			});
 		},
 		getExiv2Info: function () {
-			debug('image.getExiv2Info');
+			debug('Image.getExiv2Info');
 
 			var dotParser = new dataobjectParser();
 			var filePath = this.filePath();
@@ -98,7 +98,7 @@ module.exports = {
 			});
 		},
 		queueAnalysis: function(options) {
-			debug('image.queueAnalysis');
+			debug('Image.queueAnalysis');
 
 			options = options || {};
 			var params = {};
@@ -165,7 +165,7 @@ module.exports = {
 	},
 
 	afterCreate: function (img, next) {
-		debug('image.afterCreate');
+		debug('Image.afterCreate');
 
 		var image;
 
