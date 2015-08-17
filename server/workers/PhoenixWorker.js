@@ -4,6 +4,7 @@ var Promise = require('bluebird');
 
 var child_process = require('child_process');
 var fs = require('fs');
+var path = require('path');
 
 var config = require('../config.json');
 var ORM = require('../includes/ORM.js');
@@ -85,123 +86,125 @@ PhoenixWorker.prototype.getJobString = function(params, filePath, fileName) {
 	return command;
 };
 
-// function saveAnalyses(imageId, output, callback) {
-// 	//loop through analyses with async
-// 	var analyses = Object.keys(output);
-// 	async.each(
-// 		analyses,
-// 		function(key, callback) {
-// 			//rename analysis file with param names
-// 			var newFilePath = output[key].filename.split('.');
-// 			var appendedParams = '';
-// 			for( var param in output[key] ) {
-// 				if( param == 'filename' ) continue;
+PhoenixWorker.prototype.saveAnalyses = function(imageId, output) {
+	var self = this;
+	var analyses = Object.keys(output);
+	var existingAnalyses;
 
-// 				var paramVal = output[key][param]
-// 				if( output[key][param] == 'true' || output[key][param] == 'false' ) {
-// 					paramVal = output[key][param] ? '1' : '0';
-// 				}
+	return Promise.map(analyses, function (key) {
+		//rename analysis file with param names
+		var newFilePath = output[key].filename.split('.');
+		var appendedParams = '';
 
-// 				appendedParams += '_' + paramVal;
-// 			}
-// 			var now = new Date();
+		for( var param in output[key] ) {
+			if( param == 'filename' ) {
+				continue;
+			}
 
-// 			newFilePath[0] += appendedParams + '_' + now.getTime();
-// 			newFilePath = newFilePath.join('.');
-// 			fs.renameSync(output[key].filename, newFilePath);
+			var paramVal = output[key][param]
+			if( output[key][param] == 'true' || output[key][param] == 'false' ) {
+				paramVal = output[key][param] ? '1' : '0';
+			}
 
-// 			//construct new Analysis object
-// 			var analysis = new Analysis();
-// 			analysis.type = key;
-// 			analysis.fileName = path.basename(newFilePath);
-// 			analysis.path = path.dirname(newFilePath);
-// 			analysis.path = path.relative(appRoot.toString(), analysis.path);
-// 			analysis.params = output[key];
-// 			analysis.imageId = imageId;
+			appendedParams += '_' + paramVal;
+		}
 
-// 			//dont need the filename
-// 			delete analysis.params.filename;
+		var now = new Date();
 
-// 			debug('analysis:', analysis);
+		newFilePath[0] += appendedParams + '_' + now.getTime();
+		newFilePath = newFilePath.join('.');
+		fs.renameSync(output[key].filename, newFilePath);
 
-// 			Analysis.find(
-// 				{type: analysis.type},
-// 				null,
-// 				{sort: {created: 'asc'}},
-// 				function (err, existingAnalyses) {
-// 					if( err ) return callback(err);
+		//construct new Analysis object
+		var analysis = {};
+		analysis.type = key;
+		analysis.fileName = path.basename(newFilePath);
+		analysis.path = path.dirname(newFilePath);
+		// analysis.path = path.relative(analysis.path);
+		analysis.params = output[key];
+		analysis.imageId = imageId;
 
-// 					debug('existing', existingAnalyses);
-// 					//try to save analysis
-// 					analysis.save(function(err) {
-// 						if( err ) return callback(err);
+		//dont need the filename
+		delete analysis.params.filename;
 
-// 						if( existingAnalyses.length > 2 ) {
-// 							existingAnalyses[0].remove();
-// 						}
+		debug('analysis:', analysis);
 
-// 						return callback();
-// 					});
-// 				}
-// 			);
-// 		},
-// 		//something went wrong
-// 		function(err) {
-// 			if( err ) debug('error in analysis loop', err);
+		return self.models.analysis.find({
+			where: {
+				type: analysis.type
+			},
+			sort: 'createdAt asc'
+		})
+		.then(function (analyses) {
+			debug('existing', analyses);
+			existingAnalyses = analyses;
 
-// 			return callback(err);
-// 		}
-// 	);
-// }
+			//try to save analysis
+			return self.models.analysis.create(analysis);
+		})
+		.then(function (analysis) {
+			if( existingAnalyses.length > 2 ) {
+				existingAnalyses[0].destroy();
+			};
+
+			return analysis;
+		});
+	});
+};
 
 //phoenix worker function - makes the call to phoenix & saves resulting analyses
 PhoenixWorker.prototype.handleJob = function(params, callback) {
 	debug('worker', params);
 
+	var self = this;
 	var image;
+	var output;
 
-	this.models.image.findOne({
+	return this.models.image.findOne({
 		id: params.imageId
 	})
 	.then(function (img) {
-		if( ! image ) {
+		if( ! img ) {
 			throw new Error('no image found with this id');
 		}
 
 		image = img;
 
-		var jobString = getJobString(params, image.path, image.fileName);
+		var jobString = self.getJobString(params, image.path, image.fileName);
 
 		return Promise.fromNode(function (callback) {
 			return child_process.exec(jobString, callback);
 		});
 	})
-	.then(function (stdout, stderr) {
+	.spread(function (stdout, stderr) {
 		return Promise.try(function () {
 			return JSON.parse(stdout);
 		});
 	})
-	.then(function (output) {
+	.then(function (jsonOutput) {
+		output = jsonOutput;
+
 		//save estimates & qtables if available
 		image.imagemagickQuality = output.imagick_estimate || image.imagick_estimate || null;
 		image.hackerfactorQuality = output.hf_estimate || image.hf_estimate || null;
 		image.qtables = output.qtables || image.qtables || null;
 		return image.save();
 	})
-	.then(function (wot) {
-		console.log('savin bro');
-		// 	//remove img meta from output
-		// 	delete output.hf_estimate;
-		// 	delete output.imagick_estimate;
-		// 	delete output.qtables;
+	.then(function (img) {
+		image = img;
 
-		// 	saveAnalyses(image._id, output, function (err, saved) {
-		// 		return callback(err);
-		// 	});
+		//remove img meta from output
+		delete output.hf_estimate;
+		delete output.imagick_estimate;
+		delete output.qtables;
+
+		return self.saveAnalyses(image.id, output);
 	})
 	.catch(function (err) {
 		debug('error in job', err);
-	});
+		throw err;
+	})
+	.nodeify(callback);
 };
 
 module.exports = PhoenixWorker;
