@@ -86,7 +86,11 @@ router.post('/upload', function (req, res, next) {
 		//go ahead with image submission
 		uploadedImage.fileChecks(req.app.models.image)
 		.then(function (image) {
-			return [image, image.queueAnalysis(config.defaultAnalysisOpts)];
+			if( image.duplicate ) {
+				return [image, {data: {_id: null}}];
+			} else {
+				return [image, image.queueAnalysis(config.defaultAnalysisOpts)];
+			}
 		})
 		.spread(function (image, job) {
 			return res.json({
@@ -133,7 +137,11 @@ router.post('/submit', jsonParser, function (req, res, next) {
 		.on('close', function () {
 			downloadedImage.fileChecks(req.app.models.image)
 			.then(function (image) {
-				return [image, image.queueAnalysis(config.defaultAnalysisOpts)];
+				if( image.duplicate ) {
+					return [image, {data: {_id: null}}];
+				} else {
+					return [image, image.queueAnalysis(config.defaultAnalysisOpts)];
+				}
 			})
 			.spread(function (image, job) {
 				return res.json({
