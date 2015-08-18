@@ -12,7 +12,6 @@ var request = require('request');
 var Promise = require('bluebird');
 
 var serverPath = '../../../../server/';
-var models;
 
 describe('/api/images', function () {
 	var app;
@@ -31,7 +30,6 @@ describe('/api/images', function () {
 
 	after(function () {
 		app.listener.close();
-		return app.orm.destroy();
 	});
 
 	afterEach(function () {
@@ -227,7 +225,7 @@ describe('/api/images', function () {
 		it('should return image data if permalink exists', function (done) {
 			testServer
 			.get('/api/images/testPermalink')
-			.end(function(err, res) {
+			.end(function (err, res) {
 				res.status.should.equal(200);
 				res.body.image.should.have.property('createdAt');
 				done();
