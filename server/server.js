@@ -24,7 +24,7 @@ app.get('/api', function (req, res) {
 
 //routes
 app.use('/api/images', require('./routes/images.js'));
-// app.use('/api/analyses', require('./routes/analyses.js'));
+app.use('/api/analyses', require('./routes/analyses.js'));
 // app.use('/api/jobs', require('./routes/jobs.js'));
 
 //static files
