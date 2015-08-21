@@ -28,6 +28,4 @@ router.get('/:imageId', function (req, res, next) {
 	});
 });
 
-module.exports = function() {
-	return router;
-}();
+module.exports = router;
