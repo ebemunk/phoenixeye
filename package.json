@@ -2,7 +2,7 @@
   "name": "phoenixeye",
   "version": "1.0.0",
   "private": true,
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
     "postinstall": "node ./node_modules/bower/bin/bower install && node ./node_modules/gulp/bin/gulp.js",
     "test-server": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage/server -- --recursive ./test/src/server",
