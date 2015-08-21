@@ -53,6 +53,7 @@ module.exports = {
 			via: 'image'
 		},
 
+		//instance methods
 		filePath: function () {
 			return path.join(this.path, this.fileName);
 		},
@@ -161,9 +162,37 @@ module.exports = {
 				debug('enqueued', job.data._id);
 				return job;
 			});
+		},
+
+		//default instance overrides
+		toJSON: function () {
+			var obj = this.toObject();
+
+			var doNotReturn = [
+				'uploaderIP'
+			];
+
+			doNotReturn.forEach(function (key) {
+				delete obj[key];
+			});
+
+			var qtables = {};
+			for( var tableIndex in obj.qtables ) {
+				qtables[tableIndex] = [];
+
+				var qt = obj.qtables[tableIndex].split(',');
+				while( qt.length ) {
+					qtables[tableIndex].push(qt.splice(0,8));
+				}
+			}
+
+			obj.qtables = qtables;
+
+			return obj;
 		}
 	},
 
+	//hooks
 	afterCreate: function (img, next) {
 		debug('Image.afterCreate');
 
