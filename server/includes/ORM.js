@@ -9,6 +9,7 @@ var Promise = require('bluebird');
 
 var Image = require('../models/Image.js');
 var Analysis = require('../models/Analysis.js');
+var Job = require('../models/Job.js');
 
 function ORM() {
 	this.orm = new Waterline();
@@ -38,7 +39,7 @@ function ORM() {
 
 	this.orm.loadCollection(Waterline.Collection.extend(Image));
 	this.orm.loadCollection(Waterline.Collection.extend(Analysis));
-
+	this.orm.loadCollection(Waterline.Collection.extend(Job));
 }
 
 ORM.prototype.init = function () {
