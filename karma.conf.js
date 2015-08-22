@@ -19,8 +19,9 @@ module.exports = function(config) {
       'client/dist/debug.js',
       'client/js/phoenixeye.js',
       'client/js/**/*.js',
+      'client/html/**/*.html',
       'bower_components/angular-mocks/angular-mocks.js',
-      'test/src/client/js/**/*.js'
+      'test/src/client/js/**/*.js',
     ],
 
 
@@ -32,6 +33,14 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'client/html/**/*.html': ['ng-html2js'],
+      'client/js/**/!(vendor)/**/*.js': ['coverage']
+    },
+
+
+    ngHtml2JsPreprocessor: {
+      stripPrefix: 'client/',
+      moduleName: 'phoenixeye.templates'
     },
 
 
