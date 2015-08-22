@@ -120,7 +120,7 @@ PhoenixWorker.prototype.saveAnalyses = function(imageId, output) {
 		analysis.type = key;
 		analysis.fileName = path.basename(newFilePath);
 		analysis.path = path.dirname(newFilePath);
-		// analysis.path = path.relative(analysis.path);
+		analysis.path = path.relative(__dirname, analysis.path);
 		analysis.params = output[key];
 		analysis.imageId = imageId;
 
