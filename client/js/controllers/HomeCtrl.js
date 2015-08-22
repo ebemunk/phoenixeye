@@ -42,13 +42,13 @@ angular.module('phoenixeye')
 				url: 'api/images/submit',
 				data: {url: url}
 			})
-			.then(function (data, status) {
-				dbg('success', data, status);
-				var jobId = data.jobId || null;
+			.then(function (resp, status) {
+				dbg('success', resp, status);
+				var jobId = resp.data.jobId || null;
 				$state.go('image', {
-					image: data.image,
+					image: resp.data.image,
 					jobId: jobId,
-					permalink: data.image.permalink
+					permalink: resp.data.image.permalink
 				});
 			})
 			.catch(function (data, status) {
