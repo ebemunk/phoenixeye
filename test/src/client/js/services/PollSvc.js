@@ -2,10 +2,9 @@
 
 describe('PollSvc', function () {
 	var PollSvc;
-	var $httpBackend,
-		$timeout,
-		$rootScope
-	;
+	var $httpBackend;
+	var $timeout;
+	var $rootScope;
 
 	beforeEach(module('phoenixeye'));
 
@@ -21,7 +20,7 @@ describe('PollSvc', function () {
 	}));
 
 	describe('pollUntil', function () {
-		it('should return a promise', function (done) {
+		it('should return a promise', function () {
 			var promise = PollSvc.pollUntil({
 				method: 'get',
 				url: '/images'
@@ -29,12 +28,10 @@ describe('PollSvc', function () {
 				return false;
 			});
 
-			expect(promise).to.have.property('promise');
-
-			done();
+			promise.should.have.property('promise');
 		});
 
-		it('should call $http with the config given', function (done) {
+		it('should call $http with the config given', function () {
 			$httpBackend.expectGET('/api/images/permalink')
 				.respond(200, {});
 
@@ -47,11 +44,9 @@ describe('PollSvc', function () {
 
 			$httpBackend.flush();
 			$timeout.flush();
-
-			done();
 		});
 
-		it('should reject promise on server error', function (done) {
+		it('should reject promise on server error', function () {
 			$httpBackend.expectGET('/api/images/permalink')
 				.respond(400, {});
 
@@ -69,12 +64,10 @@ describe('PollSvc', function () {
 			$httpBackend.flush();
 			$timeout.flush();
 
-			expect(rejected).to.be.true;
-
-			done();
+			rejected.should.be.true;
 		});
 
-		it('should keep polling until condition fn returns true', function (done) {
+		it('should keep polling until condition fn returns true', function () {
 			$httpBackend.expect('GET', '/api/images/permalink')
 				.respond(200, {condition: false});
 			PollSvc.pollUntil({
@@ -92,11 +85,9 @@ describe('PollSvc', function () {
 
 			$timeout.flush();
 			$httpBackend.flush();
-
-			done();
 		});
 
-		it('should resolve promise once condition fn returns true', function (done) {
+		it('should resolve promise once condition fn returns true', function () {
 			$httpBackend.expect('GET', '/api/images/permalink')
 				.respond(200, {condition: true});
 
@@ -109,10 +100,9 @@ describe('PollSvc', function () {
 
 			$timeout.flush();
 			$httpBackend.flush();
-			done();
 		});
 
-		it('should reject promise on state change', function (done) {
+		it('should reject promise on state change', function () {
 			$httpBackend.when('GET', '/api/images/permalink')
 				.respond(200, {condition: false});
 
@@ -137,12 +127,10 @@ describe('PollSvc', function () {
 			$httpBackend.flush();
 			$timeout.flush();
 
-			expect(rejected).to.be.true;
-
-			done();
+			rejected.should.be.true;
 		});
 
-		it('should not stop poll if new state change is image', function (done) {
+		it('should not stop poll if new state change is image', function () {
 			$httpBackend.when('GET', '/api/images/permalink')
 				.respond(200, {condition: false});
 
@@ -167,9 +155,7 @@ describe('PollSvc', function () {
 			$httpBackend.flush();
 			$timeout.flush();
 
-			expect(rejected).to.not.be.true;
-
-			done();
+			rejected.should.not.be.true;
 		});
 	});
 });
