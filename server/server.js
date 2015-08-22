@@ -53,6 +53,7 @@ module.exports = app.orm.init()
 
 	app.listener = app.listen(config.port, function () {
 		debug('server running on port ' + config.port);
+		console.log('phoenixeye server running at:', config.port);
 	});
 
 	return app;
