@@ -156,7 +156,8 @@ angular.module('phoenixeye')
 			var sec = parseFloat(parts[2]) || 0;
 			gpsDirection = gpsDirection || parts[3];
 
-			console.log(deg, min, sec, gpsDirection);
+			dbg('gps deg,min,sec,direction', deg, min, sec, gpsDirection);
+
 			var dd = deg + min/60 + sec/3600;
 
 			if( gpsDirection ) {
@@ -165,7 +166,9 @@ angular.module('phoenixeye')
 					dd *= -1;
 				}
 			}
-			console.log(dd);
+
+			dbg('gps dd', dd);
+
 			return dd;
 		}
 
