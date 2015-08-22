@@ -56,8 +56,12 @@
 				</h3>
 			</div>
 			<div class="panel-body" collapse-when="collapsedPanels.hsv">
-				<select ng-model="displayedHSV" ng-options="hsv as (hsv.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (hsv.created | date:'MMM dd, yy @ h:mm a') for hsv in histograms.hsv"></select>
-				<img class="img-responsive" ng-src="{{displayedHSV ? displayedHSV.path + '/' + displayedHSV.fileName : ''}}">
+				<select ng-model="displayedHSV"
+					ng-options="hsv as (hsv.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (hsv.createdAt | date:'MMM dd, yy @ h:mm a') for hsv in histograms.hsv"
+				></select>
+				<img class="img-responsive"
+					ng-src="{{displayedHSV ? displayedHSV.path + '/' + displayedHSV.fileName : ''}}"
+				>
 			</div>
 		</div>
 
@@ -71,8 +75,12 @@
 				</h3>
 			</div>
 			<div class="panel-body" collapse-when="collapsedPanels.lab_fast">
-				<select ng-model="displayedLab" ng-options="lab_fast as (lab_fast.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (lab_fast.created | date:'MMM dd, yy @ h:mm a') for lab_fast in histograms.lab_fast"></select>
-				<img class="img-responsive" ng-src="{{displayedLab ? displayedLab.path + '/' + displayedLab.fileName : ''}}">
+				<select ng-model="displayedLab"
+					ng-options="lab_fast as (lab_fast.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (lab_fast.createdAt | date:'MMM dd, yy @ h:mm a') for lab_fast in histograms.lab_fast"
+				></select>
+				<img class="img-responsive"
+					ng-src="{{displayedLab ? displayedLab.path + '/' + displayedLab.fileName : ''}}"
+				>
 			</div>
 		</div>
 
@@ -133,7 +141,7 @@
 									ng-click="displayImage(analysis)"
 									ng-class="{active: displayedImage == analysis}"
 								>
-									Quality: {{analysis.params.quality}}% | <small>{{analysis.created | date : 'MMM d, yy @ h:mm a'}}</small>
+									Quality: {{analysis.params.quality}}% | <small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
 								</a>
 							</li>
 						</ul>
@@ -161,7 +169,7 @@
 									ng-click="displayImage(analysis)"
 									ng-class="{active: displayedImage == analysis}"
 								>
-									<small>{{analysis.created | date : 'MMM d, yy @ h:mm a'}}</small>
+									<small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
 								</a>
 							</li>
 						</ul>
@@ -189,7 +197,7 @@
 									ng-click="displayImage(analysis)"
 									ng-class="{active: displayedImage == analysis}"
 								>
-									<small>{{analysis.created | date : 'MMM d, yy @ h:mm a'}}</small>
+									<small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
 								</a>
 							</li>
 						</ul>
@@ -217,7 +225,7 @@
 									ng-click="displayImage(analysis)"
 									ng-class="{active: displayedImage == analysis}"
 								>
-									Retain: {{analysis.params.retain}}, QCoeff: {{analysis.params.qcoeff}} | <small>{{analysis.created | date : 'MMM d, yy @ h:mm a'}}</small>
+									Retain: {{analysis.params.retain}}, QCoeff: {{analysis.params.qcoeff}} | <small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
 								</a>
 							</li>
 						</ul>
@@ -231,7 +239,9 @@
 		</nav>
 
 		<div class="image-display">
-			<img class="img-responsive" ng-src="{{displayedImage ? displayedImage.path + '/' + displayedImage.fileName : ''}}">
+			<img class="img-responsive"
+				ng-src="{{displayedImage ? displayedImage.path + '/' + displayedImage.fileName : ''}}"
+			>
 		</div>
 
 		<div class="panel panel-default">
