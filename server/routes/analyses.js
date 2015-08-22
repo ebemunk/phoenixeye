@@ -14,14 +14,8 @@ router.get('/:imageId', function (req, res, next) {
 		imageId: req.params.imageId
 	})
 	.then(function (analyses) {
-		if( ! analyses.length ) {
-			throw new HTTPError(404, 'no analyses for this image id');
-		}
-
 		//return analyses
-		return res.json({
-			analyses: analyses
-		});
+		return res.json(analyses);
 	})
 	.catch(function (err) {
 		return next(err);

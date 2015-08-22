@@ -42,16 +42,6 @@ describe('/api/analyses', function () {
 	});
 
 	describe('/:imageId', function () {
-		it('should return error if no analysis for imageId exists', function (done) {
-			testServer
-			.get('/api/analyses/zzz')
-			.end(function (err, res) {
-				res.status.should.equal(404);
-
-				done();
-			});
-		});
-
 		it('should return analyses if imageId has them', function (done) {
 			var randomId = 123;
 
@@ -65,9 +55,8 @@ describe('/api/analyses', function () {
 				.get('/api/analyses/' + randomId)
 				.end(function (err, res) {
 					res.status.should.equal(200);
-					res.body.should.have.property('analyses');
-					res.body.analyses.should.be.an('array');
-					res.body.analyses.should.not.be.empty;
+					res.body.should.be.an('array');
+					res.body.should.not.be.empty;
 
 					done();
 				});
