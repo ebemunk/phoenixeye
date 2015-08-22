@@ -22,12 +22,16 @@ angular.module('phoenixeye')
 						var matches = fuzzySearch.search(newV).map(function (el) {
 							return el.key;
 						});
+
 						$scope.filtered = buildFilteredObject(matches);
 					});
 
 					$scope.$watch('list', function (newV) {
 						$scope.filtered = newV;
-						if( ! newV ) return;
+
+						if( ! newV ) {
+							return;
+						}
 
 						var fuzzySearchArray = buildFuzzySearchArray(newV);
 						fuzzySearch = new Fuse(fuzzySearchArray, {
@@ -47,12 +51,12 @@ angular.module('phoenixeye')
 							for( var prop in obj[field] ) {
 								array = array.concat(
 									Object.keys(obj[field][prop])
-										.map(function (key) {
-											return {
-												key: key,
-												val: obj[field][prop][key]
-											};
-										})
+									.map(function (key) {
+										return {
+											key: key,
+											val: obj[field][prop][key]
+										};
+									})
 								);
 							}
 						}
@@ -68,8 +72,13 @@ angular.module('phoenixeye')
 								for( var key in $scope.list[field][prop] ) {
 									if( matches.indexOf(key) < 0 ) continue;
 
-									if( ! obj[field] ) obj[field] = {};
-									if( ! obj[field][prop] ) obj[field][prop] = {};
+									if( ! obj[field] ) {
+										obj[field] = {};
+									}
+
+									if( ! obj[field][prop] ) {
+										obj[field][prop] = {};
+									}
 
 									obj[field][prop][key] = $scope.list[field][prop][key];
 								}
