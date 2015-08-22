@@ -16,6 +16,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'client/dist/dependencies.js',
+      'client/dist/debug.js',
       'client/js/phoenixeye.js',
       'client/js/**/*.js',
       'bower_components/angular-mocks/angular-mocks.js',
