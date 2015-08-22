@@ -1,4 +1,8 @@
+(function () {
+
 'use strict';
+
+var dbg = debug('app:phoenixeye');
 
 angular.module('phoenixeye', [
 	'ui.router',
@@ -7,7 +11,8 @@ angular.module('phoenixeye', [
 	'ui.bootstrap',
 	'ui.bootstrap-slider',
 	'ngMap',
-	'angular-loading-bar'
+	'angular-loading-bar',
+	'angular.filter'
 ]);
 
 angular.module('phoenixeye')
@@ -47,3 +52,5 @@ angular.module('phoenixeye')
 		$rootScope.$state = $state;
 	}
 ]);
+
+})();

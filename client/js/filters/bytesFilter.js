@@ -1,4 +1,8 @@
+(function () {
+
 'use strict';
+
+var dbg = debug('app:bytesFilter');
 
 angular.module('phoenixeye')
 .filter('bytes', function() {
@@ -14,3 +18,5 @@ angular.module('phoenixeye')
 		return (val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val) + ' ' + units[number];
 	}
 });
+
+})();

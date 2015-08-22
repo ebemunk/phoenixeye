@@ -1,4 +1,8 @@
+(function () {
+
 'use strict';
+
+var dbg = debug('app:RequestAnalysisCtrl');
 
 angular.module('phoenixeye')
 .controller('RequestAnalysisCtrl', [
@@ -55,3 +59,5 @@ angular.module('phoenixeye')
 		};
 	}
 ]);
+
+})();

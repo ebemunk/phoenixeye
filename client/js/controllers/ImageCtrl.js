@@ -1,4 +1,8 @@
+(function () {
+
 'use strict';
+
+var dbg = debug('app:ImageCtrl');
 
 angular.module('phoenixeye')
 .controller('ImageCtrl', [
@@ -10,7 +14,7 @@ angular.module('phoenixeye')
 	'PollSvc',
 	'$modal',
 	function ImageCtrl($scope, $http, ngToast, $stateParams, $timeout, PollSvc, $modal) {
-		console.log('stateParams', $stateParams);
+		dbg('stateParams', $stateParams);
 
 		$scope.image = $stateParams.image;
 		$scope.displayedImage = $stateParams.image;
@@ -30,8 +34,9 @@ angular.module('phoenixeye')
 			url: 'api/images/' + $stateParams.permalink
 		}, function (resp) {
 			return resp.image.metaComplete;
-		}).promise.then(function (resp) {
-			console.log('image poll resolved', resp);
+		}).promise
+		.then(function (resp) {
+			dbg('image poll resolved', resp);
 			$scope.image = resp.image;
 			$scope.displayedImage = resp.image;
 			getAnalyses();
@@ -41,6 +46,7 @@ angular.module('phoenixeye')
 			if( ! newV ) return;
 
 			$scope.metaList = {};
+
 			if( newV.xmp ) {
 				$scope.metaList.xmp = newV.xmp;
 			}
@@ -63,7 +69,7 @@ angular.module('phoenixeye')
 
 		//get analyses and separate them by type between histograms/analyses
 		function getAnalyses() {
-			console.log('get analysis start', $scope.image);
+			dbg('get analysis start', $scope.image);
 
 			//reset objects
 			$scope.analyses = {
@@ -80,10 +86,11 @@ angular.module('phoenixeye')
 
 			$http({
 				method: 'get',
-				url: 'api/analyses/' + $scope.image._id
-			}).success(function (resp, status) {
-				console.log('analyses', resp);
-				resp.analyses.forEach(function (analysis) {
+				url: 'api/analyses/' + $scope.image.id
+			})
+			.then(function (resp, status) {
+				dbg('analyses', resp);
+				resp.data.forEach(function (analysis) {
 					if( analysis.type == 'hsv' || analysis.type == 'lab_fast' ) {
 						$scope.histograms[analysis.type].push(analysis);
 					} else {
@@ -113,12 +120,14 @@ angular.module('phoenixeye')
 					$http({
 						method: 'get',
 						url: 'api/images/' + $stateParams.permalink
-					}).then(function (resp) {
+					})
+					.then(function (resp) {
 						$scope.image = resp.data.image;
 					});
 				}
-			}).error(function (resp, status) {
-				console.log('error analyses', resp);
+			})
+			.catch(function (resp, status) {
+				dbg('error analyses', resp);
 			});
 		}
 
@@ -129,7 +138,7 @@ angular.module('phoenixeye')
 			}, function (resp) {
 				return resp.job.status == 'complete';
 			}).promise.then(function (resp) {
-				console.log('job poll resolved', resp);
+				dbg('job poll resolved', resp);
 				getAnalyses();
 			});
 		}
@@ -168,12 +177,14 @@ angular.module('phoenixeye')
 			});
 
 			modal.result.then(function (resp) {
-				console.log('requestAnalysis response', resp);
+				dbg('requestAnalysis response', resp);
 
 				pollForJob(resp.data.jobId);
 			}).catch(function (err) {
-				console.log('requestAnalysis fail', err);
+				dbg('requestAnalysis fail', err);
 			});
 		};
 	}
 ]);
+
+})();

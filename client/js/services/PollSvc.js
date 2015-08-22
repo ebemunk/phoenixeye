@@ -1,4 +1,8 @@
+(function () {
+
 'use strict';
+
+var dbg = debug('app:PollSvc');
 
 angular.module('phoenixeye')
 .service('PollSvc', [
@@ -62,3 +66,5 @@ angular.module('phoenixeye')
 		}
 	}
 ]);
+
+})();

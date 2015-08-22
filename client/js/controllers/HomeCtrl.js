@@ -1,4 +1,8 @@
+(function () {
+
 'use strict';
+
+var dbg = debug('app:HomeCtrl');
 
 angular.module('phoenixeye')
 .controller('HomeCtrl', [
@@ -13,18 +17,21 @@ angular.module('phoenixeye')
 				Upload.upload({
 					url: '/api/images/upload',
 					file: file
-				}).progress(function (event) {
-					console.log('progress', event);
-				}).success(function (data, status) {
-					console.log('success', data, status);
+				})
+				.progress(function (event) {
+					dbg('progress', event);
+				})
+				.success(function (data, status) {
+					dbg('success', data, status);
 					var jobId = data.jobId || null;
 					$state.go('image', {
 						image: data.image,
 						jobId: jobId,
 						permalink: data.image.permalink
 					});
-				}).error(function (data, status) {
-					console.log('error', data, status);
+				})
+				.error(function (data, status) {
+					dbg('error', data, status);
 				});
 			}
 		};
@@ -34,17 +41,21 @@ angular.module('phoenixeye')
 				method: 'POST',
 				url: 'api/images/submit',
 				data: {url: url}
-			}).success(function (data, status) {
-				console.log('success', data, status);
+			})
+			.then(function (data, status) {
+				dbg('success', data, status);
 				var jobId = data.jobId || null;
 				$state.go('image', {
 					image: data.image,
 					jobId: jobId,
 					permalink: data.image.permalink
 				});
-			}).error(function (data, status) {
-				console.log('error', data, status);
+			})
+			.catch(function (data, status) {
+				dbg('error', data, status);
 			});
 		};
 	}
 ]);
+
+})();
