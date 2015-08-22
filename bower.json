@@ -1,6 +1,6 @@
 {
   "name": "phoenixeye",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "author": "ebemunk <ebemunk@gmail.com>",
   "license": "MIT",
@@ -8,17 +8,18 @@
     "bootstrap": "~3.3.4",
     "angular": "~1.4.0",
     "angular-ui-router": "~0.2.13",
-    "ng-file-upload": "~6.0.4",
+    "ng-file-upload": "~7.0.10",
     "ngtoast": "~1.5.5",
+    "fuse": "~1.2.2",
     "angular-bootstrap": "~0.13.0",
     "font-awesome": "~4.4.0",
-    "fuse": "~1.2.2",
     "ngmap": "~1.10.0",
     "angular-mocks": "~1.4.0",
     "seiyria-bootstrap-slider": "~4.9.1",
     "visionmedia-debug": "~2.2.0",
     "angular-loading-bar": "~0.8.0",
-    "three.js": "~0.71.0"
+    "three.js": "~0.71.0",
+    "angular-filter": "~0.5.5"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.3"
