@@ -310,13 +310,13 @@
 				<fuzzy-search list="metaList" filtered="metaFiltered"></fuzzy-search>
 				<div ng-repeat="(title, meta) in metaFiltered">
 					<h4>{{title | uppercase}}</h4>
-					<table ng-repeat="(heading, section) in meta" class="table table-condensed">
-						<thead>
+					<table class="table table-condensed">
+						<thead ng-repeat-start="(heading, section) in meta" >
 							<tr>
-								<th colspan="2">{{heading}}</th>
+								<th colspan="2">{{heading}} <collapse-toggle toggle="collapsedMeta[heading]"></collapse-toggle></th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody ng-repeat-end collapse-when="collapsedMeta[heading]">
 							<tr ng-repeat="(key, value) in section">
 								<td>{{key}}</td>
 								<td>{{value}}</td>
