@@ -11,6 +11,7 @@ var minifyCSS = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
 
 var browserSync = require('browser-sync');
+var nodemon = require('gulp-nodemon');
 
 var files = {
 	js: {
@@ -27,15 +28,18 @@ var files = {
 			'bower_components/ngtoast/dist/ngToast.min.js',
 			'bower_components/ngmap/build/scripts/ng-map.js',
 			'bower_components/angular-loading-bar/build/loading-bar.js',
+			'bower_components/angular-filter/dist/angular-filter.js',
+
+			'bower_components/three.js/three.js',
+			'bower_components/fuse/src/fuse.min.js',
 
 			//bootstrap & related
 			'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
-			'bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js',
+			'bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js'
 
-			//misc libs
-			'bower_components/fuse/src/fuse.min.js',
+		],
+		debug: [
 			'bower_components/visionmedia-debug/dist/debug.js',
-			'bower_components/three.js/three.js'
 		],
 		files: [
 			'client/js/phoenixeye.js',
@@ -64,6 +68,15 @@ gulp.task('js-deps', function () {
 	;
 });
 
+gulp.task('js-debug', function () {
+	return gulp.src(files.js.debug)
+		.pipe(plumber())
+		.pipe(concat('debug.js'))
+		.pipe(uglify())
+		.pipe(gulp.dest('client/dist'))
+	;
+});
+
 gulp.task('js', function () {
 	return gulp.src(files.js.files)
 		.pipe(plumber())
@@ -83,7 +96,8 @@ gulp.task('less', function () {
 		.pipe(minifyCSS({
 			keepSpecialComments: 0
 		}))
-		.pipe(autoprefixer()).pipe(concat('phoenixeye.css'))
+		.pipe(autoprefixer())
+		.pipe(concat('phoenixeye.css'))
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('client/dist'))
 	;
@@ -106,18 +120,26 @@ gulp.task('fonts', function() {
 	.pipe(gulp.dest('client/fonts'));
 });
 
-gulp.task('browser-sync', function () {
-	browserSync({
-		proxy: 'localhost:3000',
-		ui: false,
-		open: false
+gulp.task('nodemon', function () {
+	return nodemon({
+		script: 'server/server.js',
+		watch: [
+			'server'
+		]
 	});
 });
 
-gulp.task('watch', ['browser-sync'], function () {
+gulp.task('watch', ['nodemon'], function () {
+	browserSync({
+		proxy: 'localhost:3000',
+		ui: false,
+		open: false,
+		port: 3001
+	});
+
 	gulp.watch(files.js.files, ['js', browserSync.reload]);
 	gulp.watch(files.less, ['less', browserSync.reload]);
 	gulp.watch(files.html).on('change', browserSync.reload);
 });
 
-gulp.task('default', ['js-deps', 'js', 'less', 'css-deps', 'fonts']);
+gulp.task('default', ['js-deps', 'js-debug', 'js', 'less', 'css-deps', 'fonts']);
