@@ -131,6 +131,7 @@ PhoenixWorker.prototype.saveAnalyses = function(imageId, output) {
 
 		return self.models.analysis.find({
 			where: {
+				imageId: imageId,
 				type: analysis.type
 			},
 			sort: 'createdAt asc'
