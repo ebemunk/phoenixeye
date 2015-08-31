@@ -1,0 +1,130 @@
+<nav class="navbar navbar-default">
+	<ul class="nav navbar-nav">
+		<form class="navbar-form navbar-left">
+			<li class="btn-group" dropdown>
+				<a class="btn btn-default"
+					ng-click="vm.displayedImage = vm.image"
+					ng-class="{active: vm.displayedImage == vm.image}"
+				>
+					Original
+				</a>
+			</li>
+
+			<li class="btn-group" dropdown>
+				<a class="btn btn-default"
+					ng-click="vm.displayedImage = vm.analyses.ela[0]"
+					ng-class="{
+						active: vm.displayedImage.type == 'ela',
+						disabled: vm.analyses.ela.length < 1
+					}"
+				>
+					<abbr title="Error Level Analysis">ELA</abbr>
+				</a>
+				<a class="btn btn-default dropdown-toggle"
+					dropdown-toggle
+					ng-class="{disabled: vm.analyses.ela.length < 1}"
+				>
+					<i class="fa fa-caret-down"></i>
+				</a>
+				<ul class="dropdown-menu">
+					<li ng-repeat="analysis in vm.analyses.ela track by id">
+						<a href
+							ng-click="vm.displayedImage = analysis"
+							ng-class="{active: vm.displayedImage == analysis}"
+						>
+							Quality: {{analysis.params.quality}}% | <small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<li class="btn-group" dropdown>
+				<a class="btn btn-default"
+					ng-click="vm.displayedImage = vm.analyses.lg[0]"
+					ng-class="{
+						active: vm.displayedImage.type == 'lg',
+						disabled: vm.analyses.lg.length < 1
+					}"
+				>
+					<abbr title="Luminance Gradient">LG</abbr>
+				</a>
+				<a class="btn btn-default dropdown-toggle"
+					dropdown-toggle
+					ng-class="{disabled: vm.analyses.lg.length < 1}"
+				>
+					<i class="fa fa-caret-down"></i>
+				</a>
+				<ul class="dropdown-menu">
+					<li ng-repeat="analysis in vm.analyses.lg track by id">
+						<a href
+							ng-click="vm.displayedImage = analysis"
+							ng-class="{active: vm.displayedImage == analysis}"
+						>
+							<small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<li class="btn-group" dropdown>
+				<a class="btn btn-default"
+					ng-click="vm.displayedImage = vm.analyses.avgdist[0]"
+					ng-class="{
+						active: vm.displayedImage.type == 'avgdist',
+						disabled: vm.analyses.avgdist.length < 1
+					}"
+				>
+					<abbr title="Average Distance">AD</abbr>
+				</a>
+				<a class="btn btn-default dropdown-toggle"
+					dropdown-toggle
+					ng-class="{disabled: vm.analyses.avgdist.length < 1}"
+				>
+					<i class="fa fa-caret-down"></i>
+				</a>
+				<ul class="dropdown-menu">
+					<li ng-repeat="analysis in vm.analyses.avgdist track by id">
+						<a href
+							ng-click="vm.displayedImage = analysis"
+							ng-class="{active: vm.displayedImage == analysis}"
+						>
+							<small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<li class="btn-group" dropdown>
+				<a class="btn btn-default"
+					ng-click="vm.displayedImage = vm.analyses.copymove[0]"
+					ng-class="{
+						active: vm.displayedImage.type == 'copymove',
+						disabled: vm.analyses.copymove.length < 1
+					}"
+				>
+					<abbr title="Copy-Move Detection">CM</abbr>
+				</a>
+				<a class="btn btn-default dropdown-toggle"
+					dropdown-toggle
+					ng-class="{disabled: vm.analyses.copymove.length < 1}"
+				>
+					<i class="fa fa-caret-down"></i>
+				</a>
+				<ul class="dropdown-menu">
+					<li ng-repeat="analysis in vm.analyses.copymove track by id">
+						<a href
+							ng-click="vm.displayedImage = analysis"
+							ng-class="{active: vm.displayedImage == analysis}"
+						>
+							Retain: {{analysis.params.retain}}, QCoeff: {{analysis.params.qcoeff}} | <small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
+						</a>
+					</li>
+				</ul>
+			</li>
+		</form>
+	</ul>
+
+	<form class="navbar-form navbar-right">
+		<a class="btn btn-default" ng-click="vm.requestAnalysis()">Request Analysis</a>
+	</form>
+</nav>

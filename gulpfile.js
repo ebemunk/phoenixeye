@@ -1,15 +1,27 @@
 var gulp = require('gulp');
 var plumber = require('gulp-plumber');
 
+//utility
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
 
+//js
 var uglify = require('gulp-uglify');
+var iife = require('gulp-iife');
 
+//less
 var less = require('gulp-less');
-var minifyCSS = require('gulp-minify-css');
-var autoprefixer = require('gulp-autoprefixer');
+var lessPluginGlob = require('less-plugin-glob');
+var postcss = require('gulp-postcss');
+var autoprefixer = require('autoprefixer');
+var mqpacker = require('css-mqpacker');
+var csswring = require('csswring');
 
+//html
+var angularTemplateCache = require('gulp-angular-templatecache');
+var minifyHTML = require('gulp-minify-html');
+
+//dev
 var browserSync = require('browser-sync');
 var nodemon = require('gulp-nodemon');
 
@@ -17,46 +29,55 @@ var files = {
 	js: {
 		dependencies: [
 			//angular stuff
-			'bower_components/jquery/dist/jquery.min.js',
-			'bower_components/angular/angular.min.js',
-			'bower_components/angular-animate/angular-animate.min.js',
-			'bower_components/angular-sanitize/angular-sanitize.min.js',
+			'bower_components/jquery/dist/jquery.js',
+			'bower_components/angular/angular.js',
+			'bower_components/angular-animate/angular-animate.js',
+			'bower_components/angular-sanitize/angular-sanitize.js',
 
 			//3rd party libs
-			'bower_components/angular-ui-router/release/angular-ui-router.min.js',
-			'bower_components/ng-file-upload/ng-file-upload.min.js',
-			'bower_components/ngtoast/dist/ngToast.min.js',
+			'bower_components/angular-ui-router/release/angular-ui-router.js',
+			'bower_components/ng-file-upload/ng-file-upload.js',
+			'bower_components/ngtoast/dist/ngToast.js',
 			'bower_components/ngmap/build/scripts/ng-map.js',
 			'bower_components/angular-loading-bar/build/loading-bar.js',
 			'bower_components/angular-filter/dist/angular-filter.js',
 
-			'bower_components/three.js/three.js',
-			'bower_components/fuse/src/fuse.min.js',
+			// 'bower_components/three.js/three.js',
+			'bower_components/fuse/src/fuse.js',
+			'node_modules/bluebird/js/browser/bluebird.js',
 
 			//bootstrap & related
-			'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+			'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
 			'bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js'
-
 		],
 		debug: [
 			'bower_components/visionmedia-debug/dist/debug.js',
 		],
-		files: [
-			'client/js/phoenixeye.js',
-			'client/js/**/*.js'
+		app: [
+			'client/phoenixeye.module.js',
+			'client/config/*.js',
+			'client/**/*.js',
+			'!client/dist/*',
+			'!client/test/*'
 		]
 	},
-	less: [
-		'client/less/*.less'
-	],
-	css: [
-		'bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css',
-		'bower_components/angular-loading-bar/build/loading-bar.css',
-	],
-	html: [
-		'client/index.html',
-		'client/html/**/*.html'
-	]
+	less: {
+		main: [
+			'client/phoenixeye.less'
+		],
+		app: [
+			'client/**/*.less'
+		]
+	},
+	html: {
+		main: [
+			'client/index.html'
+		],
+		app: [
+			'client/**/*.html',
+			'!client/index.html'
+		]
+	}
 };
 
 gulp.task('js-deps', function () {
@@ -77,47 +98,61 @@ gulp.task('js-debug', function () {
 	;
 });
 
-gulp.task('js', function () {
-	return gulp.src(files.js.files)
+gulp.task('js-cli', function () {
+	return gulp.src(files.js.app)
 		.pipe(plumber())
 		.pipe(sourcemaps.init())
-		.pipe(concat('phoenixeye.js'))
+		.pipe(iife())
 		.pipe(uglify())
+		.pipe(concat('phoenixeye.js'))
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('client/dist'))
 	;
+});
+
+gulp.task('js', ['js-deps', 'js-debug', 'js-cli']);
+
+gulp.task('html', function() {
+	return gulp.src(files.html.app)
+		.pipe(plumber())
+		.pipe(minifyHTML({
+			empty: true
+		}))
+		.pipe(angularTemplateCache({
+			standalone: true
+		}))
+		.pipe(iife())
+		.pipe(uglify())
+		.pipe(gulp.dest('client/dist'));
 });
 
 gulp.task('less', function () {
-	return gulp.src(files.less)
+	return gulp.src(files.less.main)
 		.pipe(plumber())
 		.pipe(sourcemaps.init())
-		.pipe(less())
-		.pipe(minifyCSS({
-			keepSpecialComments: 0
+		.pipe(less({
+			plugins: [
+				lessPluginGlob
+			]
 		}))
-		.pipe(autoprefixer())
-		.pipe(concat('phoenixeye.css'))
+		.pipe(postcss([
+			autoprefixer({
+				browsers: ['last 2 versions']
+			}),
+			mqpacker,
+			csswring({
+				removeAllComments: true
+			})
+		]))
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('client/dist'))
-	;
-});
-
-gulp.task('css-deps', function () {
-	return gulp.src(files.css)
-		.pipe(plumber())
-		.pipe(minifyCSS({
-			keepSpecialComments: 0
-		}))
-		.pipe(autoprefixer())
-		.pipe(concat('dependencies.css'))
-		.pipe(gulp.dest('client/dist'))
+        .pipe(browserSync.stream({match: '**/*.css'}))
 	;
 });
 
 gulp.task('fonts', function() {
 	return gulp.src('bower_components/font-awesome/fonts/*')
-	.pipe(gulp.dest('client/fonts'));
+	.pipe(gulp.dest('client/dist/fonts'));
 });
 
 gulp.task('nodemon', function () {
@@ -137,9 +172,10 @@ gulp.task('watch', ['nodemon'], function () {
 		port: 3001
 	});
 
-	gulp.watch(files.js.files, ['js', browserSync.reload]);
-	gulp.watch(files.less, ['less', browserSync.reload]);
-	gulp.watch(files.html).on('change', browserSync.reload);
+	gulp.watch(files.js.app, ['js-cli', browserSync.reload]);
+	gulp.watch(files.less.app, ['less']);
+	gulp.watch(files.html.app, ['html', browserSync.reload]);
+	gulp.watch(files.html.main).on('change', browserSync.reload);
 });
 
-gulp.task('default', ['js-deps', 'js-debug', 'js', 'less', 'css-deps', 'fonts']);
+// gulp.task('default', ['js-deps', 'js-debug', 'js', 'less', 'css-deps', 'fonts']);
