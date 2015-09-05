@@ -8,7 +8,7 @@ ImageService.$inject = [
 
 ImageService.$name = 'ImageService';
 
-function ImageService ($http, debug) {
+function ImageService () {
 	injectToThis(this.constructor).apply(this, arguments);
 }
 
