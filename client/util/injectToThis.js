@@ -5,6 +5,9 @@ window.injectToThis = function (ctor) {
 		}
 
 		var name = ctor.$name || 'global';
-		this.debug = this.debug('app:' + name);
+
+		if( this.debug ) {
+			this.debug = this.debug('app:' + name);
+		}
 	}
 };
