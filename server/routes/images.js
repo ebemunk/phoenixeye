@@ -3,6 +3,8 @@ var config = require('../config.json');
 
 var Promise = require('bluebird');
 
+var path = require('path');
+
 var router = require('express').Router();
 var jsonParser = require('body-parser').json();
 
@@ -127,6 +129,14 @@ router.post('/submit', jsonParser, function (req, res, next) {
 		//too big
 		if( response.headers['content-length'] > config.upload.sizeLimit) {
 			throw new HTTPError(413, 'file too big');
+		}
+
+		var contentDisposition = response.headers['content-disposition'] || '';
+		var originalFileName = contentDisposition.match(/filename="(.+)";/);
+		if( originalFileName ) {
+			downloadedImage.originalFileName = originalFileName[1];
+		} else {
+			downloadedImage.originalFileName = path.basename(imageUrl);
 		}
 
 		//download the image
