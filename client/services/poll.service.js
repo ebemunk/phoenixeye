@@ -11,7 +11,7 @@ PollService.$inject = [
 
 PollService.$name = 'PollService';
 
-function PollService ($q, $http, $timeout, $rootScope, debug) {
+function PollService () {
 	injectToThis(this.constructor).apply(this, arguments);
 
 	var self = this;
@@ -20,7 +20,7 @@ function PollService ($q, $http, $timeout, $rootScope, debug) {
 	self.defaultTimeout = 3000;
 	self.pollers = [];
 
-	$rootScope.$on('$stateChangeSuccess', self.stateChangeSuccess.bind(self));
+	self.$rootScope.$on('$stateChangeSuccess', self.stateChangeSuccess.bind(self));
 }
 
 //stop all pollers on state change
