@@ -11,7 +11,7 @@ HomeController.$inject = [
 
 HomeController.$name = 'HomeController';
 
-function HomeController ($http, $state, Upload, ngToast, debug) {
+function HomeController () {
 	injectToThis(this.constructor).apply(this, arguments);
 }
 
