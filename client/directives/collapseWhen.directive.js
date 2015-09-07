@@ -14,9 +14,9 @@ function collapseWhen ($) {
 		link: function (scope, element, attrs) {
 			scope.$watch('collapseWhen', function (value) {
 				if( value ) {
-					$(element).slideUp();
+					$(element).stop().slideUp();
 				} else {
-					$(element).slideDown();
+					$(element).stop().slideDown();
 				}
 			});
 		}
