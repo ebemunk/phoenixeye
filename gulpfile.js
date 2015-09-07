@@ -36,19 +36,19 @@ var files = {
 
 			//3rd party libs
 			'bower_components/angular-ui-router/release/angular-ui-router.js',
-			'bower_components/ng-file-upload/ng-file-upload.js',
-			'bower_components/ngtoast/dist/ngToast.js',
-			'bower_components/ngmap/build/scripts/ng-map.js',
-			'bower_components/angular-loading-bar/build/loading-bar.js',
 			'bower_components/angular-filter/dist/angular-filter.js',
+			'bower_components/ng-file-upload/ng-file-upload.js',
+			'bower_components/ngmap/build/scripts/ng-map.js',
+			'bower_components/ngtoast/dist/ngToast.js',
+			'bower_components/angular-loading-bar/build/loading-bar.js',
+			'bower_components/nouislider/distribute/nouislider.js',
 
 			// 'bower_components/three.js/three.js',
 			'bower_components/fuse/src/fuse.js',
 			'node_modules/bluebird/js/browser/bluebird.js',
 
 			//bootstrap & related
-			'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-			'bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js'
+			'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
 		],
 		debug: [
 			'bower_components/visionmedia-debug/dist/debug.js',
@@ -134,6 +134,9 @@ gulp.task('less', function () {
 			plugins: [
 				lessPluginGlob
 			]
+		}).on('error', function (err) {
+			console.log(err);
+			this.emit('end');
 		}))
 		.pipe(postcss([
 			autoprefixer({
@@ -178,4 +181,4 @@ gulp.task('watch', ['nodemon'], function () {
 	gulp.watch(files.html.main).on('change', browserSync.reload);
 });
 
-// gulp.task('default', ['js-deps', 'js-debug', 'js', 'less', 'css-deps', 'fonts']);
+gulp.task('default', ['js', 'less', 'html', 'fonts']);
