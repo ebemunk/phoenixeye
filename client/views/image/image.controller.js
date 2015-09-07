@@ -78,6 +78,19 @@ function ImageController() {
 		}
 
 		vm.getAnalyses(vm.image.id);
+	})
+	.catch(function (err) {
+		vm.debug('error while polling api/images/imageId', err);
+		var errString;
+
+		if( err.status === 404 ) {
+			errString = 'This image does not exist.';
+		} else {
+			errString = 'Something went wrong. (' + err.statusText + ')';
+		}
+
+		vm.ngToast.danger(errString);
+		vm.$state.go('404');
 	});
 }
 
