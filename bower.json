@@ -4,21 +4,21 @@
   "author": "ebemunk <ebemunk@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "~3.3.4",
     "angular": "~1.4.0",
-    "angular-ui-router": "~0.2.13",
-    "ng-file-upload": "~7.0.10",
-    "ngtoast": "~1.5.5",
-    "fuse": "~1.2.2",
     "angular-bootstrap": "~0.13.0",
-    "font-awesome": "~4.4.0",
-    "ngmap": "~1.10.0",
-    "angular-mocks": "~1.4.0",
-    "seiyria-bootstrap-slider": "~4.9.1",
-    "visionmedia-debug": "~2.2.0",
+    "angular-filter": "~0.5.5",
     "angular-loading-bar": "~0.8.0",
+    "angular-mocks": "~1.4.0",
+    "angular-ui-router": "~0.2.13",
+    "bootstrap": "~3.3.4",
+    "font-awesome": "~4.4.0",
+    "fuse": "~1.2.2",
+    "ng-file-upload": "~7.0.10",
+    "ngmap": "~1.10.0",
+    "ngtoast": "~1.5.5",
+    "nouislider": "~8.0.2",
     "three.js": "~0.71.0",
-    "angular-filter": "~0.5.5"
+    "visionmedia-debug": "~2.2.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.3"
