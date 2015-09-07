@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default image-navbar">
 	<ul class="nav navbar-nav">
 		<form class="navbar-form navbar-left">
 			<li class="btn-group" dropdown>
@@ -27,10 +27,12 @@
 					<i class="fa fa-caret-down"></i>
 				</a>
 				<ul class="dropdown-menu">
-					<li ng-repeat="analysis in vm.analyses.ela track by id">
+					<li
+						ng-repeat="analysis in vm.analyses.ela track by analysis.id"
+						ng-class="{active: vm.displayedImage == analysis}"
+					>
 						<a href
 							ng-click="vm.displayedImage = analysis"
-							ng-class="{active: vm.displayedImage == analysis}"
 						>
 							Quality: {{analysis.params.quality}}% | <small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
 						</a>
@@ -55,10 +57,12 @@
 					<i class="fa fa-caret-down"></i>
 				</a>
 				<ul class="dropdown-menu">
-					<li ng-repeat="analysis in vm.analyses.lg track by id">
+					<li
+						ng-repeat="analysis in vm.analyses.lg track by analysis.id"
+						ng-class="{active: vm.displayedImage == analysis}"
+					>
 						<a href
 							ng-click="vm.displayedImage = analysis"
-							ng-class="{active: vm.displayedImage == analysis}"
 						>
 							<small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
 						</a>
@@ -83,10 +87,12 @@
 					<i class="fa fa-caret-down"></i>
 				</a>
 				<ul class="dropdown-menu">
-					<li ng-repeat="analysis in vm.analyses.avgdist track by id">
+					<li
+						ng-repeat="analysis in vm.analyses.avgdist track by analysis.id"
+						ng-class="{active: vm.displayedImage == analysis}"
+					>
 						<a href
 							ng-click="vm.displayedImage = analysis"
-							ng-class="{active: vm.displayedImage == analysis}"
 						>
 							<small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
 						</a>
@@ -111,10 +117,12 @@
 					<i class="fa fa-caret-down"></i>
 				</a>
 				<ul class="dropdown-menu">
-					<li ng-repeat="analysis in vm.analyses.copymove track by id">
+					<li
+						ng-repeat="analysis in vm.analyses.copymove track by analysis.id"
+						ng-class="{active: vm.displayedImage == analysis}"
+					>
 						<a href
 							ng-click="vm.displayedImage = analysis"
-							ng-class="{active: vm.displayedImage == analysis}"
 						>
 							Retain: {{analysis.params.retain}}, QCoeff: {{analysis.params.qcoeff}} | <small>{{analysis.createdAt | date : 'MMM d, yy @ h:mm a'}}</small>
 						</a>
@@ -125,6 +133,20 @@
 	</ul>
 
 	<form class="navbar-form navbar-right">
-		<a class="btn btn-default" ng-click="vm.requestAnalysis()">Request Analysis</a>
+		<a
+			class="btn btn-default btn-requestAnalysis"
+			ng-click="vm.requestAnalysis()"
+			ng-if="! vm.analysisPollActive"
+		>
+			Request Analysis
+		</a>
+
+		<a
+			class="btn btn-default btn-requestAnalysis"
+			ng-if="vm.analysisPollActive"
+			disabled
+		>
+			<i class="fa fa-gear fa-spin"></i> Computing
+		</a>
 	</form>
 </nav>
