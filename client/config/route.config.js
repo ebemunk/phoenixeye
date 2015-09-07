@@ -26,6 +26,9 @@ function RouteConfig ($stateProvider, $urlRouterProvider, $locationProvider) {
 				jobId: null
 			}
 		})
+		.state('404', {
+			templateUrl: 'views/404/404.html'
+		})
 	;
 
 	$urlRouterProvider.otherwise('/');
