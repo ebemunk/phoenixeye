@@ -20,4 +20,5 @@ module
 .constant('Promise', Promise)
 .constant('debug', debug)
 .constant('$', $)
+.constant('noUiSlider', noUiSlider)
 ;
