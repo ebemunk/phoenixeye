@@ -9,11 +9,14 @@ function fuzzySearch() {
 			filtered: '='
 		},
 		templateUrl: 'components/fuzzySearch/fuzzySearch.html',
-		controller: FuzzySearchController,
+		controller: 'FuzzySearchController',
 		controllerAs: 'vm',
 		bindToController: true
 	}
 }
+
+angular.module('phoenixeye')
+.controller('FuzzySearchController', FuzzySearchController);
 
 FuzzySearchController.$inject = [
 	'$scope'
