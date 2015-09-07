@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row image-view">
 	<div class="col-xs-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -8,10 +8,16 @@
 				</h3>
 			</div>
 			<div class="panel-body" collapse-when="vm.collapsedPanels.basic">
-				<div><strong>Original Filename</strong> {{vm.image.originalFileName}}</div>
-				<div><strong>Location</strong> {{vm.image.url || 'Uploaded'}}</div>
+				<div class="nowrap">
+					<strong>Original Filename</strong>
+					<span title="{{vm.image.originalFileName}}">{{vm.image.originalFileName}}</span>
+				</div>
+				<div class="nowrap">
+					<strong>Location</strong>
+					<span title="{{vm.image.url || 'Uploaded'}}">{{vm.image.url || 'Uploaded'}}</span>
+				</div>
 				<div><strong>Size</strong> {{vm.image.fileSize | bytes}}</div>
-				<div><strong>Dimensions</strong> {{vm.image.size.width}}x{{image.size.height}}</div>
+				<div><strong>Dimensions</strong> {{vm.image.size.width}} &times; {{vm.image.size.height}}</div>
 				<div ng-if="vm.image.channelStatistics.Pixels"><strong>Pixels</strong> {{vm.image.channelStatistics.Pixels | number}}</div>
 				<div><strong>Last Save Quality (<abbr title="Hackerfactor Estimation Method">HF</abbr>)</strong> {{vm.image.hackerfactorQuality | number : 0}}%</div>
 				<div><strong>Last Save Quality (<abbr title="ImageMagick Estimation Method">IM</abbr>)</strong> {{vm.image.imagemagickQuality}}%</div>
@@ -19,7 +25,7 @@
 			</div>
 		</div>
 
-		<div class="panel panel-default" ng-if="gps">
+		<div class="panel panel-default" ng-if="vm.gps">
 			<div class="panel-heading">
 				<h3 class="panel-title">GPS Map
 					<collapse-toggle toggle="vm.collapsedPanels.map"></collapse-toggle>
@@ -57,7 +63,9 @@
 				</h3>
 			</div>
 			<div class="panel-body" collapse-when="vm.collapsedPanels.hsv">
-				<select ng-model="vm.displayedHSV"
+				<select 
+					class="form-control"
+					ng-model="vm.displayedHSV"
 					ng-options="hsv as (hsv.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (hsv.createdAt | date:'MMM dd, yy @ h:mm a') for hsv in vm.histograms.hsv"
 				></select>
 				<img class="img-responsive"
@@ -75,8 +83,10 @@
 					</i>
 				</h3>
 			</div>
-			<div class="panel-body" collapse-when="vm.collapsedPanels.lab_fast">
-				<select ng-model="vm.displayedLab"
+			<div class="panel-body lab-panel" collapse-when="vm.collapsedPanels.lab_fast">
+				<select
+					class="form-control"
+					ng-model="vm.displayedLab"
 					ng-options="lab_fast as (lab_fast.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (lab_fast.createdAt | date:'MMM dd, yy @ h:mm a') for lab_fast in vm.histograms.lab_fast"
 				></select>
 				<img class="img-responsive"
@@ -111,7 +121,8 @@
 		<ng-include src="'components/imageNavbar/imageNavbar.html'"></ng-include>
 
 		<div class="image-display">
-			<img class="img-responsive"
+			<img
+				class="img-responsive"
 				ng-src="{{vm.displayedImage ? vm.displayedImage.path + '/' + vm.displayedImage.fileName : ''}}"
 			>
 		</div>

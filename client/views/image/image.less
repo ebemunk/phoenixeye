@@ -1,0 +1,46 @@
+.image-view {
+	select {
+		margin-bottom: 0.3em;
+		cursor: pointer;
+
+		&:focus {
+			box-shadow: none !important;
+		}
+	}
+
+	.nowrap {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.panel-title {
+		.fa-question-circle {
+			float: right;
+			margin-right: 3px;
+		}
+	}
+
+	.panel-body {
+		h4 {
+			font-size: 16px;
+			font-weight: bold;
+		}
+
+		.table {
+			margin-bottom: 0;
+		}
+	}
+
+	.lab-panel {
+		text-align: center;
+
+		.img-responsive {
+			display: initial;
+		}
+	}
+
+	.image-display {
+		margin-bottom: @line-height-computed;
+	}
+}

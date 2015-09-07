@@ -9,7 +9,8 @@ ImageController.$inject = [
 	'ngToast',
 	'debug',
 	'ImageService',
-	'PollService'
+	'PollService',
+	'GPSService'
 ];
 
 ImageController.$name = 'ImageController';
@@ -41,10 +42,10 @@ function ImageController() {
 
 	vm.debug('state.params', vm.$state.params);
 
-	// //poll for jobId if its a fresh submission
-	// if( $stateParams.jobId ) {
-	// 	pollForJob($stateParams.jobId);
-	// }
+	//poll for jobId if its a fresh submission
+	if( vm.$state.params.jobId ) {
+		vm.pollJob(vm.$state.params.jobId);
+	}
 
 	//poll until image metadata gathering is complete
 	vm.PollService.pollUntil({
@@ -57,93 +58,47 @@ function ImageController() {
 		vm.debug('image poll resolved', response);
 		vm.image = response.data.image;
 		vm.displayedImage = vm.image;
+
+		vm.metaList = {};
+
+		if( vm.image.exif ) {
+			vm.metaList.exif = vm.image.exif;
+
+			if( vm.image.exif.GPSInfo ) {
+				vm.gps = vm.GPSService.getCoords(vm.image.exif.GPSInfo);
+			}
+		}
+
+		if( vm.image.iptc ) {
+			vm.metaList.iptc = vm.image.iptc;
+		}
+
+		if( vm.image.xmp ) {
+			vm.metaList.xmp = vm.image.xmp;
+		}
+
 		vm.getAnalyses(vm.image.id);
 	});
-
-	// $scope.$watch('image', function (newV) {
-	// 	if( ! newV ) return;
-
-	// 	$scope.metaList = {};
-
-	// 	if( newV.xmp ) {
-	// 		$scope.metaList.xmp = newV.xmp;
-	// 	}
-
-	// 	if( newV.exif ) {
-	// 		$scope.metaList.exif = newV.exif;
-	// 	}
-
-	// 	if( newV.iptc ) {
-	// 		$scope.metaList.iptc = newV.iptc;
-	// 	}
-
-	// 	if( newV.exif && newV.exif.GPSInfo ) {
-	// 		$scope.gps = {
-	// 			lat: gpsDMStoDD(newV.exif.GPSInfo.GPSLatitude, newV.exif.GPSInfo.GPSLatitudeRef),
-	// 			lng: gpsDMStoDD(newV.exif.GPSInfo.GPSLongitude, newV.exif.GPSInfo.GPSLongitudeRef)
-	// 		};
-	// 	}
-	// });
-
-	// //switch displayed image
-	// $scope.displayImage = function(image) {
-	// 	$scope.displayedImage = image;
-	// };
-
-	// function gpsDMStoDD(gpsString, gpsDirection) {
-	// 	var parts = gpsString.split(' ');
-
-	// 	var deg = parseFloat(parts[0].replace('deg', '').replace('°', '')) || 0;
-	// 	var min = parseFloat(parts[1]) || 0;
-	// 	var sec = parseFloat(parts[2]) || 0;
-	// 	gpsDirection = gpsDirection || parts[3];
-
-	// 	dbg('gps deg,min,sec,direction', deg, min, sec, gpsDirection);
-
-	// 	var dd = deg + min/60 + sec/3600;
-
-	// 	if( gpsDirection ) {
-	// 		gpsDirection = gpsDirection[0].toLowerCase();
-	// 		if( gpsDirection == 's' || gpsDirection == 'w' ) {
-	// 			dd *= -1;
-	// 		}
-	// 	}
-
-	// 	dbg('gps dd', dd);
-
-	// 	return dd;
-	// }
-
-	// $scope.requestAnalysis = function() {
-	// 	var modal = $modal.open({
-	// 		animation: true,
-	// 		templateUrl: 'html/partials/requestAnalysis.html',
-	// 		controller: 'RequestAnalysisCtrl'
-	// 	});
-
-	// 	modal.result.then(function (resp) {
-	// 		dbg('requestAnalysis response', resp);
-
-	// 		pollForJob(resp.data.jobId);
-	// 	}).catch(function (err) {
-	// 		dbg('requestAnalysis fail', err);
-	// 	});
-	// };
 }
 
 ImageController.prototype.pollJob = function (jobId) {
 	var vm = this;
 
+	vm.analysisPollActive = true;
+
 	return vm.PollService.pollUntil({
 		method: 'get',
 		url: 'api/jobs/' + jobId
-	}, function (resp) {
-		return resp.job.status == 'complete';
+	}, function (response) {
+		return response.data.job.status == 'complete';
 	}).promise
-	.then(function (resp) {
-		vm.debug('job poll resolved', resp);
+	.then(function (response) {
+		vm.debug('job poll resolved', response);
 
-		return vm.getAnalyses();
+		vm.analysisPollActive = false;
+		vm.ngToast.success('Analyses are ready!');
+
+		return vm.getAnalyses(vm.image.id);
 	});
 };
 
@@ -157,26 +112,43 @@ ImageController.prototype.getAnalyses = function (imageId) {
 		vm.analyses = analyses;
 		vm.histograms = histograms;
 
-		if( ! vm.displayedHSV ) {
-			vm.displayedHSV = histograms.hsv[0];
-		}
+		vm.displayedHSV = histograms.hsv[0];
+		vm.displayedLab = histograms.lab_fast[0];
 
-		if( ! vm.displayedLab ) {
-			vm.displayedLab = histograms.lab_fast[0];
+		//get qtables for jpg after analysis complete
+		if( vm.image.type == 'jpg' && Object.keys(vm.image.qtables).length == 0 ) {
+			vm.$http({
+				method: 'get',
+				url: 'api/images/' + vm.$state.params.permalink
+			})
+			.then(function (response) {
+				vm.image = response.data.image;
+			});
 		}
-
-		// //get qtables for jpg after analysis complete
-		// if( $scope.image.type == 'jpg' && Object.keys($scope.image.qtables).length == 0 ) {
-		// 	$http({
-		// 		method: 'get',
-		// 		url: 'api/images/' + $stateParams.permalink
-		// 	})
-		// 	.then(function (resp) {
-		// 		$scope.image = resp.data.image;
-		// 	});
-		// }
 	})
 	.catch(function (response, status) {
 		vm.debug('error analyses', response, status);
+	});
+};
+
+ImageController.prototype.requestAnalysis = function () {
+	var vm = this;
+
+	var modal = vm.$modal.open({
+		animation: true,
+		templateUrl: 'components/requestAnalysis/requestAnalysis.html',
+		controller: 'RequestAnalysisController',
+		controllerAs: 'vm',
+		backdrop: 'static'
+	});
+
+	modal.result
+	.then(function (response) {
+		vm.debug('modal response', response);
+
+		vm.pollJob(response.data.jobId);
+	})
+	.catch(function (err) {
+		vm.debug('modal fail', err);
 	});
 };
