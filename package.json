@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "node ./node_modules/bower/bin/bower install && node ./node_modules/gulp/bin/gulp.js",
     "test-server": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage/server -- --recursive ./test/src/server",
-    "test-client": "node ./node_modules/karma/bin/karma start",
+    "test-client": "node ./node_modules/karma/bin/karma start ./test/karma.conf.js",
     "test": "npm run-script test-server && npm run-script test-client",
     "posttest": "rm -f tmp/*",
     "test-ci": "npm run-script test-server && npm run-script test-client",
