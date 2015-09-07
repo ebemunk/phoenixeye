@@ -15,14 +15,14 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../client/dist/dependencies.js',
-      '../client/dist/debug.js',
-      '../client/dist/templates.js',
-      '../client/phoenixeye.module.js',
-      '../client/**/*.js',
-      // '../client/html/**/*.html',
-      '../bower_components/angular-mocks/angular-mocks.js',
-      'src/client/**/*.js',
+      'client/dist/dependencies.js',
+      'client/dist/debug.js',
+      'client/dist/templates.js',
+      'client/phoenixeye.module.js',
+      'client/!(dist)/**/*.js',
+      // 'client/html/**/*.html',
+      'bower_components/angular-mocks/angular-mocks.js',
+      'test/src/client/**/*.js'
     ],
 
 
@@ -35,7 +35,7 @@ module.exports = function(config) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       // 'client/html/**/*.html': ['ng-html2js'],
-      '../client/**/*.js': ['coverage']
+      'client/!(dist)/**/*.js': ['coverage']
     },
 
 
@@ -53,7 +53,7 @@ module.exports = function(config) {
 
     coverageReporter: {
       type : 'lcov',
-      dir : 'coverage/client'
+      dir : 'test/coverage/client'
     },
 
 
