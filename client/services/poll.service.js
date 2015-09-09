@@ -71,5 +71,5 @@ PollService.prototype.pollUntil = function (httpConfig, stopCondition, timeout) 
 	.then(successHandler)
 	.catch(errorHandler);
 
-	return deferred;
+	return deferred.promise;
 };
