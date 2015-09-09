@@ -53,7 +53,7 @@ function ImageController() {
 		url: 'api/images/' + vm.$state.params.permalink
 	}, function (response) {
 		return response.data.image.metaComplete;
-	}).promise
+	})
 	.then(function (response) {
 		vm.debug('image poll resolved', response);
 		vm.image = response.data.image;
@@ -104,7 +104,7 @@ ImageController.prototype.pollJob = function (jobId) {
 		url: 'api/jobs/' + jobId
 	}, function (response) {
 		return response.data.job.status == 'complete';
-	}).promise
+	})
 	.then(function (response) {
 		vm.debug('job poll resolved', response);
 
