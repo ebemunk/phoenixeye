@@ -35,8 +35,6 @@ function slider (noUiSlider) {
 		link: function (scope, element, attrs, ngModelCtrl) {
 			var ngModelWatchDeregisterFn;
 
-			initialize();
-
 			//prevent memory leaks on destroy
 			scope.$on('$destroy', function () {
 				destroy();
