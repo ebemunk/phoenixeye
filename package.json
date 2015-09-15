@@ -11,7 +11,7 @@
     "test": "npm run-script test-server && npm run-script test-client",
     "posttest": "rm -f tmp/*",
     "test-ci": "npm run-script test-server && npm run-script test-client",
-    "posttest-ci": "node node_modules/lcov-result-merger/bin/lcov-result-merger.js './test/coverage/**/lcov.info' | node ./node_modules/codeclimate-test-reporter/bin/codeclimate.js"
+    "posttest-ci": "node ./node_modules/lcov-result-merger/bin/lcov-result-merger.js './test/coverage/**/lcov.info' | node ./node_modules/codeclimate-test-reporter/bin/codeclimate.js"
   },
   "author": "ebemunk <ebemunk@gmail.com>",
   "license": "MIT",
@@ -42,7 +42,6 @@
     "chai": "~3.2.0",
     "chai-as-promised": "^5.1.0",
     "codeclimate-test-reporter": "^0.1.1",
-    "coveralls": "^2.11.3",
     "css-mqpacker": "^4.0.0",
     "csswring": "^3.0.7",
     "eslint": "^1.4.1",
