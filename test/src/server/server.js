@@ -23,7 +23,6 @@ describe('/api', function () {
 	});
 
 	after(function () {
-		app.listener.close();
 		return app.orm.destroy();
 	});
 
@@ -66,7 +65,6 @@ describe('/', function () {
 	});
 
 	after(function () {
-		app.listener.close();
 		delete require.cache[require.resolve(serverPath + 'server.js')];
 
 		return Promise.map(Object.keys(app.connections), function (connection) {

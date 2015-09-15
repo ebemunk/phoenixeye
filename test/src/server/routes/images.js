@@ -28,10 +28,6 @@ describe('/api/images', function () {
 		});
 	});
 
-	after(function () {
-		app.listener.close();
-	});
-
 	afterEach(function () {
 		return Promise.map(Object.keys(models), function (model) {
 			return models[model].destroy({});

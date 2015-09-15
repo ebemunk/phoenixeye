@@ -32,7 +32,6 @@ describe('/api/analyses', function () {
 
 	after(function () {
 		unlinkStub.restore();
-		app.listener.close();
 	});
 
 	afterEach(function () {
