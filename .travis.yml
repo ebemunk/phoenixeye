@@ -11,3 +11,7 @@ before_script:
 
 script:
   - npm run-script test-ci
+
+addons:
+code_climate:
+    repo_token: 690a4bcbd83d1dc01db7902f1ef3c477fc43e5c32de0f2b4ee8e5ce4a586a5f4
