@@ -2,100 +2,100 @@
 // Generated on Sun Mar 29 2015 10:00:42 GMT-0700 (Pacific Daylight Time)
 
 module.exports = function(config) {
-  var configuration = {
+	var configuration = {
 
-    // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
-
-
-    // frameworks to use
-    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'chai', 'sinon'],
+		// base path that will be used to resolve all patterns (eg. files, exclude)
+		basePath: '',
 
 
-    // list of files / patterns to load in the browser
-    files: [
-      'client/dist/dependencies.js',
-      'client/dist/debug.js',
-      'client/dist/templates.js',
-      'client/phoenixeye.module.js',
-      'client/!(dist)/**/*.js',
-      // 'client/html/**/*.html',
-      'bower_components/angular-mocks/angular-mocks.js',
-      'test/src/client/**/*.js'
-    ],
+		// frameworks to use
+		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+		frameworks: ['mocha', 'chai', 'sinon'],
 
 
-    // list of files to exclude
-    exclude: [
-    ],
+		// list of files / patterns to load in the browser
+		files: [
+			'client/dist/dependencies.js',
+			'client/dist/debug.js',
+			'client/dist/templates.js',
+			'client/phoenixeye.module.js',
+			'client/!(dist)/**/*.js',
+			// 'client/html/**/*.html',
+			'bower_components/angular-mocks/angular-mocks.js',
+			'test/src/client/**/*.js'
+		],
 
 
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-      // 'client/html/**/*.html': ['ng-html2js'],
-      'client/!(dist)/**/*.js': ['coverage']
-    },
+		// list of files to exclude
+		exclude: [
+		],
 
 
-    // ngHtml2JsPreprocessor: {
-    //   stripPrefix: 'client/',
-    //   moduleName: 'phoenixeye.templates'
-    // },
+		// preprocess matching files before serving them to the browser
+		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+		preprocessors: {
+			// 'client/html/**/*.html': ['ng-html2js'],
+			'client/!(dist)/**/*.js': ['coverage']
+		},
 
 
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha', 'coverage'],
+		// ngHtml2JsPreprocessor: {
+		//   stripPrefix: 'client/',
+		//   moduleName: 'phoenixeye.templates'
+		// },
 
 
-    coverageReporter: {
-      type : 'lcov',
-      dir : 'test/coverage/client'
-    },
+		// test results reporter to use
+		// possible values: 'dots', 'progress'
+		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
+		reporters: ['mocha', 'coverage'],
 
 
-    // web server port
-    port: 9876,
+		coverageReporter: {
+			type : 'lcov',
+			dir : 'test/coverage/client'
+		},
 
 
-    // enable / disable colors in the output (reporters and logs)
-    colors: true,
+		// web server port
+		port: 9876,
 
 
-    // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
+		// enable / disable colors in the output (reporters and logs)
+		colors: true,
 
 
-    // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: false,
+		// level of logging
+		// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+		logLevel: config.LOG_INFO,
 
 
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    // browsers: ['Chrome', 'Firefox', 'IE'],
-    browsers: ['Firefox'],
+		// enable / disable watching file and executing tests whenever any file changes
+		autoWatch: false,
 
 
-    // customLaunchers: {
-    //   Chrome_travis_ci: {
-    //     base: 'Chrome',
-    //     flags: ['--no-sandbox']
-    //   }
-    // },
+		// start these browsers
+		// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+		// browsers: ['Chrome', 'Firefox', 'IE'],
+		browsers: ['Firefox'],
 
 
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
-  };
+		// customLaunchers: {
+		//   Chrome_travis_ci: {
+		//     base: 'Chrome',
+		//     flags: ['--no-sandbox']
+		//   }
+		// },
 
-  // if(process.env.TRAVIS){
-  //   configuration.browsers = ['Chrome_travis_ci'];
-  // }
 
-  config.set(configuration);
+		// Continuous Integration mode
+		// if true, Karma captures browsers, runs the tests and exits
+		singleRun: true
+	};
+
+	// if(process.env.TRAVIS){
+	//   configuration.browsers = ['Chrome_travis_ci'];
+	// }
+
+	config.set(configuration);
 };
