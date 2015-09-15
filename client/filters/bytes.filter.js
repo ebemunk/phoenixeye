@@ -1,3 +1,5 @@
+/*global angular*/
+
 angular.module('phoenixeye')
 .filter('bytes', function () {
 	return function (bytes, precision) {
@@ -18,5 +20,5 @@ angular.module('phoenixeye')
 		var val = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision);
 
 		return ( val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val ) + ' ' + units[number];
-	}
+	};
 });

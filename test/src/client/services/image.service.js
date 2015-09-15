@@ -1,3 +1,6 @@
+/*eslint-env node, mocha*/
+/*global inject*/
+
 'use strict';
 
 describe('Service: ImageService', function () {
@@ -67,6 +70,8 @@ describe('Service: ImageService', function () {
 		});
 
 		it('should sort analyses by createdAt descending', function (done) {
+			/*eslint no-unused-vars: 0*/
+
 			$httpBackend.expectGET('api/analyses/permalink')
 			.respond(200, 
 				[

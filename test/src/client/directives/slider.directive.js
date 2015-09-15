@@ -1,30 +1,27 @@
+/*eslint-env node, mocha*/
+/*global inject, should, sinon*/
+
 'use strict';
 
 describe('Directive: slider', function () {
 	var $compile;
-	var $rootScope;
-	var noUiSlider;
+	var scope;
 
 	beforeEach(module('phoenixeye'));
 	beforeEach(module('templates'));
 
 	beforeEach(inject(function ($injector) {
 		$compile = $injector.get('$compile');
-		$rootScope = $injector.get('$rootScope');
-		noUiSlider = $injector.get('noUiSlider');
+		scope = $injector.get('$rootScope').$new();
 	}));
 
 	it('should require ngModel', function () {
-		var scope = $rootScope.$new();
-
 		should.Throw(function () {
 			$compile('<slider start="start" range="range"></slider>')(scope);
 		});
 	});
 
 	it('should initialize noUiSlider', function () {
-		var scope = $rootScope.$new();
-
 		scope.start = [0];
 		scope.range = {
 			min: [1],
@@ -39,8 +36,6 @@ describe('Directive: slider', function () {
 	});
 
 	it('should update ngModel when slider value updates', function () {
-		var scope = $rootScope.$new();
-
 		scope.start = [0];
 		scope.range = {
 			min: [1],
@@ -59,8 +54,6 @@ describe('Directive: slider', function () {
 	});
 
 	it('should update slider when ngModel value is changed', function () {
-		var scope = $rootScope.$new();
-
 		scope.start = [0];
 		scope.range = {
 			min: [1],
@@ -79,8 +72,6 @@ describe('Directive: slider', function () {
 	});
 
 	it('should re-initialize the slider if any option changes', function () {
-		var scope = $rootScope.$new();
-
 		scope.start = [0];
 		scope.range = {
 			min: [1],
@@ -107,8 +98,6 @@ describe('Directive: slider', function () {
 	});
 
 	it('should destroy the slider if scope is destroyed', function () {
-		var scope = $rootScope.$new();
-
 		scope.start = [0];
 		scope.range = {
 			min: [1],
@@ -130,8 +119,6 @@ describe('Directive: slider', function () {
 	});
 
 	it('should use custom integer formatter if formatInteger is true', function () {
-		var scope = $rootScope.$new();
-
 		scope.start = [0];
 		scope.range = {
 			min: [1],

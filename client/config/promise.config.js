@@ -1,3 +1,5 @@
+/*global angular*/
+
 var module = angular.module('phoenixeye');
 module.config(PromiseConfig);
 module.run(PromiseScheduler);
@@ -43,9 +45,15 @@ function PromiseScheduler ($rootScope, Promise, debug) {
 		$rootScope.$evalAsync(callback);
 	});
 
-	Promise.onPossiblyUnhandledRejection(function(error, promise, oldHandler){
+	Promise.onPossiblyUnhandledRejection(function (error, promise){
 		if( error.message.match(/(superseded|prevented|aborted|failed|canceled)/) ) {
 			return;
+		}
+
+		if( promise ) {
+			promise.catch(function (err) {
+				debug(err);
+			});
 		}
 
 		debug(error.stack);

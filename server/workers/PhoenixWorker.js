@@ -101,7 +101,7 @@ PhoenixWorker.prototype.saveAnalyses = function(imageId, output) {
 				continue;
 			}
 
-			var paramVal = output[key][param]
+			var paramVal = output[key][param];
 			if( output[key][param] == 'true' || output[key][param] == 'false' ) {
 				paramVal = output[key][param] ? '1' : '0';
 			}
@@ -146,7 +146,7 @@ PhoenixWorker.prototype.saveAnalyses = function(imageId, output) {
 		.then(function (analysis) {
 			if( existingAnalyses.length > 2 ) {
 				existingAnalyses[0].destroy();
-			};
+			}
 
 			return analysis;
 		});
@@ -155,6 +155,8 @@ PhoenixWorker.prototype.saveAnalyses = function(imageId, output) {
 
 //phoenix worker function - makes the call to phoenix & saves resulting analyses
 PhoenixWorker.prototype.handleJob = function(params, callback) {
+	/*eslint no-unused-vars: 0*/
+
 	debug('worker', params);
 
 	var self = this;

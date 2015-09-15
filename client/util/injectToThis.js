@@ -9,5 +9,5 @@ window.injectToThis = function (ctor) {
 		if( this.debug ) {
 			this.debug = this.debug('app:' + name);
 		}
-	}
+	};
 };

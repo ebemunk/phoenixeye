@@ -1,3 +1,6 @@
+/*eslint-env node, mocha*/
+/*global inject*/
+
 'use strict';
 
 describe('Service: PollService', function () {
@@ -27,7 +30,7 @@ describe('Service: PollService', function () {
 			var promise = PollService.pollUntil({
 				method: 'get',
 				url: 'api/images/permalink'
-			}, function (resp) {
+			}, function () {
 				return false;
 			});
 
@@ -44,7 +47,7 @@ describe('Service: PollService', function () {
 			PollService.pollUntil({
 				method: 'get',
 				url: 'api/images/permalink'
-			}, function (resp) {
+			}, function () {
 				return true;
 			});
 
@@ -61,10 +64,10 @@ describe('Service: PollService', function () {
 			PollService.pollUntil({
 				method: 'get',
 				url: 'api/images/permalink'
-			}, function (resp) {
+			}, function () {
 				return true;
 			})
-			.catch(function (resp) {
+			.catch(function () {
 				rejected = true;
 			});
 
@@ -119,10 +122,10 @@ describe('Service: PollService', function () {
 			PollService.pollUntil({
 				method: 'get',
 				url: 'api/images/permalink'
-			}, function (resp) {
+			}, function () {
 				return false;
 			})
-			.catch(function (resp) {
+			.catch(function () {
 				rejected = true;
 			});
 
@@ -148,10 +151,10 @@ describe('Service: PollService', function () {
 			PollService.pollUntil({
 				method: 'get',
 				url: 'api/images/permalink'
-			}, function (resp) {
+			}, function () {
 				return false;
 			})
-			.catch(function (resp) {
+			.catch(function () {
 				rejected = true;
 			});
 

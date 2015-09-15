@@ -108,6 +108,8 @@ router.post('/upload', function (req, res, next) {
 
 //submit url
 router.post('/submit', jsonParser, function (req, res, next) {
+	/*eslint no-unused-vars: 0*/
+
 	debug('/submit');
 
 	var imageUrl = req.body.url;

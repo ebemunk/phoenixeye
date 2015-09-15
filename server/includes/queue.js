@@ -1,3 +1,5 @@
+/*eslint no-unused-vars: 0*/
+
 var debug = require('debug')('server:queue');
 var config = require('../config.json');
 
@@ -17,7 +19,7 @@ if( process.env.NODE_ENV === 'test' ) {
 						}
 					});
 				}
-			}
+			};
 		}
 	};
 } else {

@@ -1,3 +1,5 @@
+/*global angular*/
+
 angular.module('phoenixeye')
 .directive('slider', slider);
 
@@ -58,7 +60,7 @@ function slider (noUiSlider) {
 						scope.format,
 						scope.pips,
 						scope.formatInteger
-					]
+					];
 				},
 				function () {
 					initialize();

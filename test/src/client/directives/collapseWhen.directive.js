@@ -1,3 +1,6 @@
+/*eslint-env node, mocha*/
+/*global inject, sinon*/
+
 'use strict';
 
 describe('Directive: collapseWhen', function () {
@@ -19,7 +22,7 @@ describe('Directive: collapseWhen', function () {
 		var slideDownSpy = sinon.spy($.fn, 'slideDown');
 
 		$rootScope.collapse = true;
-		var element = $compile('<div collapse-when="collapse">test</div>')($rootScope);
+		$compile('<div collapse-when="collapse">test</div>')($rootScope);
 		$rootScope.$digest();
 
 		slideUpSpy.calledOnce.should.be.true;
@@ -34,7 +37,7 @@ describe('Directive: collapseWhen', function () {
 		var slideDownSpy = sinon.spy($.fn, 'slideDown');
 
 		$rootScope.collapse = false;
-		var element = $compile('<div collapse-when="collapse">test</div>')($rootScope);
+		$compile('<div collapse-when="collapse">test</div>')($rootScope);
 		$rootScope.$digest();
 
 		slideDownSpy.calledOnce.should.be.true;

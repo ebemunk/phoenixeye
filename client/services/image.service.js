@@ -1,3 +1,5 @@
+/*global angular, injectToThis*/
+
 angular.module('phoenixeye')
 .service('ImageService', ImageService);
 
@@ -19,7 +21,7 @@ ImageService.prototype.getAnalyses = function (imageId) {
 		method: 'get',
 		url: 'api/analyses/' + imageId
 	})
-	.then(function (response, status) {
+	.then(function (response) {
 		self.debug('getAnalyses', response);
 
 		var analyses = {
@@ -46,13 +48,15 @@ ImageService.prototype.getAnalyses = function (imageId) {
 			return a.createdAt < b.createdAt;
 		}
 
+		var type;
+
 		//sort by most recent created date
-		for( var type in analyses ) {
+		for( type in analyses ) {
 			analyses[type] = analyses[type].sort(mostRecentCreatedAt);
 		}
 
 		//sort by most recent created date
-		for( var type in histograms ) {
+		for( type in histograms ) {
 			histograms[type] = histograms[type].sort(mostRecentCreatedAt);
 		}
 

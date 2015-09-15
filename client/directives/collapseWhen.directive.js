@@ -1,3 +1,5 @@
+/*global angular*/
+
 angular.module('phoenixeye')
 .directive('collapseWhen', collapseWhen);
 
@@ -11,7 +13,7 @@ function collapseWhen ($) {
 		scope: {
 			collapseWhen: '='
 		},
-		link: function (scope, element, attrs) {
+		link: function (scope, element) {
 			scope.$watch('collapseWhen', function (value) {
 				if( value ) {
 					$(element).stop().slideUp();

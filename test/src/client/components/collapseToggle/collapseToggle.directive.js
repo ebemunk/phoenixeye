@@ -1,8 +1,11 @@
+/*eslint-env node, mocha*/
+/*global inject*/
+
 'use strict';
 
 describe('Directive: collapseToggle', function () {
 	var $compile;
-	var $rootScope;
+	var scope;
 	var $;
 
 	beforeEach(module('phoenixeye'));
@@ -10,23 +13,23 @@ describe('Directive: collapseToggle', function () {
 
 	beforeEach(inject(function ($injector) {
 		$compile = $injector.get('$compile');
-		$rootScope = $injector.get('$rootScope');
+		scope = $injector.get('$rootScope').$new();
 		$ = $injector.get('$');
 	}));
 
 	it('should toggle "toggle" attr value in scope', function () {
-		var element = $compile('<collapse-toggle toggle="collapse">test</div>')($rootScope);
+		var element = $compile('<collapse-toggle toggle="collapse">test</div>')(scope);
 
-		$rootScope.$digest();
+		scope.$digest();
 		$(element).find('i').click();
-		$rootScope.$digest();
+		scope.$digest();
 
-		$rootScope.collapse.should.be.true;
+		scope.collapse.should.be.true;
 
-		$rootScope.$digest();
+		scope.$digest();
 		$(element).find('i').click();
-		$rootScope.$digest();
+		scope.$digest();
 
-		$rootScope.collapse.should.be.false;
+		scope.collapse.should.be.false;
 	});
 });

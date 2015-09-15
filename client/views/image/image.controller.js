@@ -1,3 +1,5 @@
+/*global angular, injectToThis*/
+
 angular.module('phoenixeye')
 .controller('ImageController', ImageController);
 
@@ -129,7 +131,7 @@ ImageController.prototype.getAnalyses = function (imageId) {
 		vm.displayedLab = histograms.lab_fast[0];
 
 		//get qtables for jpg after analysis complete
-		if( vm.image.type == 'jpg' && Object.keys(vm.image.qtables).length == 0 ) {
+		if( vm.image.type == 'jpg' && Object.keys(vm.image.qtables).length === 0 ) {
 			vm.$http({
 				method: 'get',
 				url: 'api/images/' + vm.$state.params.permalink

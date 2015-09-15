@@ -67,6 +67,8 @@ module.exports = {
 			});
 		},
 		getExiv2Info: function () {
+			/*eslint no-unused-vars: 0*/
+
 			debug('Image.getExiv2Info');
 
 			var dotParser = new dataobjectParser();
@@ -109,7 +111,7 @@ module.exports = {
 				//clamp it between [0-100]
 				params.ela = {
 					quality: Math.min(Math.max(quality, 0), 100)
-				}
+				};
 			}
 
 			if( options.avgdist ) {
@@ -120,13 +122,15 @@ module.exports = {
 				params.lg = true;
 			}
 
+			var whitebg;
+
 			if( options.hsv ) {
-				var whitebg = (typeof options.hsv.whitebg == 'boolean' ? options.hsv.whitebg : config.defaultAnalysisOpts.hsv.whitebg);
+				whitebg = (typeof options.hsv.whitebg == 'boolean' ? options.hsv.whitebg : config.defaultAnalysisOpts.hsv.whitebg);
 				params.hsv = {whitebg: whitebg};
 			}
 
 			if( options.labfast ) {
-				var whitebg = (typeof options.labfast.whitebg == 'boolean' ? options.labfast.whitebg : config.defaultAnalysisOpts.labfast.whitebg);
+				whitebg = (typeof options.labfast.whitebg == 'boolean' ? options.labfast.whitebg : config.defaultAnalysisOpts.labfast.whitebg);
 				params.labfast = {whitebg: whitebg};
 			}
 
@@ -194,6 +198,8 @@ module.exports = {
 
 	//hooks
 	afterCreate: function (img, next) {
+		/*jshint -W069 */
+
 		debug('Image.afterCreate');
 
 		var image;

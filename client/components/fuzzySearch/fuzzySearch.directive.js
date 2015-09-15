@@ -1,3 +1,5 @@
+/*global angular, injectToThis*/
+
 angular.module('phoenixeye')
 .directive('fuzzySearch', fuzzySearch);
 
@@ -12,14 +14,15 @@ function fuzzySearch() {
 		controller: 'FuzzySearchController',
 		controllerAs: 'vm',
 		bindToController: true
-	}
+	};
 }
 
 angular.module('phoenixeye')
 .controller('FuzzySearchController', FuzzySearchController);
 
 FuzzySearchController.$inject = [
-	'$scope'
+	'$scope',
+	'Fuse'
 ];
 
 FuzzySearchController.$name = 'FuzzySearchController';
@@ -37,7 +40,7 @@ function FuzzySearchController () {
 		}
 
 		var fuzzySearchArray = vm.buildFuzzySearchArray(newV);
-		vm.fuzzySearch = new Fuse(fuzzySearchArray, {
+		vm.fuzzySearch = new vm.Fuse(fuzzySearchArray, {
 			keys: ['key', 'val'],
 			threshold: 0.4
 		});
@@ -56,7 +59,7 @@ FuzzySearchController.prototype.filter = function () {
 
 	if( ! vm.search ) {
 		vm.filtered = vm.list;
-		return
+		return;
 	}
 
 	var matches = vm.fuzzySearch.search(vm.search).map(function (el) {
@@ -70,16 +73,17 @@ FuzzySearchController.prototype.filter = function () {
 FuzzySearchController.prototype.buildFuzzySearchArray = function (obj) {
 	var array = [];
 
+	function getKeyVal(key) {
+		return {
+			key: key,
+			val: obj[field][prop][key]
+		};
+	}
+
 	for( var field in obj ) {
 		for( var prop in obj[field] ) {
 			array = array.concat(
-				Object.keys(obj[field][prop])
-				.map(function (key) {
-					return {
-						key: key,
-						val: obj[field][prop][key]
-					};
-				})
+				Object.keys(obj[field][prop]).map(getKeyVal)
 			);
 		}
 	}

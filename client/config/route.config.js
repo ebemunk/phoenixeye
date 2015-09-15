@@ -1,3 +1,5 @@
+/*global angular*/
+
 angular.module('phoenixeye').config(RouteConfig);
 
 RouteConfig.$inject = [

@@ -1,5 +1,4 @@
 var debug = require('debug')('server:routes:jobs');
-var config = require('../config.json');
 
 var router = require('express').Router();
 

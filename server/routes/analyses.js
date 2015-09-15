@@ -1,9 +1,6 @@
 var debug = require('debug')('server:routes:analyses');
-var config = require('../config.json');
 
 var router = require('express').Router();
-
-var HTTPError = require('node-http-error');
 
 //get analyses by their imageId
 router.get('/:imageId', function (req, res, next) {

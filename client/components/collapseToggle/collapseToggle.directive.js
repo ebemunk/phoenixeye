@@ -1,3 +1,5 @@
+/*global angular*/
+
 angular.module('phoenixeye')
 .directive('collapseToggle', collapseToggle);
 
@@ -8,5 +10,5 @@ function collapseToggle() {
 		scope: {
 			toggle: '='
 		}
-	}
+	};
 }

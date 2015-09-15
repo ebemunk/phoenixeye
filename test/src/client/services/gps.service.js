@@ -1,3 +1,6 @@
+/*eslint-env node, mocha*/
+/*global inject*/
+
 'use strict';
 
 describe('Service: GPSService', function () {

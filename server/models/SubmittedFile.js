@@ -81,7 +81,7 @@ SubmittedFile.prototype.checkMD5 = function(imageModel) {
 	return md5file(this.tmpPath)
 	.then(function (md5) {
 		fileMd5 = md5;
-		return imageModel.findOne({md5: md5})
+		return imageModel.findOne({md5: md5});
 	})
 	.then(function (image) {
 		if( ! image ) {

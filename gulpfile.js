@@ -51,7 +51,7 @@ var files = {
 			'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
 		],
 		debug: [
-			'bower_components/visionmedia-debug/dist/debug.js',
+			'bower_components/visionmedia-debug/dist/debug.js'
 		],
 		app: [
 			'client/phoenixeye.module.js',
@@ -127,6 +127,8 @@ gulp.task('html', function() {
 });
 
 gulp.task('less', function () {
+	/*eslint no-console: 0*/
+
 	return gulp.src(files.less.main)
 		.pipe(plumber())
 		.pipe(sourcemaps.init())

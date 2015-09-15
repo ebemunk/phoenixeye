@@ -1,3 +1,5 @@
+/*global angular, injectToThis*/
+
 angular.module('phoenixeye')
 .controller('RequestAnalysisController', RequestAnalysisController);
 

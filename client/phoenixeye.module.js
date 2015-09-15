@@ -1,3 +1,5 @@
+/*global angular, Promise, debug, $, noUiSlider, Fuse*/
+
 //3rd party dependencies
 angular.module('phoenixeye-deps', [
 	'ui.router',
@@ -21,4 +23,5 @@ module
 .constant('debug', debug)
 .constant('$', $)
 .constant('noUiSlider', noUiSlider)
+.constant('Fuse', Fuse)
 ;

@@ -1,3 +1,5 @@
+/*global angular, injectToThis*/
+
 angular.module('phoenixeye')
 .service('PollService', PollService);
 
@@ -16,7 +18,6 @@ function PollService () {
 
 	var self = this;
 
-	self.debug = debug;
 	self.defaultTimeout = 3000;
 	self.pollers = [];
 
@@ -45,11 +46,11 @@ PollService.prototype.pollUntil = function (httpConfig, stopCondition, timeout) 
 	self.pollers.push(deferred);
 
 	//error from server
-	function errorHandler(response, status) {
+	function errorHandler(response) {
 		deferred.reject(response);
 	}
 
-	function successHandler(response, status) {
+	function successHandler(response) {
 		//not stopped
 		if( deferred.stopped ) {
 			return deferred.reject();

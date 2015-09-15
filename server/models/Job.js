@@ -1,3 +1,5 @@
+/*eslint no-unused-vars: 0*/
+
 var debug = require('debug')('server:models:Job');
 
 module.exports = {
