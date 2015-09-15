@@ -1,3 +1,6 @@
+/*eslint-env node*/
+/*eslint no-unused-vars: 0*/
+
 var debug = require('debug')('server:main');
 var config = require('./config.json');
 
@@ -48,13 +51,17 @@ app.orm = new ORM();
 
 module.exports = app.orm.init()
 .then(function (models) {
+	/*eslint no-console: 0*/
+
 	app.models = models.collections;
 	app.connections = models.connections;
 
-	app.listener = app.listen(config.port, function () {
-		debug('server running on port ' + config.port);
-		console.log('phoenixeye server running at:', config.port);
-	});
+	if( require.main === module ) {
+		app.listener = app.listen(config.port, function () {
+			debug('server running on port ' + config.port);
+			console.log('phoenixeye server running at:', config.port);
+		});	
+	}
 
 	return app;
 })
