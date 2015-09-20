@@ -4,6 +4,8 @@ var plumber = require('gulp-plumber');
 //utility
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
+var flatten = require('gulp-flatten');
+var del = require('del');
 
 //js
 var uglify = require('gulp-uglify');
@@ -44,22 +46,28 @@ var files = {
 			'bower_components/nouislider/distribute/nouislider.js',
 			'bower_components/angular-local-storage/dist/angular-local-storage.js',
 
-			// 'bower_components/three.js/three.js',
+			'bower_components/three.js/three.js',
 			'bower_components/fuse/src/fuse.js',
 			'node_modules/bluebird/js/browser/bluebird.js',
 
 			//bootstrap & related
-			'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
+			'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+
+			//not in bower
+			'client/vendor/*.js'
 		],
 		debug: [
 			'bower_components/visionmedia-debug/dist/debug.js'
+		],
+		workers: [
+			'client/**/*.worker.js'
 		],
 		app: [
 			'client/phoenixeye.module.js',
 			'client/config/*.js',
 			'client/**/*.js',
 			'!client/dist/*',
-			'!client/test/*'
+			'!client/**/*.worker.js'
 		]
 	},
 	less: {
@@ -99,6 +107,13 @@ gulp.task('js-debug', function () {
 	;
 });
 
+gulp.task('js-workers', function () {
+	return gulp.src(files.js.workers)
+		.pipe(flatten())
+		.pipe(gulp.dest('client/dist/workers'))
+	;
+});
+
 gulp.task('js-cli', function () {
 	return gulp.src(files.js.app)
 		.pipe(plumber())
@@ -111,7 +126,7 @@ gulp.task('js-cli', function () {
 	;
 });
 
-gulp.task('js', ['js-deps', 'js-debug', 'js-cli']);
+gulp.task('js', ['js-deps', 'js-debug', 'js-cli', 'js-workers']);
 
 gulp.task('html', function() {
 	return gulp.src(files.html.app)
@@ -179,9 +194,16 @@ gulp.task('watch', ['nodemon'], function () {
 	});
 
 	gulp.watch(files.js.app, ['js-cli', browserSync.reload]);
+	gulp.watch(files.js.workers, ['js-workers', browserSync.reload]);
 	gulp.watch(files.less.app, ['less']);
 	gulp.watch(files.html.app, ['html', browserSync.reload]);
 	gulp.watch(files.html.main).on('change', browserSync.reload);
+});
+
+gulp.task('clean', function () {
+	return del([
+		'client/dist/*'
+	]);
 });
 
 gulp.task('default', ['js', 'less', 'html', 'fonts']);
