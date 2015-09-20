@@ -2,6 +2,7 @@
 
 //3rd party dependencies
 angular.module('phoenixeye-deps', [
+	'LocalStorageModule',
 	'ui.router',
 	'ui.bootstrap',
 	'ngFileUpload',

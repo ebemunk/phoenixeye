@@ -8,6 +8,7 @@
     "angular-bootstrap": "~0.13.0",
     "angular-filter": "~0.5.5",
     "angular-loading-bar": "~0.8.0",
+    "angular-local-storage": "~0.2.2",
     "angular-mocks": "~1.4.0",
     "angular-ui-router": "~0.2.13",
     "bootstrap": "~3.3.5",

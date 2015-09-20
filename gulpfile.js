@@ -42,6 +42,7 @@ var files = {
 			'bower_components/ngtoast/dist/ngToast.js',
 			'bower_components/angular-loading-bar/build/loading-bar.js',
 			'bower_components/nouislider/distribute/nouislider.js',
+			'bower_components/angular-local-storage/dist/angular-local-storage.js',
 
 			// 'bower_components/three.js/three.js',
 			'bower_components/fuse/src/fuse.js',
