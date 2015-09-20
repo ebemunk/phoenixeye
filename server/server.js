@@ -32,7 +32,8 @@ app.use('/api/jobs', require('./routes/jobs.js'));
 
 //static files
 app.use('/images', express.static('images', {index: 'false'}));
-app.use(express.static('client'));
+app.use('/img', express.static('img', {index: 'false'}));
+app.use(express.static('client/dist'));
 
 //redirect anything else to index.html
 app.use('/*', function indexRedirect(req, res, next) {
