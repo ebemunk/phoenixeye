@@ -1,0 +1,25 @@
+<canvas class="image-data"></canvas>
+
+<button
+	class="btn btn-default draw-btn"
+	ng-click="vm.drawColorspace()"
+	ng-class="{
+		active: vm.processing
+	}"
+	ng-disabled="! vm.pixelData || vm.disabled"
+	ng-if="! vm.rendered"
+>
+	<i
+		class="fa fa-spinner"
+		ng-class="{
+			'fa-spin': vm.processing
+		}"
+		ng-if="vm.processing"
+	></i> Draw Colorspace {{vm.rendered}}
+</button>
+
+<div class="checkbox always-draw" ng-if="vm.rendered">
+	<label>
+		<input type="checkbox" ng-model="vm.alwaysDraw" ng-change="vm.alwaysDrawToggle()"> Always Draw
+	</label>
+</div>
