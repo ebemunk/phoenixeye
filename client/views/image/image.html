@@ -46,10 +46,15 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">3D RGB Colorspace</h3>
+				<h3 class="panel-title">3D RGB Colorspace
+					<collapse-toggle toggle="vm.collapsedPanels.rgb"></collapse-toggle>
+					<i class="fa fa-question-circle"
+						tooltip="3D RGB histogram visualization.">
+					</i>
+				</h3>
 			</div>
-			<div class="panel-body">
-
+			<div class="panel-body centered position-relative" collapse-when="vm.collapsedPanels.rgb">
+				<colorspace image="vm.image"></colorspace>
 			</div>
 		</div>
 
