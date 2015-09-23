@@ -103,7 +103,7 @@ function magnifier ($) {
 			if( e.deltaY > 0 ) {
 				scope.magnifier.power = Math.min(scope.magnifier.power * 2, 128);
 			} else {
-				scope.magnifier.power = Math.max(1, scope.magnifier.power / 2);
+				scope.magnifier.power = Math.max(2, scope.magnifier.power / 2);
 			}
 
 			scope.$apply(scope.magnifier);
