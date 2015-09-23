@@ -126,7 +126,9 @@
 		<ng-include src="'components/imageNavbar/imageNavbar.html'"></ng-include>
 
 		<div class="image-display">
+			<div magnifier="vm.magnifier" target="#image-display" class="magnifier"></div>
 			<img
+				id="image-display"
 				class="img-responsive"
 				ng-src="{{vm.displayedImage ? vm.displayedImage.path + '/' + vm.displayedImage.fileName : ''}}"
 			>
