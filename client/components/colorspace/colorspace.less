@@ -9,8 +9,16 @@ colorspace {
 
 	.always-draw {
 		position: absolute;
-		bottom: 15px;
-		left: 27px;
 		color: white;
+
+		@media (min-width: @screen-md) {
+			bottom: 15px;
+			left: 27px;
+		}
+
+		@media (min-width: @screen-lg) {
+			bottom: 15px;
+			left: 56px;
+		}
 	}
 }
