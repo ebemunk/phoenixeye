@@ -1,0 +1,18 @@
+- monq disconnect issue
+- ENOENT on unlink in worker (??)
+- home view
+	- styles
+	- header
+- image view
+	- header
+- info page
+- footer
+- remember closed panels (+ google maps collapsed start issue)
+- 404 page styles
+- about view
+- info view
+- image controls
+	- fit to width (displayedImage.fullSize doesnt carry over)
+	- overlay
+- autolevels?
+- request analysis notice (max 3 kept of each)
