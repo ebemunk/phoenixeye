@@ -1,76 +1,71 @@
-/*global angular, injectToThis*/
+/*global angular*/
 
 angular.module('phoenixeye')
 .service('PollService', PollService);
 
 PollService.$inject = [
+	'debug',
 	'$q',
 	'$http',
 	'$timeout',
-	'$rootScope',
-	'debug'
+	'$rootScope'
 ];
 
-PollService.$name = 'PollService';
+function PollService (debug, $q, $http, $timeout, $rootScope) {
+	debug = debug('app:PollService');
 
-function PollService () {
-	injectToThis(this.constructor).apply(this, arguments);
-
+	var defaultTimeout = 3000;
 	var self = this;
 
-	self.defaultTimeout = 3000;
-	self.pollers = [];
+	this.pollers = [];
+	this.pollUntil = pollUntil;
 
-	self.$rootScope.$on('$stateChangeSuccess', self.stateChangeSuccess.bind(self));
+	$rootScope.$on('$stateChangeSuccess', stateChangeSuccess);
+
+	//stop all pollers on state change
+	function stateChangeSuccess (event, toState) {
+		if( toState.name === 'image' ) {
+			return;
+		}
+
+		self.pollers.forEach(function (poller) {
+			poller.stopped = true;
+		});
+	}
+
+	function pollUntil (httpConfig, stopCondition, timeout) {
+		timeout = timeout || defaultTimeout;
+
+		var deferred = $q.defer();
+		self.pollers.push(deferred);
+
+		//error from server
+		function errorHandler(response) {
+			deferred.reject(response);
+		}
+
+		function successHandler(response) {
+			//not stopped
+			if( deferred.stopped ) {
+				return deferred.reject();
+			}
+
+			//stop condition not met, try again
+			if( ! stopCondition(response) ) {
+				$timeout(function () {
+					$http(httpConfig)
+					.then(successHandler)
+					.catch(errorHandler);
+				}, timeout);
+			} else {
+				deferred.resolve(response);
+			}
+		}
+
+		$http(httpConfig)
+		.then(successHandler)
+		.catch(errorHandler);
+
+		return deferred.promise;
+	}
 }
-
-//stop all pollers on state change
-PollService.prototype.stateChangeSuccess = function (event, toState) {
-	var self = this;
-
-	if( toState.name === 'image' ) {
-		return;
-	}
-
-	self.pollers.forEach(function (poller) {
-		poller.stopped = true;
-	});
-};
-
-PollService.prototype.pollUntil = function (httpConfig, stopCondition, timeout) {
-	var self = this;
-
-	timeout = timeout || self.defaultTimeout;
-
-	var deferred = self.$q.defer();
-	self.pollers.push(deferred);
-
-	//error from server
-	function errorHandler(response) {
-		deferred.reject(response);
-	}
-
-	function successHandler(response) {
-		//not stopped
-		if( deferred.stopped ) {
-			return deferred.reject();
-		}
-
-		//stop condition not met, try again
-		if( ! stopCondition(response) ) {
-			self.$timeout(function () {
-				self.$http(httpConfig)
-				.then(successHandler)
-				.catch(errorHandler);
-			}, timeout);
-		} else {
-			deferred.resolve(response);
-		}
-	}
-
-	self.$http(httpConfig)
-	.then(successHandler)
-	.catch(errorHandler);
-
-	return deferred.promise;
-};

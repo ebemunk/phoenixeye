@@ -1,19 +1,17 @@
-/*global angular, injectToThis*/
+/*global angular*/
 
 angular.module('phoenixeye')
 .controller('RequestAnalysisController', RequestAnalysisController);
 
 RequestAnalysisController.$inject = [
-	'$modalInstance',
+	'debug',
 	'$http',
 	'$state',
-	'debug'
+	'$modalInstance'
 ];
 
-RequestAnalysisController.$name = 'RequestAnalysisController';
-
-function RequestAnalysisController () {
-	injectToThis(this.constructor).apply(this, arguments);
+function RequestAnalysisController (debug, $http, $state, $modalInstance) {
+	debug = debug('app:RequestAnalysisController');
 
 	var vm = this;
 
@@ -31,64 +29,61 @@ function RequestAnalysisController () {
 	vm.labfast = {
 		whitebg: false
 	};
-}
 
-RequestAnalysisController.prototype.ok = function () {
-	var vm = this;
+	vm.ok = ok;
+	vm.cancel = cancel;
 
-	if( vm.analysis.ela && vm.elaQuality ) {
-		vm.analysis.ela = {
-			quality: vm.elaQuality
-		};
-	}
-
-	if( vm.analysis.copymove && (vm.copymove.retain || vm.copymove.qcoeff) ) {
-		vm.analysis.copymove = {};
-
-		if( vm.copymoveRetain ) {
-			vm.analysis.copymove.retain = vm.copymoveRetain;
+	function ok () {
+		if( vm.analysis.ela && vm.elaQuality ) {
+			vm.analysis.ela = {
+				quality: vm.elaQuality
+			};
 		}
 
-		if( vm.copymoveQcoeff ) {
-			vm.analysis.copymove.qcoeff = vm.copymoveQcoeff;
+		if( vm.analysis.copymove && (vm.copymove.retain || vm.copymove.qcoeff) ) {
+			vm.analysis.copymove = {};
+
+			if( vm.copymoveRetain ) {
+				vm.analysis.copymove.retain = vm.copymoveRetain;
+			}
+
+			if( vm.copymoveQcoeff ) {
+				vm.analysis.copymove.qcoeff = vm.copymoveQcoeff;
+			}
+		}
+
+		if( vm.hsvWhitebg ) {
+			vm.analysis.hsv = {
+				whitebg: true
+			};
+		}
+
+		if( vm.labfastWhitebg ) {
+			vm.analysis.labfast = {
+				whitebg: true
+			};
+		}
+
+		if( ! isRequestEmpty() ) {
+			var requestPromise = $http({
+				method: 'post',
+				url: 'api/images/' + $state.params.permalink + '/analysis',
+				data: vm.analysis
+			});
+
+			$modalInstance.close(requestPromise);
 		}
 	}
 
-	if( vm.hsvWhitebg ) {
-		vm.analysis.hsv = {
-			whitebg: true
-		};
+	function cancel () {
+		$modalInstance.dismiss('cancel');
 	}
 
-	if( vm.labfastWhitebg ) {
-		vm.analysis.labfast = {
-			whitebg: true
-		};
-	}
-
-	if( ! vm.isRequestEmpty() ) {
-		var requestPromise = vm.$http({
-			method: 'post',
-			url: 'api/images/' + vm.$state.params.permalink + '/analysis',
-			data: vm.analysis
+	function isRequestEmpty () {
+		var atLeastOne = Object.keys(vm.analysis).some(function (key) {
+			return vm.analysis[key];
 		});
 
-		vm.$modalInstance.close(requestPromise);
+		return ! atLeastOne;
 	}
-};
-
-RequestAnalysisController.prototype.cancel = function () {
-	var vm = this;
-
-	vm.$modalInstance.dismiss('cancel');
-};
-
-RequestAnalysisController.prototype.isRequestEmpty = function () {
-	var vm = this;
-
-	var atLeastOne = Object.keys(vm.analysis).some(function (key) {
-		return vm.analysis[key];
-	});
-
-	return ! atLeastOne;
-};
+}

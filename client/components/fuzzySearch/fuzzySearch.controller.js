@@ -1,101 +1,98 @@
-/*global angular, injectToThis*/
+/*global angular*/
 
 angular.module('phoenixeye')
 .controller('FuzzySearchController', FuzzySearchController);
 
 FuzzySearchController.$inject = [
+	'debug',
 	'$scope',
 	'Fuse'
 ];
 
-FuzzySearchController.$name = 'FuzzySearchController';
-
-function FuzzySearchController () {
-	injectToThis(this.constructor).apply(this, arguments);
+function FuzzySearchController (debug, $scope, Fuse) {
+	debug = debug('app:FuzzySearchController');
 
 	var vm = this;
 
-	vm.$scope.$watch('vm.list', function (newV) {
-		vm.filtered = newV;
+	vm.clear = clear;
+	vm.filter = filter;
 
-		if( ! newV ) {
+	$scope.$watch('vm.list', listWatcher);
+
+	function listWatcher (list) {
+		vm.filtered = list;
+
+		if( ! list ) {
 			return;
 		}
 
-		var fuzzySearchArray = vm.buildFuzzySearchArray(newV);
-		vm.fuzzySearch = new vm.Fuse(fuzzySearchArray, {
+		var fuzzySearchArray = buildFuzzySearchArray(list);
+		vm.fuzzySearch = new Fuse(fuzzySearchArray, {
 			keys: ['key', 'val'],
 			threshold: 0.4
 		});
-	});
-}
-
-FuzzySearchController.prototype.clear = function () {
-	var vm = this;
-
-	vm.search = '';
-	vm.filter();
-};
-
-FuzzySearchController.prototype.filter = function () {
-	var vm = this;
-
-	if( ! vm.search ) {
-		vm.filtered = vm.list;
-		return;
 	}
 
-	var matches = vm.fuzzySearch.search(vm.search).map(function (el) {
-		return el.key;
-	});
-
-	vm.filtered = vm.buildFilteredObject(matches);
-};
-
-
-FuzzySearchController.prototype.buildFuzzySearchArray = function (obj) {
-	var array = [];
-
-	function getKeyVal(key) {
-		return {
-			key: key,
-			val: obj[field][prop][key]
-		};
+	function clear () {
+		vm.search = '';
+		filter();
 	}
 
-	for( var field in obj ) {
-		for( var prop in obj[field] ) {
-			array = array.concat(
-				Object.keys(obj[field][prop]).map(getKeyVal)
-			);
+	function filter () {
+		if( ! vm.search ) {
+			vm.filtered = vm.list;
+			return;
 		}
+
+		var matches = vm.fuzzySearch.search(vm.search).map(function (el) {
+			return el.key;
+		});
+
+		vm.filtered = buildFilteredObject(matches);
 	}
 
-	return array;
-};
+	function buildFuzzySearchArray (obj) {
+		var array = [];
 
-FuzzySearchController.prototype.buildFilteredObject = function (matches) {
-	var vm = this;
+		function getKeyVal(key) {
+			return {
+				key: key,
+				val: obj[field][prop][key]
+			};
+		}
 
-	var obj = {};
-
-	for( var field in vm.list ) {
-		for( var prop in vm.list[field] ) {
-			for( var key in vm.list[field][prop] ) {
-				if( matches.indexOf(key) < 0 ) continue;
-
-				if( ! obj[field] ) {
-					obj[field] = {};
-				}
-
-				if( ! obj[field][prop] ) {
-					obj[field][prop] = {};
-				}
-
-				obj[field][prop][key] = vm.list[field][prop][key];
+		for( var field in obj ) {
+			for( var prop in obj[field] ) {
+				array = array.concat(
+					Object.keys(obj[field][prop]).map(getKeyVal)
+				);
 			}
 		}
+
+		return array;
 	}
 
-	return obj;
-};
+	function buildFilteredObject (matches) {
+		var obj = {};
+
+		for( var field in vm.list ) {
+			for( var prop in vm.list[field] ) {
+				for( var key in vm.list[field][prop] ) {
+					if( matches.indexOf(key) < 0 ) continue;
+
+					if( ! obj[field] ) {
+						obj[field] = {};
+					}
+
+					if( ! obj[field][prop] ) {
+						obj[field][prop] = {};
+					}
+
+					obj[field][prop][key] = vm.list[field][prop][key];
+				}
+			}
+		}
+
+		return obj;
+	}
+}
