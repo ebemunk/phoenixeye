@@ -33,29 +33,29 @@ function PromiseConfig ($qProvider, Promise) {
 }
 
 PromiseScheduler.$inject = [
+	'debug',
 	'$rootScope',
-	'Promise',
-	'debug'
+	'Promise'
 ];
 
-function PromiseScheduler ($rootScope, Promise, debug) {
+function PromiseScheduler (debug, $rootScope, Promise) {
 	debug = debug('app:PromiseScheduler');
 
 	Promise.setScheduler(function (callback) {
 		$rootScope.$evalAsync(callback);
 	});
 
-	Promise.onPossiblyUnhandledRejection(function (error, promise){
+	Promise.onPossiblyUnhandledRejection(function (error, promise) {
 		if( error.message.match(/(superseded|prevented|aborted|failed|canceled)/) ) {
 			return;
 		}
 
 		if( promise ) {
 			promise.catch(function (err) {
-				debug(err);
+				debug(err, error.stack);
 			});
+		} else {
+			debug(error.stack);
 		}
-
-		debug(error.stack);
 	});
 }
