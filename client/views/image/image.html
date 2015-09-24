@@ -125,11 +125,19 @@
 	<div class="col-xs-8">
 		<ng-include src="'components/imageNavbar/imageNavbar.html'"></ng-include>
 
+		<ng-include src="'components/imageControls/imageControls.html'"></ng-include>
+
 		<div class="image-display">
 			<div magnifier="vm.magnifier" target="#image-display" class="magnifier"></div>
+
+			<div overlay="vm.image" class="overlay"></div>
+
 			<img
 				id="image-display"
 				class="img-responsive"
+				ng-class="{
+					'img-responsive': ! vm.displayedImage.fullSize
+				}"
 				ng-src="{{vm.displayedImage ? vm.displayedImage.path + '/' + vm.displayedImage.fileName : ''}}"
 			>
 		</div>

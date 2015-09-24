@@ -1,0 +1,29 @@
+<div class="btn-group">
+	<button
+		type="button"
+		class="btn btn-default"
+		ng-class="{
+			active: vm.displayedImage.fullSize
+		}"
+		tooltip-html="'Toggle Fit-to-Width <strong>(F)</strong>'"
+		ng-click="vm.displayedImage.fullSize = ! vm.displayedImage.fullSize"
+	>
+		<i class="fa fa-arrows-h"></i>
+	</button>
+
+	<button
+		type="button"
+		class="btn btn-default"
+		ng-class="{
+			active: vm.magnifier.active
+		}"
+		tooltip-html="'Toggle Magnifier <strong>(M)</strong> <br> <small>Mousewheel to zoom in/out.</small>'"
+		ng-click="vm.magnifier.toggle()"
+	>
+		<i class="fa fa-search"></i> {{vm.magnifier.power}}x
+	</button>
+
+	<button type="button" class="btn btn-default">
+		<i class="fa fa-picture-o"></i>
+	</button>
+</div>
