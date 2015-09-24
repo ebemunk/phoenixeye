@@ -8,19 +8,23 @@ collapseWhen.$inject = [
 ];
 
 function collapseWhen ($) {
-	return {
+	var directive = {
 		restrict: 'A',
 		scope: {
 			collapseWhen: '='
 		},
-		link: function (scope, element) {
-			scope.$watch('collapseWhen', function (value) {
-				if( value ) {
-					$(element).stop().slideUp();
-				} else {
-					$(element).stop().slideDown();
-				}
-			});
-		}
+		link: link
 	};
+
+	return directive;
+
+	function link (scope, element) {
+		scope.$watch('collapseWhen', function (value) {
+			if( value ) {
+				$(element).stop().slideUp();
+			} else {
+				$(element).stop().slideDown();
+			}
+		});
+	}
 }

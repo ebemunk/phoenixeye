@@ -43,9 +43,7 @@ function slider (noUiSlider) {
 		var ngModelWatchDeregisterFn;
 
 		//prevent memory leaks on destroy
-		scope.$on('$destroy', function () {
-			destroy();
-		});
+		scope.$on('$destroy', destroy);
 
 		//watch noUiSlider options & reconstruct if they change
 		scope.$watchCollection(
@@ -67,9 +65,7 @@ function slider (noUiSlider) {
 					scope.formatInteger
 				];
 			},
-			function () {
-				initialize();
-			}
+			initialize
 		);
 
 		//initialize slider
