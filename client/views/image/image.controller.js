@@ -7,15 +7,17 @@ ImageController.$inject = [
 	'debug',
 	'$scope',
 	'$http',
+	'$timeout',
 	'$state',
 	'$modal',
 	'ngToast',
+	'localStorageService',
 	'ImageService',
 	'PollService',
 	'GPSService'
 ];
 
-function ImageController(debug, $scope, $http, $state, $modal, ngToast, ImageService, PollService, GPSService) {
+function ImageController(debug, $scope, $http, $timeout, $state, $modal, ngToast, localStorageService, ImageService, PollService, GPSService) {
 	debug = debug('app:ImageController');
 
 	debug('state.params', $state.params);
@@ -41,9 +43,11 @@ function ImageController(debug, $scope, $http, $state, $modal, ngToast, ImageSer
 	vm.displayedHSV = null;
 	vm.displayedLab = null;
 
-	vm.collapsedPanels = {};
+	vm.collapsedPanels = localStorageService.get('collapsedPanels') || {};
 
 	vm.requestAnalysis = requestAnalysis;
+
+	$scope.$watch('vm.collapsedPanels', collapsedPanelsWatch, true);
 
 	initialize();
 
@@ -94,7 +98,7 @@ function ImageController(debug, $scope, $http, $state, $modal, ngToast, ImageSer
 			if( err.status === 404 ) {
 				errString = 'This image does not exist.';
 			} else {
-				errString = 'Something went wrong. (' + err.statusText + ')';
+				errString = 'Something went wrong :(<br><strong>' + err.statusText + '</strong>';
 			}
 
 			ngToast.danger(errString);
@@ -145,6 +149,8 @@ function ImageController(debug, $scope, $http, $state, $modal, ngToast, ImageSer
 		})
 		.catch(function (response, status) {
 			debug('error analyses', response, status);
+
+			ngToast.danger('Something went wrong :(<br><strong>' + response.data.error + '</strong>');
 		});
 	}
 
@@ -160,11 +166,26 @@ function ImageController(debug, $scope, $http, $state, $modal, ngToast, ImageSer
 		modal.result
 		.then(function (response) {
 			debug('modal response', response);
+			ngToast.success('Analysis request submitted.')
 
 			pollJob(response.data.jobId);
 		})
 		.catch(function (err) {
 			debug('modal fail', err);
 		});
+	}
+
+	function collapsedPanelsWatch (collapsedPanels) {
+		if( ! collapsedPanels ) {
+			return;
+		}
+
+		if( ! collapsedPanels.map ) {
+			$timeout(function () {
+				$scope.$broadcast('gpsMapInit');
+			}, 1500);
+		}
+
+		localStorageService.set('collapsedPanels', collapsedPanels);
 	}
 }

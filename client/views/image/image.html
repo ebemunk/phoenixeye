@@ -25,21 +25,32 @@
 			</div>
 		</div>
 
-		<div class="panel panel-default" ng-if="vm.gps">
+		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">GPS Map
 					<collapse-toggle toggle="vm.collapsedPanels.map"></collapse-toggle>
 				</h3>
 			</div>
 			<div class="panel-body" collapse-when="vm.collapsedPanels.map">
-				<div map-lazy-load="http://maps.google.com/maps/api/js">
-					<map center="{{vm.gps.lat}}, {{vm.gps.lng}}" zoom="6" scrollwheel="false">
+				<div
+					ng-if="vm.gps"
+					map-lazy-load="http://maps.google.com/maps/api/js"
+				>
+					<map
+						center="{{vm.gps.lat}}, {{vm.gps.lng}}"
+						zoom="6"
+						scrollwheel="false"
+						init-event="gpsMapInit"
+					>
 						<marker
 							position="[{{vm.gps.lat}}, {{vm.gps.lng}}]"
 							title="Image GPS Location"
 							visible="true"
 						></marker>
 					</map>
+				</div>
+				<div ng-if="! vm.gps">
+					No GPS data available.
 				</div>
 			</div>
 		</div>
@@ -67,15 +78,20 @@
 					</i>
 				</h3>
 			</div>
-			<div class="panel-body centered" collapse-when="vm.collapsedPanels.hsv">
-				<select 
-					class="form-control"
-					ng-model="vm.displayedHSV"
-					ng-options="hsv as (hsv.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (hsv.createdAt | date:'MMM dd, yy @ h:mm a') for hsv in vm.histograms.hsv"
-				></select>
-				<img class="img-responsive"
-					ng-src="{{vm.displayedHSV ? vm.displayedHSV.path + '/' + vm.displayedHSV.fileName : ''}}"
-				>
+			<div class="panel-body" collapse-when="vm.collapsedPanels.hsv">
+				<div class="centered" ng-if="vm.histograms.hsv.length">
+					<select 
+						class="form-control"
+						ng-model="vm.displayedHSV"
+						ng-options="hsv as (hsv.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (hsv.createdAt | date:'MMM dd, yy @ h:mm a') for hsv in vm.histograms.hsv"
+					></select>
+					<img class="img-responsive"
+						ng-src="{{vm.displayedHSV ? vm.displayedHSV.path + '/' + vm.displayedHSV.fileName : ''}}"
+					>
+				</div>
+				<div ng-if="! vm.histograms.hsv.length">
+					HSV Histogram not yet available.
+				</div>
 			</div>
 		</div>
 
@@ -88,15 +104,20 @@
 					</i>
 				</h3>
 			</div>
-			<div class="panel-body centered" collapse-when="vm.collapsedPanels.lab_fast">
-				<select
-					class="form-control"
-					ng-model="vm.displayedLab"
-					ng-options="lab_fast as (lab_fast.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (lab_fast.createdAt | date:'MMM dd, yy @ h:mm a') for lab_fast in vm.histograms.lab_fast"
-				></select>
-				<img class="img-responsive"
-					ng-src="{{vm.displayedLab ? vm.displayedLab.path + '/' + vm.displayedLab.fileName : ''}}"
-				>
+			<div class="panel-body" collapse-when="vm.collapsedPanels.lab_fast">
+				<div class="centered" ng-if="vm.histograms.lab_fast.length">
+					<select
+						class="form-control"
+						ng-model="vm.displayedLab"
+						ng-options="lab_fast as (lab_fast.params.whitebg == 'true' ? 'White BG' : 'Black BG') + ' | ' + (lab_fast.createdAt | date:'MMM dd, yy @ h:mm a') for lab_fast in vm.histograms.lab_fast"
+					></select>
+					<img class="img-responsive"
+						ng-src="{{vm.displayedLab ? vm.displayedLab.path + '/' + vm.displayedLab.fileName : ''}}"
+					>
+				</div>
+				<div ng-if="! vm.histograms.lab_fast.length">
+					Lab Histogram not yet available.
+				</div>
 			</div>
 		</div>
 
@@ -110,13 +131,19 @@
 				</h3>
 			</div>
 			<div class="panel-body" collapse-when="vm.collapsedPanels.qtables">
-				<div ng-repeat="(tableIndex, qt) in vm.image.qtables">
+				<div
+					ng-if="vm.image.qtables.length"
+					ng-repeat="(tableIndex, qt) in vm.image.qtables"
+				>
 					<h4>{{tableIndex == '1' ? 'Chrominance' : 'Luminance'}}</h4>
 					<table class="table table-bordered table-condensed">
 						<tr ng-repeat="row in qt">
 							<td ng-repeat="q in row track by $index">{{q}}</td>
 						</tr>
 					</table>
+				</div>
+				<div ng-if="! vm.image.qtables.length">
+					Quantization Tables not yet available.
 				</div>
 			</div>
 		</div>
