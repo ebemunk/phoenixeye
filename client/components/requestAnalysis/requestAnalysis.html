@@ -1,142 +1,145 @@
-<div class="modal-header">
-	<h3 class="modal-title">Request Analysis</h3>
-</div>
+<div class="request-analysis">
+	<div class="modal-header">
+		<h3 class="modal-title">Request Analysis</h3>
+		<p class="notice">Only the most recent 3 of each type of analysis will be kept.</p>
+	</div>
 
-<div class="modal-body">
-	<form>
-		<div class="checkbox">
-			<label>
-				<input type="checkbox" ng-model="vm.analysis.ela"> Error Level Analysis
-			</label>
-		</div>
-
-		<div class="form-group" ng-if="vm.analysis.ela">
-			<div class="row">
-				<label class="col-xs-12">Quality [1, 100]</label>
+	<div class="modal-body">
+		<form>
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" ng-model="vm.analysis.ela"> Error Level Analysis
+				</label>
 			</div>
-			<div class="row">
-				<div class="col-xs-10">
-					<slider
-						class="noUi-extended"
-						start="70"
-						range="{
-							min: [1],
-							max: [100]
-						}"
-						step="1"
-						connect="'lower'"
-						ng-model="vm.elaQuality"
-						format-integer="true"
-						ng-disabled="! vm.analysis.ela"
-					></slider>
+
+			<div class="form-group" ng-if="vm.analysis.ela">
+				<div class="row">
+					<label class="col-xs-12">Quality [1, 100]</label>
 				</div>
-				<div class="col-xs-2">
-					<input
-						class="form-control"
-						ng-model="vm.elaQuality"
-						ng-disabled="! vm.analysis.ela"
-					>
-				</div>
-			</div>
-		</div>
-
-		<div class="checkbox">
-			<label>
-				<input type="checkbox" ng-model="vm.analysis.lg"> Luminance Gradient
-			</label>
-		</div>
-
-		<div class="checkbox">
-			<label>
-				<input type="checkbox" ng-model="vm.analysis.avgdist"> Average Distance
-			</label>
-		</div>
-
-		<div class="checkbox">
-			<label>
-				<input type="checkbox" ng-model="vm.analysis.copymove"> Copy-Move Detection
-			</label>
-		</div>
-
-		<div ng-if="vm.analysis.copymove" class="form-group">
-			<div class="row">
-				<label class="col-xs-12">Retain [1, 16]</label>
-			</div>
-			<div class="row">
-				<div class="col-xs-10">
-					<slider
-						class="noUi-extended"
-						start="4"
-						range="{
-							min: [1],
-							max: [16]
-						}"
-						step="1"
-						connect="'lower'"
-						ng-model="vm.copymoveRetain"
-						format-integer="true"
-						ng-disabled="! vm.analysis.copymove"
-					></slider>
-				</div>
-				<div class="col-xs-2">
-					<input
-						class="form-control"
-						ng-model="vm.copymoveRetain"
-						ng-disabled="! vm.analysis.copymove"
-					>
+				<div class="row">
+					<div class="col-xs-10">
+						<slider
+							class="noUi-extended"
+							start="70"
+							range="{
+								min: [1],
+								max: [100]
+							}"
+							step="1"
+							connect="'lower'"
+							ng-model="vm.elaQuality"
+							format-integer="true"
+							ng-disabled="! vm.analysis.ela"
+						></slider>
+					</div>
+					<div class="col-xs-2">
+						<input
+							class="form-control"
+							ng-model="vm.elaQuality"
+							ng-disabled="! vm.analysis.ela"
+						>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div ng-if="vm.analysis.copymove" class="form-group">
-			<div class="row">
-				<label class="col-xs-12">Quality Coefficientc [1, 8]</label>
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" ng-model="vm.analysis.lg"> Luminance Gradient
+				</label>
 			</div>
-			<div class="row">
-				<div class="col-xs-10">
-					<slider
-						class="noUi-extended"
-						start="1"
-						range="{
-							min: [1],
-							max: [8]
-						}"
-						connect="'lower'"
-						ng-model="vm.copymoveQcoeff"
-						ng-disabled="! vm.analysis.copymove"
-					></slider>
+
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" ng-model="vm.analysis.avgdist"> Average Distance
+				</label>
+			</div>
+
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" ng-model="vm.analysis.copymove"> Copy-Move Detection
+				</label>
+			</div>
+
+			<div ng-if="vm.analysis.copymove" class="form-group">
+				<div class="row">
+					<label class="col-xs-12">Retain [1, 16]</label>
 				</div>
-				<div class="col-xs-2">
-					<input
-						class="form-control"
-						ng-model="vm.copymoveQcoeff"
-						ng-disabled="! vm.analysis.copymove"
-					>
+				<div class="row">
+					<div class="col-xs-10">
+						<slider
+							class="noUi-extended"
+							start="4"
+							range="{
+								min: [1],
+								max: [16]
+							}"
+							step="1"
+							connect="'lower'"
+							ng-model="vm.copymoveRetain"
+							format-integer="true"
+							ng-disabled="! vm.analysis.copymove"
+						></slider>
+					</div>
+					<div class="col-xs-2">
+						<input
+							class="form-control"
+							ng-model="vm.copymoveRetain"
+							ng-disabled="! vm.analysis.copymove"
+						>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="checkbox">
-			<label>
-				<input type="checkbox" ng-model="vm.analysis.hsv"> HSV Histogram
-			</label>
-			<label ng-if="vm.analysis.hsv">
-				<input type="checkbox" ng-model="vm.hsvWhitebg" ng-disabled="! vm.analysis.hsv"> White Background
-			</label>
-		</div>
+			<div ng-if="vm.analysis.copymove" class="form-group">
+				<div class="row">
+					<label class="col-xs-12">Quality Coefficientc [1, 8]</label>
+				</div>
+				<div class="row">
+					<div class="col-xs-10">
+						<slider
+							class="noUi-extended"
+							start="1"
+							range="{
+								min: [1],
+								max: [8]
+							}"
+							connect="'lower'"
+							ng-model="vm.copymoveQcoeff"
+							ng-disabled="! vm.analysis.copymove"
+						></slider>
+					</div>
+					<div class="col-xs-2">
+						<input
+							class="form-control"
+							ng-model="vm.copymoveQcoeff"
+							ng-disabled="! vm.analysis.copymove"
+						>
+					</div>
+				</div>
+			</div>
 
-		<div class="checkbox">
-			<label>
-				<input type="checkbox" ng-model="vm.analysis.labfast"> Lab Histogram
-			</label>
-			<label ng-if="vm.analysis.labfast">
-				<input type="checkbox" ng-model="vm.labfastWhitebg" ng-disabled="! vm.analysis.labfast"> White Background
-			</label>
-		</div>
-	</form>
-</div>
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" ng-model="vm.analysis.hsv"> HSV Histogram
+				</label>
+				<label ng-if="vm.analysis.hsv" class="white-bg">
+					<input type="checkbox" ng-model="vm.hsvWhitebg" ng-disabled="! vm.analysis.hsv"> White Background
+				</label>
+			</div>
 
-<div class="modal-footer">
-	<button class="btn btn-primary" ng-click="vm.ok()" ng-disabled="vm.isRequestEmpty()">OK</button>
-	<button class="btn btn-warning" ng-click="vm.cancel()">Cancel</button>
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" ng-model="vm.analysis.labfast"> Lab Histogram
+				</label>
+				<label ng-if="vm.analysis.labfast" class="white-bg">
+					<input type="checkbox" ng-model="vm.labfastWhitebg" ng-disabled="! vm.analysis.labfast"> White Background
+				</label>
+			</div>
+		</form>
+	</div>
+
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="vm.ok()" ng-disabled="vm.isRequestEmpty()">OK</button>
+		<button class="btn btn-warning" ng-click="vm.cancel()">Cancel</button>
+	</div>
 </div>
