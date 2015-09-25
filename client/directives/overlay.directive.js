@@ -4,10 +4,9 @@ angular.module('phoenixeye')
 .directive('overlay', overlay);
 
 overlay.$inject = [
-	'$'
 ];
 
-function overlay ($) {
+function overlay () {
 	var directive = {
 		restrict: 'A',
 		scope: {

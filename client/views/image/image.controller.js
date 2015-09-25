@@ -166,7 +166,7 @@ function ImageController(debug, $scope, $http, $timeout, $state, $modal, ngToast
 		modal.result
 		.then(function (response) {
 			debug('modal response', response);
-			ngToast.success('Analysis request submitted.')
+			ngToast.success('Analysis request submitted.');
 
 			pollJob(response.data.jobId);
 		})
