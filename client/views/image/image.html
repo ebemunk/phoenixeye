@@ -260,6 +260,12 @@
 						</tbody>
 					</table>
 				</div>
+				<div
+					class="no-metadata"
+					ng-if="vm.metaFiltered | isEmptyObject"
+				>
+					No metadata found.
+				</div>
 			</div>
 		</div>
 	</div>
