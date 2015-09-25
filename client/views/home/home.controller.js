@@ -28,23 +28,22 @@ function HomeController (debug, $http, $state, Upload, ngToast) {
 			.progress(function (event) {
 				debug('progress', event);
 			})
-			.success(function (data, status) {
-				debug('success', data, status);
+			.success(function (response, status) {
+				debug('success', response, status);
 
-				var jobId = data.jobId || null;
+				var jobId = response.jobId || null;
 
 				ngToast.success('Upload complete!');
 
 				$state.go('image', {
-					image: data.image,
+					image: response.image,
 					jobId: jobId,
-					permalink: data.image.permalink
+					permalink: response.image.permalink
 				});
 			})
-			.error(function (data, status) {
-				debug('error', data, status);
-
-				ngToast.danger('Something went wrong. (' + data.error + ')');
+			.catch(function (response) {
+				debug('error', response);
+				ngToast.danger('Something went wrong :(<br><strong>' + response.data.error + '</strong>');
 			});
 		}
 	}
@@ -55,19 +54,20 @@ function HomeController (debug, $http, $state, Upload, ngToast) {
 			url: 'api/images/submit',
 			data: {url: url}
 		})
-		.then(function (resp, status) {
-			debug('success', resp, status);
+		.then(function (response, status) {
+			debug('success', response, status);
 
-			var jobId = resp.data.jobId || null;
+			var jobId = response.data.jobId || null;
 
 			$state.go('image', {
-				image: resp.data.image,
+				image: response.data.image,
 				jobId: jobId,
-				permalink: resp.data.image.permalink
+				permalink: response.data.image.permalink
 			});
 		})
-		.catch(function (data, status) {
-			debug('error', data, status);
+		.catch(function (response, status) {
+			debug('error', response, status);
+			ngToast.danger('Something went wrong :(<br><strong>' + response.data.error + '</strong>');
 		});
 	}
 }
