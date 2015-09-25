@@ -18,7 +18,9 @@
 			active: vm.magnifier.active
 		}"
 		tooltip-html="'Toggle Magnifier <strong>(M)</strong> <br> <small>Mousewheel to zoom in/out.</small>'"
+		tooltip-html="'Toggle Magnifier <strong>(M)</strong><br><small>Mousewheel to zoom in/out.</small>'"
 		ng-click="vm.magnifier.toggle()"
+		ng-disabled="vm.overlay.active"
 	>
 		<i class="fa fa-search"></i> {{vm.magnifier.power}}x
 	</button>
