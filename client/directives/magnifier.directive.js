@@ -25,15 +25,17 @@ function magnifier ($) {
 			power: 2
 		};
 
-		var target = $(scope.target);
+		scope.magnifier.toggle = toggle;
+
+		var target;
 		var imageWatcher;
 		var sizeWatcher;
-
-		scope.magnifier.toggle = toggle;
 
 		toggle();
 
 		function toggle () {
+			target = $(scope.target);
+
 			if( ! scope.magnifier.active ) {
 				scope.magnifier.active = true;
 
