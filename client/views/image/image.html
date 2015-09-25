@@ -130,7 +130,14 @@
 		<div class="image-display">
 			<div magnifier="vm.magnifier" target="#image-display" class="magnifier"></div>
 
-			<div overlay="vm.image" class="overlay"></div>
+			<img
+				class="overlay"
+				overlay="vm.overlay"
+				ng-class="{
+					'img-responsive': vm.displayFitToWidth
+				}"
+				ng-src="{{vm.image ? vm.image.path + '/' + vm.image.fileName : ''}}"
+			>
 
 			<img
 				id="image-display"

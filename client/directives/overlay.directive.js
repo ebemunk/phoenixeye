@@ -1,0 +1,65 @@
+/*global angular*/
+
+angular.module('phoenixeye')
+.directive('overlay', overlay);
+
+overlay.$inject = [
+	'$'
+];
+
+function overlay ($) {
+	var directive = {
+		restrict: 'A',
+		scope: {
+			overlay: '=',
+			target: '@'
+		},
+		link: link
+	};
+
+	return directive;
+
+	function link (scope, element) {
+		scope.overlay = {
+			active: true,
+			opacity: 50
+		};
+
+		scope.overlay.toggle = toggle;
+
+		toggle();
+
+		function toggle () {
+			if( ! scope.overlay.active ) {
+				scope.overlay.active = true;
+
+				element.on('mousewheel', adjustOpacity);
+			} else {
+				scope.overlay.active = false;
+
+				element.off('mousewheel');
+			}
+
+			element.css({
+				display: scope.overlay.active ? '' : 'none',
+				opacity: scope.overlay.opacity / 100
+			});
+		}
+
+		function adjustOpacity (e) {
+			e.preventDefault();
+
+			if( e.deltaY > 0 ) {
+				scope.overlay.opacity = Math.min(scope.overlay.opacity + 5, 100);
+			} else {
+				scope.overlay.opacity = Math.max(0, scope.overlay.opacity - 5);
+			}
+
+			element.css({
+				opacity: scope.overlay.opacity / 100
+			});
+
+			scope.$apply(scope.overlay);
+		}
+	}
+}
