@@ -136,7 +136,7 @@
 				id="image-display"
 				class="img-responsive"
 				ng-class="{
-					'img-responsive': ! vm.displayedImage.fullSize
+					'img-responsive': vm.displayFitToWidth
 				}"
 				ng-src="{{vm.displayedImage ? vm.displayedImage.path + '/' + vm.displayedImage.fileName : ''}}"
 			>

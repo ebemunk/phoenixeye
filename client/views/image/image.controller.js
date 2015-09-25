@@ -24,6 +24,7 @@ function ImageController(debug, $scope, $http, $state, $modal, ngToast, ImageSer
 
 	vm.image = $state.params.image;
 	vm.displayedImage = $state.params.image;
+	vm.displayFitToWidth = true;
 
 	vm.analyses = {
 		ela: [],
