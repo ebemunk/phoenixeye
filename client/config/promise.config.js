@@ -51,7 +51,12 @@ function PromiseScheduler (debug, $rootScope, Promise) {
 		}
 
 		if( promise ) {
-			promise.catch(function (err) {
+			promise
+			.catch(function (err) {
+				if( err.status === 415 || err.status === 413 ) {
+					return;
+				}
+
 				debug(err, error.stack);
 			});
 		} else {
