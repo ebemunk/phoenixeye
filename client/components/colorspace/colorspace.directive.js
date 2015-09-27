@@ -3,7 +3,11 @@
 angular.module('phoenixeye')
 .directive('colorspace', colorspace);
 
-function colorspace () {
+colorspace.$inject = [
+	'DetectorService'
+];
+
+function colorspace (DetectorService) {
 	return {
 		restrict: 'E',
 		templateUrl: 'components/colorspace/colorspace.html',
@@ -14,7 +18,7 @@ function colorspace () {
 		controllerAs: 'vm',
 		bindToController: true,
 		link: function(scope, element) {
-			if ( ! Detector.webgl || ! Detector.workers || ! Detector.canvas ) {
+			if ( ! DetectorService.webgl || ! DetectorService.workers || ! DetectorService.canvas ) {
 				scope.vm.disabled = true;
 
 				return;
@@ -46,9 +50,3 @@ function colorspace () {
 		}
 	};
 }
-
-var Detector = {
-	canvas: !! window.CanvasRenderingContext2D,
-	webgl: ( function () { try { var canvas = document.createElement( 'canvas' ); return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )(),
-	workers: !! window.Worker
-};
