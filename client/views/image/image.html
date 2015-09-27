@@ -132,7 +132,7 @@
 			</div>
 			<div class="panel-body" collapse-when="vm.collapsedPanels.qtables">
 				<div
-					ng-if="vm.image.qtables.length"
+					ng-if="vm.image.qtables"
 					ng-repeat="(tableIndex, qt) in vm.image.qtables"
 				>
 					<h4>{{tableIndex == '1' ? 'Chrominance' : 'Luminance'}}</h4>
@@ -142,7 +142,7 @@
 						</tr>
 					</table>
 				</div>
-				<div ng-if="! vm.image.qtables.length">
+				<div ng-if="vm.image.qtables | isEmptyObject">
 					Quantization Tables not yet available.
 				</div>
 			</div>
