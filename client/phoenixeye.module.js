@@ -26,4 +26,5 @@ module
 .constant('noUiSlider', noUiSlider)
 .constant('Fuse', Fuse)
 .constant('THREE', THREE)
+.constant('katex', katex)
 ;
