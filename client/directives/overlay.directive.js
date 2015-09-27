@@ -10,8 +10,7 @@ function overlay () {
 	var directive = {
 		restrict: 'A',
 		scope: {
-			overlay: '=',
-			target: '@'
+			overlay: '='
 		},
 		link: link
 	};
@@ -19,6 +18,10 @@ function overlay () {
 	return directive;
 
 	function link (scope, element) {
+		if( element[0].tagName !== 'IMG' ) {
+			throw new Error('overlay can only be used for <img> elements');
+		}
+
 		scope.overlay = {
 			active: true,
 			opacity: 50
