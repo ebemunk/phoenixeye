@@ -20,7 +20,8 @@
     "ngtoast": "~1.5.5",
     "nouislider": "~8.0.2",
     "three.js": "~0.71.0",
-    "visionmedia-debug": "~2.2.0"
+    "visionmedia-debug": "~2.2.0",
+    "KaTeX": "katex#~0.5.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.3"

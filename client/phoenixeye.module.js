@@ -1,4 +1,4 @@
-/*global angular, Promise, debug, $, noUiSlider, Fuse, THREE*/
+/*global angular, Promise, debug, $, noUiSlider, Fuse, THREE katex*/
 
 //3rd party dependencies
 angular.module('phoenixeye-deps', [

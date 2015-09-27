@@ -50,6 +50,7 @@ var files = {
 			'bower_components/fuse/src/fuse.js',
 			'node_modules/bluebird/js/browser/bluebird.js',
 			'bower_components/jquery-mousewheel/jquery.mousewheel.js',
+			'bower_components/KaTeX/dist/katex.min.js',
 
 			//bootstrap & related
 			'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
