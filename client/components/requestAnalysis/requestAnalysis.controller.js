@@ -7,10 +7,11 @@ RequestAnalysisController.$inject = [
 	'debug',
 	'$http',
 	'$state',
-	'$modalInstance'
+	'$modalInstance',
+	'$rootScope'
 ];
 
-function RequestAnalysisController (debug, $http, $state, $modalInstance) {
+function RequestAnalysisController (debug, $http, $state, $modalInstance, $rootScope) {
 	debug = debug('app:RequestAnalysisController');
 
 	var vm = this;
@@ -32,6 +33,8 @@ function RequestAnalysisController (debug, $http, $state, $modalInstance) {
 
 	vm.ok = ok;
 	vm.cancel = cancel;
+
+	$rootScope.$on('$stateChangeSuccess', cancel);
 
 	function ok () {
 		if( vm.analysis.ela && vm.elaQuality ) {
