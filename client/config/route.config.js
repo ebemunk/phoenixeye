@@ -28,6 +28,14 @@ function RouteConfig ($stateProvider, $urlRouterProvider, $locationProvider) {
 				jobId: null
 			}
 		})
+		.state('about', {
+			url: '/about',
+			templateUrl: 'views/about/about.html'
+		})
+		.state('info', {
+			url: '/info',
+			templateUrl: 'views/info/info.html'
+		})
 		.state('404', {
 			templateUrl: 'views/404/404.html'
 		})

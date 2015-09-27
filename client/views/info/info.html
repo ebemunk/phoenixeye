@@ -1,0 +1,79 @@
+<div class="row">
+	<div class="col-md-3">
+		<div id="side-nav" ui-scrollfix="+150">
+			<ul class="nav nav-list">
+				<li><a href="#ela">Error Level Analysis</a></li>
+				<li><a href="#avgdist">Average Distance</a></li>
+				<li><a href="#lg">Luminance Gradient</a></li>
+				<li><a href="#hsv">HSV Histogram</a></li>
+				<li><a href="#lab">Lab Histogram</a></li>
+				<li><a href="#copymove">Copy-Move Detection</a></li>
+				<li><a href="#qtable">QTables & JPEG Quality</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<h1 id="ela">Error Level Analysis (ELA)</h1>
+		<div>
+			<p>The source image is re-saved at a known quality. Then, the absolute difference between the source image and its re-saved copy is calculated for all channels (R,G,B), and finally normalized to lie between [0,255].</p>
+			<p>Hence every pixel in the output represents the error level of the re-saved copy from the original image.</p>
+			<p>There is a great in-depth discussion about how ELA works and ways it can be used to identify alterations on Neal Krawetz's <a href="http://www.fotoforensics.com/tutorial-ela.php" target="_blank">ELA Tutorial</a>.</p>
+			<p>Error Level Analysis algorithm is implemented from the description in <a href="http://blackhat.com/presentations/bh-dc-08/Krawetz/Whitepaper/bh-dc-08-krawetz-WP.pdf" target="_blank">A Picture's Worth...</a> by Neal Krawetz in his Black Hat 2008 whitepaper.</p>
+		</div>
+
+		<h1 id="avgdist">Average Distance (AVGDIST)</h1>
+		<div>
+			<p>Applies the filter</p>
+			<table class="center table-bordered">
+				<tr><td>0</td><td>0.25</td><td>0</td></tr>
+				<tr><td>0.25</td><td>0</td><td>0.25</td></tr>
+				<tr><td>0</td><td>0.25</td><td>0</td></tr>
+			</table>
+			<p>to the source image, and then get the absolute difference between the source image and the filtered copy, which is then normalized to [0,1].</p>
+			<p>Average distance algorithm is adapted from the code in <a href="https://infohost.nmt.edu/~schlake/ela/" target="_blank">ELA From Scratch</a>.</p>
+		</div>
+
+		<h1 id="lg">Luminance Gradient (LG)</h1>
+		<div>
+			<p>First, the source image is turned into grayscale by:</p>
+			<blockquote>P = 0.299*R + 0.586*G + 0.114*B, for every pixel</blockquote>
+			<p>Then, two Sobel filters with kernel size 3 are applied for both directions, X and Y. This gives the derivative of the image for both directions. For each pixel, we can find the angle between the two sobel outputs using arctan(X, Y) at every pixel, which indicates the direction of the greatest change in brightness, or the gradient.</p>
+			<p>For every pixel in the output image, we assign:</p>
+			<blockquote>R = sqrt(X2 + Y2), magnitude of the gradient<br>
+			G = (-sin(angle) / 2.0 + 0.5), -sin(angle) mapped to [0,1]<br>
+			B = (-cos(angle) / 2.0 + 0.5), -cos(angle) mapped to [0,1]
+			</blockquote>
+			<p>Finally all channels are normalized to lie between [0,255].</p>
+			<p>Hence the color of every pixel indicates the direction of greatest change in brightness among its neighbors.</p>
+			<p>Luminance Gradient algorithm is implemented from the description in <a href="http://blackhat.com/presentations/bh-dc-08/Krawetz/Whitepaper/bh-dc-08-krawetz-WP.pdf" target="_blank">A Picture's Worth...</a> by Neal Krawetz in his Black Hat 2008 whitepaper.</p>
+		</div>
+
+		<h1 id="hsv">HSV Histogram</h1>
+		<div>
+			<p>HSV Histogram represents the color frequencies of the image in the <a href="http://en.wikipedia.org/wiki/HSL_and_HSV" target="_blank">HSV Colorspace</a>. The source image is converted to HSV, and all (H,S) pairs are counted. Hue is collected into 360 buckets between [0,360], so the x-axis of the image represents Hue values. Saturation is collected in 255 buckets between [0,1] and the y-axis of the image represents change in Saturation. The Value (V) component for every pixel represents its frequency in the image, normalized to [0,1] range.</p>
+			<p>Top left corner is H=0, S=0 and bottom right corner is H=360, S=1, which results in a 360-by-255 image.</p>
+			<p>HSV Histogram code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/hsv-analysis" target="_blank">GIMP plugin</a> by Samuel Albrecht.</p>
+		</div>
+
+		<h1 id="lab">Lab Histogram</h1>
+		<div>
+			<p>Lab Histogram represents the color frequencies of the image in the <a href="http://en.wikipedia.org/wiki/Lab_color_space" target="_blank">Lab Colorspace</a>. The idea is similar to HSV Histogram, a and b components are both scaled to [-128, 127] and collected in 255 buckets. The L component is the frequency of that color in the image. Please note that unlike the HSV histogram, the borders of the colorspace does not reach the ends of the output image.</p>
+			<p>Lab Histogram code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/lab-analysis" target="_blank">GIMP plugin</a> by Samuel Albrecht.</p>
+			<p><small>For speed reasons, the histogram calculation is done on unsigned int [0,255] range, and so is not as accurate as the float [0,1] version. You can use <a href="https://github.com/ebemunk/phoenix" target="_blank">phoenix</a> to run the accurate version though!</small></p>
+		</div>
+
+		<h1 id="copymove">Copy-Move Detection</h1>
+		<div>
+			<p>Describe</p>
+		</div>
+
+		<h1 id="qtable">Quantization Tables and JPEG Quality</h1>
+		<div>
+			<p>By reading the JPEG file directly, phoenix extracts <a href="#">Quantization Tables</a> from it. There might be 1, 2 or 3 quantization tables (at least the luminance table must be present, chrominance red/blue are optional).</p>
+			<p>Many cameras have unique Quantization Tables and so a basic test might be to check if the EXIF camera's tables match the actual tables extracted from the image.</p>
+			<p>Check out ImpulseAdventure JPEG site for a wealth of information about quantization tables, comparisons and even tables for many camera models.</p>
+			<p>Aside from comparing them, Quantization Tables can also be used for estimating the JPEG quality. This corresponds only to the <strong>last</strong> save, as the tables get overwritten if many saves occur.</p>
+			<p>I have found two methods of estimating JPEG quality, one from <a href="http://www.hackerfactor.com/src/jpegquality.c" target="_blank">jpegquality.c</a> which you can read more about from the <a href="http://fotoforensics.com/tutorial-estq.php" target="_blank">Fotoforensics Tutorial</a>, and the other from the ImageMagick utility <a href="http://trac.imagemagick.org/browser/ImageMagick/trunk/coders/jpeg.c" target="_blank">jpeg.c</a>.</p>
+		</div>
+	</div>
+</div>
