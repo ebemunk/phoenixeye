@@ -11,8 +11,16 @@
 @import "**/*.less";
 
 @fa-font-path: "./fonts";
+
 @grid-float-breakpoint: 0;
 @font-size-base: 14px;
+@brand-orange: #F06322;
+@brand-primary: #95c318;
+
+@panel-bg: rgba(255,255,255,0.4);
+@panel-default-text: #fff;
+@panel-default-border: #ddd;
+@panel-default-heading-bg: @brand-orange;
 
 html {
 	position: relative;
@@ -20,7 +28,7 @@ html {
 }
 
 body {
-	margin-bottom: 60px;
+	background-image: url(img/pattern.png), linear-gradient(#dedede, #ffffff);
 
 	&.modal-open {
 		overflow: auto;
@@ -30,13 +38,6 @@ body {
 //fix responsiveness to md or above
 .container {
 	min-width: @screen-md !important;
-}
-
-.footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: 60px;
 }
 
 .position-relative {

@@ -1,7 +1,6 @@
 <div class="home">
-	home
-
 	<div
+		class="drop-zone"
 		ng-model="file"
 
 		ngf-drop
@@ -13,11 +12,55 @@
 		ngf-drag-over-class="dragover"
 		accept="image/jpeg,image/pjpeg,image/png,image/x-png,image/tiff"
 	>
-		Drop pdfs or images here or click to upload
+		Drop file or click to upload
 	</div>
 
-	<div>
-		<input ng-model="url">
-		<button ng-click="vm.submit(url)">Get from URL</button>
+	<div class="url-submit input-group">
+		<input class="form-control" placeholder="http://..." ng-model="url">
+		<span class="input-group-btn">
+			<button class="btn btn-primary" ng-click="vm.submit(url)">Get from URL</button>
+		</span>
+	</div>
+
+	<p class="limits">Maximum 7 MB or 10 Megapixels. Accepts JPG, PNG, TIFF</p>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h1 class="panel-title">Digital Image Forensics</h1>
+		</div>
+		<div class="panel-body" collapse-when="vm.collapsedPanels.basic">
+			<p>Phoenix Eye is an image forensics tool, it serves as a GUI for <a href="https://github.com/ebemunk/phoenix" class="link">phoenix</a>, an open source image forensics tool which you can download and use for free!</p>
+			<p>Phoenix Eye runs common image forensics algorithms on the submitted image. It also extracts important information from images.</p>
+			<p><strong>Features:</strong></p>
+
+			<div class="row">
+				<div class="col-xs-6">
+					<ul>
+						<li>Error Level Analysis</li>
+						<li>Copy-Move (Clone/Stamp) Forgery Detection</li>
+						<li>Average Distance</li>
+						<li>Luminance Gradient</li>
+						<li>HSV and Lab Histograms</li>
+					</ul>
+				</div>
+				<div class="col-xs-6">
+					<ul>
+						<li>3D RGB Colorspace</li>
+						<li>Extracts EXIF data</li>
+						<li>Extracts Quantization Tables</li>
+						<li>Estimates JPEG Quality</li>
+					</ul>
+				</div>
+			</div>
+
+			<p>Try some example images from the list below:</p>
+
+			<ul class="nav nav-pills center-block">
+				<li><a href="analysis/bodybyvictoria">Body By Victoria</a></li>
+				<li><a href="analysis/alfkid">The Alf Kid</a></li>
+				<li><a href="analysis/bpdisaster">BP Photoshop Disaster</a></li>
+				<li><a href="analysis/bpparody">BP Photoshop Disaster Parody</a></li>
+			</ul>
+		</div>
 	</div>
 </div>
