@@ -35,20 +35,7 @@ d888 '88%"  9888  888E d888 '88%"   X888  888X '888>    8888  888R     8888  888
 
 		<div ui-view class="container"></div>
 
-		<footer>
-			<div class="container center">
-				<h1>Phoenix Eye - Digital Image Forensics</h1>
-				<div class="row">
-					<ul class="footer-nav">
-						<li><a ui-sref="home">Home</a></li>
-						<li><a ui-sref="about">About</a></li>
-						<li><a ui-sref="info">Information</a></li>
-						<li><a href="https://github.com/ebemunk/phoenixeye">Phoenix Eye Source</a></li>
-						<li><a href="https://github.com/ebemunk/phoenix">phoenix Source</a></li>
-					</ul>
-				</div>
-			</div>
-		</footer>
+		<ng-include src="'components/footer/footer.html'"></ng-include>
 
 		<script src="dependencies.js"></script>
 		<script src="debug.js"></script>
