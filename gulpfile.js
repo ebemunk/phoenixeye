@@ -45,12 +45,14 @@ var files = {
 			'bower_components/angular-loading-bar/build/loading-bar.js',
 			'bower_components/nouislider/distribute/nouislider.js',
 			'bower_components/angular-local-storage/dist/angular-local-storage.js',
+			'bower_components/angular-ui-scrollpoint/dist/scrollpoint.js',
 
 			'bower_components/three.js/three.js',
 			'bower_components/fuse/src/fuse.js',
 			'node_modules/bluebird/js/browser/bluebird.js',
-			'bower_components/jquery-mousewheel/jquery.mousewheel.js',
 			'bower_components/KaTeX/dist/katex.min.js',
+			'bower_components/jquery-mousewheel/jquery.mousewheel.js',
+			'bower_components/bootstrap/js/scrollspy.js',
 
 			//bootstrap & related
 			'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
