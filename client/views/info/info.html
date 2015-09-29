@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-xs-3">
-		<div id="side-nav" ui-scrollfix="+150">
+		<div class="side-nav" ui-scrollpoint="+150" scrollspy ss-offset="170">
 			<ul class="nav nav-list">
 				<li><a href="#ela">Error Level Analysis</a></li>
 				<li><a href="#avgdist">Average Distance</a></li>
@@ -12,122 +12,151 @@
 			</ul>
 		</div>
 	</div>
+
 	<div class="col-xs-9">
-		<h1 id="ela">Error Level Analysis (ELA)</h1>
-		<div>
-			<p>The source image <katex>I_\text{original}</katex> is re-saved at a known quality <katex>Q</katex>.</p>
-			<blockquote>
-				<katex>I_\text{known quality} = \text{JPEG}\left(I_\text{original}, Q\right)
-			</blockquote>
-			<p>Then, the absolute difference between the source image and its re-saved copy is calculated for all channels (R,G,B)</p>
-			<blockquote>
-				<katex>I_\text{ELA} = \left\vert I_\text{original} - I_\text{known quality}\right\vert</katex>
-			</blockquote>
-			<p>Finally the result normalized to lie between <katex>\left[0,255\right]</katex>.</p>
-			<p>Hence every pixel in the output represents the error level of the re-saved copy from the original image.</p>
-			<p>There is a great in-depth discussion about how ELA works and ways it can be used to identify alterations on Neal Krawetz's <a href="http://www.fotoforensics.com/tutorial-ela.php" target="_blank">ELA Tutorial</a>.</p>
-			<p><small>Error Level Analysis algorithm is implemented from the description in <a href="http://blackhat.com/presentations/bh-dc-08/Krawetz/Whitepaper/bh-dc-08-krawetz-WP.pdf" target="_blank">A Picture's Worth...</a> by Neal Krawetz in his Black Hat 2008 whitepaper.</small></p>
+		<div class="panel panel-default" id="ela">
+			<div class="panel-heading">
+				<h1 class="panel-title">Error Level Analysis (ELA)</h1>
+			</div>
+			<div class="panel-body">
+				<p>The source image <katex>I_\text{original}</katex> is re-saved at a known quality <katex>Q</katex>.</p>
+				<blockquote>
+					<katex>I_\text{known quality} = \text{JPEG}\left(I_\text{original}, Q\right)
+				</blockquote>
+				<p>Then, the absolute difference between the source image and its re-saved copy is calculated for all channels (R,G,B)</p>
+				<blockquote>
+					<katex>I_\text{ELA} = \left\vert I_\text{original} - I_\text{known quality}\right\vert</katex>
+				</blockquote>
+				<p>Finally the result normalized to lie between <katex>\left[0,255\right]</katex>.</p>
+				<p>Hence every pixel in the output represents the error level of the re-saved copy from the original image.</p>
+				<p>There is a great in-depth discussion about how ELA works and ways it can be used to identify alterations on Neal Krawetz's <a href="http://www.fotoforensics.com/tutorial-ela.php" target="_blank">ELA Tutorial</a>.</p>
+				<p><small>Error Level Analysis algorithm is implemented from the description in <a href="http://blackhat.com/presentations/bh-dc-08/Krawetz/Whitepaper/bh-dc-08-krawetz-WP.pdf" target="_blank">A Picture's Worth...</a> by Neal Krawetz in his Black Hat 2008 whitepaper.</small></p>
+			</div>
 		</div>
 
-		<h1 id="avgdist">Average Distance (AVGDIST)</h1>
-		<div>
-			<p>Apply a convolution kernel to average the cross-shaped neighbor pixels to the image, and take the absolute difference between the source image and the filtered image.</p>
-			<blockquote>
-				<katex>I_\text{AVGDIST} = \left\vert\ I_\text{original} - \left(
-					\begin{bmatrix}
-					0 & \frac{1}{4} & 0\\
-					\frac{1}{4} & 0 & \frac{1}{4}\\
-					0 & \frac{1}{4} & 0
-					\end{bmatrix} * I_\text{original}\right)\right\vert
-				</katex>
-			</blockquote>
-			<p>Finally the resulting image is normalized to lie between <katex>\left[0,1\right]</katex>.</p>
-			<p><small>Average distance algorithm is adapted from the code in <a href="https://infohost.nmt.edu/~schlake/ela/" target="_blank">ELA From Scratch</a>.</small></p>
+		<div class="panel panel-default" id="avgdist">
+			<div class="panel-heading">
+				<h1 class="panel-title">Average Distance (AVGDIST)</h1>
+			</div>
+			<div class="panel-body">
+				<p>Apply a convolution kernel to average the cross-shaped neighbor pixels to the image, and take the absolute difference between the source image and the filtered image.</p>
+				<blockquote>
+					<katex>I_\text{AVGDIST} = \left\vert\ I_\text{original} - \left(
+						\begin{bmatrix}
+						0 & \frac{1}{4} & 0\\
+						\frac{1}{4} & 0 & \frac{1}{4}\\
+						0 & \frac{1}{4} & 0
+						\end{bmatrix} * I_\text{original}\right)\right\vert
+					</katex>
+				</blockquote>
+				<p>Finally the resulting image is normalized to lie between <katex>\left[0,1\right]</katex>.</p>
+				<p><small>Average distance algorithm is adapted from the code in <a href="https://infohost.nmt.edu/~schlake/ela/" target="_blank">ELA From Scratch</a>.</small></p>
+			</div>
 		</div>
 
-		<h1 id="lg">Luminance Gradient (LG)</h1>
-		<div>
-			<p>First, the source image is turned into grayscale by:</p>
-			<blockquote>
-				<katex>P = 0.299R + 0.586G + 0.114B,\ \text{for every pixel}</katex>
-			</blockquote>
-			<p>Then, two Sobel filters with kernel size 3 are applied for both directions, X and Y. This gives the gradient (derivative) of the image for both directions.</p>
-			<blockquote>
-				<katex>G_x = 
-					\begin{bmatrix}
-					-1 & 0 & 1\\
-					-2 & 0 & 2\\
-					-1 & 0 & 1
-					\end{bmatrix} * I_\text{original}
-					\quad\quad
-					G_y = 
-					\begin{bmatrix}
-					-1 & -2 & -1\\
-					0 & 0 & 0\\
-					1 & 2 & 1
-					\end{bmatrix} * I_\text{original}
-				</katex>
-			</blockquote>
-			<p>For each pixel, we can find the angle between the two sobel outputs, which indicates the direction of the greatest change in brightness, or the gradient.</p>
-			<blockquote>
-				<katex>\theta = \mathrm{atan2}(G_x, G_y)
-			</blockquote>
-			<p>For every pixel in the output image, we assign:</p>
-			<blockquote>
-				<katex>R = \sqrt{G_x^2 + G_y^2},\ \text{magnitude of the gradient}</katex>
-				<katex>G = -\frac{\sin(\theta)}{2} + 0.5,\ -\sin(\theta) \ \text{mapped to} \left[0, 1\right]</katex>
-				<katex>B = -\frac{\cos(\theta)}{2} + 0.5,\ -\cos(\theta) \ \text{mapped to} \left[0, 1\right]</katex>
-			</blockquote>
-			<p>Finally all channels are normalized to lie between <katex>\left[0,255\right]</katex>.</p>
-			<p>Hence the color of every pixel indicates the direction of greatest change in brightness among its neighbors.</p>
-			<p><small>Luminance Gradient algorithm is implemented from the description in <a href="http://blackhat.com/presentations/bh-dc-08/Krawetz/Whitepaper/bh-dc-08-krawetz-WP.pdf" target="_blank">A Picture's Worth...</a> by Neal Krawetz in his Black Hat 2008 whitepaper.</small></p>
+		<div class="panel panel-default" id="lg">
+			<div class="panel-heading">
+				<h1 class="panel-title">Luminance Gradient (LG)</h1>
+			</div>
+			<div class="panel-body">
+				<p>First, the source image is turned into grayscale by:</p>
+				<blockquote>
+					<katex>P = 0.299R + 0.586G + 0.114B,\ \text{for every pixel}</katex>
+				</blockquote>
+				<p>Then, two Sobel filters with kernel size 3 are applied for both directions, X and Y. This gives the gradient (derivative) of the image for both directions.</p>
+				<blockquote>
+					<katex>G_x = 
+						\begin{bmatrix}
+						-1 & 0 & 1\\
+						-2 & 0 & 2\\
+						-1 & 0 & 1
+						\end{bmatrix} * I_\text{original}
+						\quad\quad
+						G_y = 
+						\begin{bmatrix}
+						-1 & -2 & -1\\
+						0 & 0 & 0\\
+						1 & 2 & 1
+						\end{bmatrix} * I_\text{original}
+					</katex>
+				</blockquote>
+				<p>For each pixel, we can find the angle between the two sobel outputs, which indicates the direction of the greatest change in brightness, or the gradient.</p>
+				<blockquote>
+					<katex>\theta = \mathrm{atan2}(G_x, G_y)
+				</blockquote>
+				<p>For every pixel in the output image, we assign:</p>
+				<blockquote>
+					<katex>R = \sqrt{G_x^2 + G_y^2},\ \text{magnitude of the gradient}</katex>
+					<katex>G = -\frac{\sin(\theta)}{2} + 0.5,\ -\sin(\theta) \ \text{mapped to} \left[0, 1\right]</katex>
+					<katex>B = -\frac{\cos(\theta)}{2} + 0.5,\ -\cos(\theta) \ \text{mapped to} \left[0, 1\right]</katex>
+				</blockquote>
+				<p>Finally all channels are normalized to lie between <katex>\left[0,255\right]</katex>.</p>
+				<p>Hence the color of every pixel indicates the direction of greatest change in brightness among its neighbors.</p>
+				<p><small>Luminance Gradient algorithm is implemented from the description in <a href="http://blackhat.com/presentations/bh-dc-08/Krawetz/Whitepaper/bh-dc-08-krawetz-WP.pdf" target="_blank">A Picture's Worth...</a> by Neal Krawetz in his Black Hat 2008 whitepaper.</small></p>
+			</div>
 		</div>
 
-		<h1 id="hsv">HSV Histogram</h1>
-		<div>
-			<p>HSV Histogram represents the color frequencies of the image in the <a href="http://en.wikipedia.org/wiki/HSL_and_HSV" target="_blank">HSV Colorspace</a>. The source image is converted to HSV, and all <katex>\left(H,S\right)</katex> pairs are counted. Hue is collected into 360 buckets between <katex>\left[0,360\right]</katex>, so the x-axis of the image represents Hue values. Saturation is collected in 255 buckets between <katex>\left[0,1\right]</katex> and the y-axis of the image represents change in Saturation. The Value <katex>V</katex> component for every pixel represents its frequency in the image, normalized to <katex>\left[0,1\right]</katex> range.</p>
-			<p>Top left corner is <katex>H=0, S=0</katex> and bottom right corner is <katex>H=360, S=1</katex>, which results in a <katex>360 \times 255</katex> image.</p>
-			<p><small>HSV Histogram code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/hsv-analysis" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
+		<div class="panel panel-default" id="hsv">
+			<div class="panel-heading">
+				<h1 class="panel-title">HSV Histogram</h1>
+			</div>
+			<div class="panel-body">
+				<p>HSV Histogram represents the color frequencies of the image in the <a href="http://en.wikipedia.org/wiki/HSL_and_HSV" target="_blank">HSV Colorspace</a>. The source image is converted to HSV, and all <katex>\left(H,S\right)</katex> pairs are counted. Hue is collected into 360 buckets between <katex>\left[0,360\right]</katex>, so the x-axis of the image represents Hue values. Saturation is collected in 255 buckets between <katex>\left[0,1\right]</katex> and the y-axis of the image represents change in Saturation. The Value <katex>V</katex> component for every pixel represents its frequency in the image, normalized to <katex>\left[0,1\right]</katex> range.</p>
+				<p>Top left corner is <katex>H=0, S=0</katex> and bottom right corner is <katex>H=360, S=1</katex>, which results in a <katex>360 \times 255</katex> image.</p>
+				<p><small>HSV Histogram code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/hsv-analysis" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
+			</div>
 		</div>
 
-		<h1 id="lab">Lab Histogram</h1>
-		<div>
-			<p>Lab Histogram represents the color frequencies of the image in the <a href="http://en.wikipedia.org/wiki/Lab_color_space" target="_blank">Lab Colorspace</a>. The idea is similar to HSV Histogram, <katex>a</katex> and <katex>b</katex> components are both scaled to <katex>\left[-128, 127\right]</katex> and collected in 255 buckets. The <katex>L</katex> component is the frequency of that color in the image. Please note that unlike the HSV histogram, the borders of the colorspace does not reach the ends of the output image.</p>
-			<p>For performance reasons, the histogram calculation is done on unsigned int <katex>\left[0,255\right]</katex> range, and so is not as accurate as the float <katex>\left[0,1\right]</katex> version. You can use <a href="https://github.com/ebemunk/phoenix" target="_blank">phoenix</a> to run the accurate version.</p>
-			<p><small>Lab Histogram code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/lab-analysis" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
+		<div class="panel panel-default" id="lab">
+			<div class="panel-heading">
+				<h1 class="panel-title">Lab Histogram</h1>
+			</div>
+			<div class="panel-body">
+				<p>Lab Histogram represents the color frequencies of the image in the <a href="http://en.wikipedia.org/wiki/Lab_color_space" target="_blank">Lab Colorspace</a>. The idea is similar to HSV Histogram, <katex>a</katex> and <katex>b</katex> components are both scaled to <katex>\left[-128, 127\right]</katex> and collected in 255 buckets. The <katex>L</katex> component is the frequency of that color in the image. Please note that unlike the HSV histogram, the borders of the colorspace does not reach the ends of the output image.</p>
+				<p>For performance reasons, the histogram calculation is done on unsigned int <katex>\left[0,255\right]</katex> range, and so is not as accurate as the float <katex>\left[0,1\right]</katex> version. You can use <a href="https://github.com/ebemunk/phoenix" target="_blank">phoenix</a> to run the accurate version.</p>
+				<p><small>Lab Histogram code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/lab-analysis" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
+			</div>
 		</div>
 
-		<h1 id="copymove">Copy-Move Detection</h1>
-		<div>
-			<p>First, the source image is turned into grayscale by:</p>
-			<blockquote>
-				<katex>P = 0.299R + 0.586G + 0.114B,\ \text{for every pixel}</katex>
-			</blockquote>
-			<p>Then, a window of size <katex>16 \times 16</katex> is slid over the entire image. For every "block" <katex>B_\text{window}</katex> that this window covers, we apply 2D Discrete Cosine Transform to the block, quantize it by <katex>\text{Qcoeff}</katex> and keep track of <katex>\left[\text{Retain},\text{Retain}\right]</katex> submatrix of <katex>B_\text{window}</katex>.</p>
-			<blockquote>
-				<katex>B_\text{window} = \frac{1}{\text{Qcoeff}} \times \text{DCT}\left(B_\text{greyscale}\right)</katex>
-				<katex>B_\text{retained} = B_\text{window}\left[1, \text{Retain} : 1,\text{Retain}\right]</katex>
-			</blockquote>
-			<p>This results in <katex>\sum{B_\text{retained}} = \left(W - 15\right)\left(H - 15\right)</katex> number of blocks, where <katex>W, H</katex> are the width, height of the original image.</p>
-			<p>The blocks are lexicographically sorted (so that duplicates show up as consecutive elements). For every consecutive pair of blocks, the shift vector and the magnitude between them is calculated.</p>
-			<blockquote>
-				<katex>V_\text{shift} = \begin{bmatrix}x_i \\ y_i\end{bmatrix} - \begin{bmatrix}x_{i+1} \\ y_{i+1}\end{bmatrix}</katex>
-				<katex>\text{Magnitude} = \text{Norm}\left(V_\text{shift}\right)</katex>
-			</blockquote>
-			<p>If the magnitude of the shift vector is greater than the block size (16) then they are marked and counted as possible duplicate matches.</p>
-			<p>Finally, for every duplicate shift-vector we've seen, if there are more than 10 matches (10 pairs of blocks with the same <katex>B_\text{retained}</katex>), we assign a random color and paint the matching region of the original image with that color.</p>
-			<p><small>Copy-Move Detection implementation is adapted from <a href="http://www.ws.binghamton.edu/fridrich/research/copymove.pdf" target="_blank">"Detection of Copy-Move Forgery in Digital Images"</a> by Jessica Fridrich, David Soukal, Jan Lukas.</small></p>
-			<p><small>Code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/clone-detection" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
-			<p><small>The implementation of phoenix is somewhat different than the above sources <a href="https://github.com/ebemunk/phoenix/blob/master/functions.cpp#L582" target="_blank">see comment on code</a></small>.</p>
+		<div class="panel panel-default" id="copymove">
+			<div class="panel-heading">
+				<h1 class="panel-title">Copy-Move Detection</h1>
+			</div>
+			<div class="panel-body">
+				<p>First, the source image is turned into grayscale by:</p>
+				<blockquote>
+					<katex>P = 0.299R + 0.586G + 0.114B,\ \text{for every pixel}</katex>
+				</blockquote>
+				<p>Then, a window of size <katex>16 \times 16</katex> is slid over the entire image. For every "block" <katex>B_\text{window}</katex> that this window covers, we apply 2D Discrete Cosine Transform to the block, quantize it by <katex>\text{Qcoeff}</katex> and keep track of <katex>\left[\text{Retain},\text{Retain}\right]</katex> submatrix of <katex>B_\text{window}</katex>.</p>
+				<blockquote>
+					<katex>B_\text{window} = \frac{1}{\text{Qcoeff}} \times \text{DCT}\left(B_\text{greyscale}\right)</katex>
+					<katex>B_\text{retained} = B_\text{window}\left[1, \text{Retain} : 1,\text{Retain}\right]</katex>
+				</blockquote>
+				<p>This results in <katex>\sum{B_\text{retained}} = \left(W - 15\right)\left(H - 15\right)</katex> number of blocks, where <katex>W, H</katex> are the width, height of the original image.</p>
+				<p>The blocks are lexicographically sorted (so that duplicates show up as consecutive elements). For every consecutive pair of blocks, the shift vector and the magnitude between them is calculated.</p>
+				<blockquote>
+					<katex>V_\text{shift} = \begin{bmatrix}x_i \\ y_i\end{bmatrix} - \begin{bmatrix}x_{i+1} \\ y_{i+1}\end{bmatrix}</katex>
+					<katex>\text{Magnitude} = \text{Norm}\left(V_\text{shift}\right)</katex>
+				</blockquote>
+				<p>If the magnitude of the shift vector is greater than the block size (16) then they are marked and counted as possible duplicate matches.</p>
+				<p>Finally, for every duplicate shift-vector we've seen, if there are more than 10 matches (10 pairs of blocks with the same <katex>B_\text{retained}</katex>), we assign a random color and paint the matching region of the original image with that color.</p>
+				<p><small>Copy-Move Detection implementation is adapted from <a href="http://www.ws.binghamton.edu/fridrich/research/copymove.pdf" target="_blank">"Detection of Copy-Move Forgery in Digital Images"</a> by Jessica Fridrich, David Soukal, Jan Lukas.</small></p>
+				<p><small>Code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/clone-detection" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
+				<p><small>The implementation of phoenix is somewhat different than the above sources <a href="https://github.com/ebemunk/phoenix/blob/master/functions.cpp#L582" target="_blank">see comment on code</a></small>.</p>
+			</div>
 		</div>
 
-		<h1 id="qtable">Quantization Tables and JPEG Quality</h1>
-		<div>
-			<p>By reading the JPEG file directly, phoenix extracts <a href="https://en.wikipedia.org/wiki/JPEG#Quantization" target="_blank">Quantization Tables</a> from it. There might be 1, 2 or 3 quantization tables (at least the luminance table must be present, chrominance red/blue are optional).</p>
-			<p>Many cameras have unique Quantization Tables and so a basic test might be to check if the EXIF camera's tables match the actual tables extracted from the image.</p>
-			<p>Check out <a href="http://www.impulseadventure.com/photo/jpeg-quantization.html" target="_blank">ImpulseAdventure</a> JPEG articles section for a wealth of information about quantization tables, comparisons and even tables for many camera models.</p>
-			<p>Aside from comparing them, Quantization Tables can also be used for estimating the JPEG quality. This corresponds only to the <strong>last</strong> save, as the tables get overwritten if many saves occur.</p>
-			<p>I have found two methods of estimating JPEG quality, one from <a href="http://www.hackerfactor.com/src/jpegquality.c" target="_blank">jpegquality.c</a> which you can read more about from the <a href="http://fotoforensics.com/tutorial-estq.php" target="_blank">Fotoforensics Tutorial</a>, and the other from the ImageMagick utility <a href="http://git.imagemagick.org/repos/ImageMagick/blob/master/coders/jpeg.c#L795" target="_blank">jpeg.c</a>.</p>
+		<div class="panel panel-default" id="qtable">
+			<div class="panel-heading">
+				<h1 class="panel-title">Quantization Tables and JPEG Quality</h1>
+			</div>
+			<div class="panel-body">
+				<p>By reading the JPEG file directly, phoenix extracts <a href="https://en.wikipedia.org/wiki/JPEG#Quantization" target="_blank">Quantization Tables</a> from it. There might be 1, 2 or 3 quantization tables (at least the luminance table must be present, chrominance red/blue are optional).</p>
+				<p>Many cameras have unique Quantization Tables and so a basic test might be to check if the EXIF camera's tables match the actual tables extracted from the image.</p>
+				<p>Check out <a href="http://www.impulseadventure.com/photo/jpeg-quantization.html" target="_blank">ImpulseAdventure</a> JPEG articles section for a wealth of information about quantization tables, comparisons and even tables for many camera models.</p>
+				<p>Aside from comparing them, Quantization Tables can also be used for estimating the JPEG quality. This corresponds only to the <strong>last</strong> save, as the tables get overwritten if many saves occur.</p>
+				<p>I have found two methods of estimating JPEG quality, one from <a href="http://www.hackerfactor.com/src/jpegquality.c" target="_blank">jpegquality.c</a> which you can read more about from the <a href="http://fotoforensics.com/tutorial-estq.php" target="_blank">Fotoforensics Tutorial</a>, and the other from the ImageMagick utility <a href="http://git.imagemagick.org/repos/ImageMagick/blob/master/coders/jpeg.c#L795" target="_blank">jpeg.c</a>.</p>
+			</div>
 		</div>
 	</div>
 </div>
