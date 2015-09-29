@@ -5,6 +5,7 @@ angular.module('phoenixeye-deps', [
 	'LocalStorageModule',
 	'ui.router',
 	'ui.bootstrap',
+	'ui.scrollpoint',
 	'ngFileUpload',
 	'ngToast',
 	'ngMap',
