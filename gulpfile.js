@@ -189,6 +189,10 @@ gulp.task('nodemon', function () {
 	});
 });
 
+gulp.task('js-cli-watch', ['js-cli'], browserSync.reload);
+gulp.task('js-workers-watch', ['js-workers'], browserSync.reload);
+gulp.task('html-watch', ['html'], browserSync.reload);
+
 gulp.task('watch', ['nodemon'], function () {
 	browserSync({
 		proxy: 'localhost:3000',
@@ -197,10 +201,10 @@ gulp.task('watch', ['nodemon'], function () {
 		port: 3001
 	});
 
-	gulp.watch(files.js.app, ['js-cli', browserSync.reload]);
-	gulp.watch(files.js.workers, ['js-workers', browserSync.reload]);
+	gulp.watch(files.js.app, ['js-cli-watch', browserSync.reload]);
+	gulp.watch(files.js.workers, ['js-workers-watch', browserSync.reload]);
 	gulp.watch(files.less.app, ['less']);
-	gulp.watch(files.html.app, ['html', browserSync.reload]);
+	gulp.watch(files.html.app, ['html-watch', browserSync.reload]);
 	gulp.watch(files.html.main).on('change', browserSync.reload);
 });
 
