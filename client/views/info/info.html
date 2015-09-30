@@ -5,9 +5,9 @@
 				<li><a href="#ela">Error Level Analysis</a></li>
 				<li><a href="#avgdist">Average Distance</a></li>
 				<li><a href="#lg">Luminance Gradient</a></li>
+				<li><a href="#copymove">Copy-Move Detection</a></li>
 				<li><a href="#hsv">HSV Histogram</a></li>
 				<li><a href="#lab">Lab Histogram</a></li>
-				<li><a href="#copymove">Copy-Move Detection</a></li>
 				<li><a href="#qtable">QTables & JPEG Quality</a></li>
 			</ul>
 		</div>
@@ -96,28 +96,6 @@
 			</div>
 		</div>
 
-		<div class="panel panel-default" id="hsv">
-			<div class="panel-heading">
-				<h1 class="panel-title">HSV Histogram</h1>
-			</div>
-			<div class="panel-body">
-				<p>HSV Histogram represents the color frequencies of the image in the <a href="http://en.wikipedia.org/wiki/HSL_and_HSV" target="_blank">HSV Colorspace</a>. The source image is converted to HSV, and all <katex>\left(H,S\right)</katex> pairs are counted. Hue is collected into 360 buckets between <katex>\left[0,360\right]</katex>, so the x-axis of the image represents Hue values. Saturation is collected in 255 buckets between <katex>\left[0,1\right]</katex> and the y-axis of the image represents change in Saturation. The Value <katex>V</katex> component for every pixel represents its frequency in the image, normalized to <katex>\left[0,1\right]</katex> range.</p>
-				<p>Top left corner is <katex>H=0, S=0</katex> and bottom right corner is <katex>H=360, S=1</katex>, which results in a <katex>360 \times 255</katex> image.</p>
-				<p><small>HSV Histogram code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/hsv-analysis" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
-			</div>
-		</div>
-
-		<div class="panel panel-default" id="lab">
-			<div class="panel-heading">
-				<h1 class="panel-title">Lab Histogram</h1>
-			</div>
-			<div class="panel-body">
-				<p>Lab Histogram represents the color frequencies of the image in the <a href="http://en.wikipedia.org/wiki/Lab_color_space" target="_blank">Lab Colorspace</a>. The idea is similar to HSV Histogram, <katex>a</katex> and <katex>b</katex> components are both scaled to <katex>\left[-128, 127\right]</katex> and collected in 255 buckets. The <katex>L</katex> component is the frequency of that color in the image. Please note that unlike the HSV histogram, the borders of the colorspace does not reach the ends of the output image.</p>
-				<p>For performance reasons, the histogram calculation is done on unsigned int <katex>\left[0,255\right]</katex> range, and so is not as accurate as the float <katex>\left[0,1\right]</katex> version. You can use <a href="https://github.com/ebemunk/phoenix" target="_blank">phoenix</a> to run the accurate version.</p>
-				<p><small>Lab Histogram code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/lab-analysis" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
-			</div>
-		</div>
-
 		<div class="panel panel-default" id="copymove">
 			<div class="panel-heading">
 				<h1 class="panel-title">Copy-Move Detection</h1>
@@ -143,6 +121,28 @@
 				<p><small>Copy-Move Detection implementation is adapted from <a href="http://www.ws.binghamton.edu/fridrich/research/copymove.pdf" target="_blank">"Detection of Copy-Move Forgery in Digital Images"</a> by Jessica Fridrich, David Soukal, Jan Lukas.</small></p>
 				<p><small>Code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/clone-detection" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
 				<p><small>The implementation of phoenix is somewhat different than the above sources <a href="https://github.com/ebemunk/phoenix/blob/master/functions.cpp#L582" target="_blank">see comment on code</a></small>.</p>
+			</div>
+		</div>
+
+		<div class="panel panel-default" id="hsv">
+			<div class="panel-heading">
+				<h1 class="panel-title">HSV Histogram</h1>
+			</div>
+			<div class="panel-body">
+				<p>HSV Histogram represents the color frequencies of the image in the <a href="http://en.wikipedia.org/wiki/HSL_and_HSV" target="_blank">HSV Colorspace</a>. The source image is converted to HSV, and all <katex>\left(H,S\right)</katex> pairs are counted. Hue is collected into 360 buckets between <katex>\left[0,360\right]</katex>, so the x-axis of the image represents Hue values. Saturation is collected in 255 buckets between <katex>\left[0,1\right]</katex> and the y-axis of the image represents change in Saturation. The Value <katex>V</katex> component for every pixel represents its frequency in the image, normalized to <katex>\left[0,1\right]</katex> range.</p>
+				<p>Top left corner is <katex>H=0, S=0</katex> and bottom right corner is <katex>H=360, S=1</katex>, which results in a <katex>360 \times 255</katex> image.</p>
+				<p><small>HSV Histogram code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/hsv-analysis" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
+			</div>
+		</div>
+
+		<div class="panel panel-default" id="lab">
+			<div class="panel-heading">
+				<h1 class="panel-title">Lab Histogram</h1>
+			</div>
+			<div class="panel-body">
+				<p>Lab Histogram represents the color frequencies of the image in the <a href="http://en.wikipedia.org/wiki/Lab_color_space" target="_blank">Lab Colorspace</a>. The idea is similar to HSV Histogram, <katex>a</katex> and <katex>b</katex> components are both scaled to <katex>\left[-128, 127\right]</katex> and collected in 255 buckets. The <katex>L</katex> component is the frequency of that color in the image. Please note that unlike the HSV histogram, the borders of the colorspace does not reach the ends of the output image.</p>
+				<p>For performance reasons, the histogram calculation is done on unsigned int <katex>\left[0,255\right]</katex> range, and so is not as accurate as the float <katex>\left[0,1\right]</katex> version. You can use <a href="https://github.com/ebemunk/phoenix" target="_blank">phoenix</a> to run the accurate version.</p>
+				<p><small>Lab Histogram code is adapted from the <a href="https://sites.google.com/site/elsamuko/forensics/lab-analysis" target="_blank">GIMP plugin</a> by Samuel Albrecht.</small></p>
 			</div>
 		</div>
 
