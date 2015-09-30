@@ -29,3 +29,21 @@ module
 .constant('THREE', THREE)
 .constant('katex', katex)
 ;
+
+module.run(appRun);
+
+appRun.$inject = [
+	'$document',
+	'$rootScope',
+	'$state'
+];
+
+function appRun ($document, $rootScope, $state) {
+	$rootScope.$on('$viewContentLoaded', function () {
+		$document[0].body.scrollTop = $document[0].documentElement.scrollTop = 0;
+	});
+
+	$rootScope.$state = {
+		is: $state.is
+	};
+}
