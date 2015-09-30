@@ -201,10 +201,10 @@ gulp.task('watch', ['nodemon'], function () {
 		port: 3001
 	});
 
-	gulp.watch(files.js.app, ['js-cli-watch', browserSync.reload]);
-	gulp.watch(files.js.workers, ['js-workers-watch', browserSync.reload]);
+	gulp.watch(files.js.app, ['js-cli-watch']);
+	gulp.watch(files.js.workers, ['js-workers-watch']);
 	gulp.watch(files.less.app, ['less']);
-	gulp.watch(files.html.app, ['html-watch', browserSync.reload]);
+	gulp.watch(files.html.app, ['html-watch']);
 	gulp.watch(files.html.main).on('change', browserSync.reload);
 });
 

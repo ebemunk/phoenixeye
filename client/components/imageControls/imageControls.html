@@ -1,39 +1,41 @@
-<div class="btn-group">
-	<button
-		type="button"
-		class="btn btn-default"
-		ng-class="{
-			active: vm.displayFitToWidth
-		}"
-		tooltip-html="'Toggle Fit-to-Width <strong>(F)</strong>'"
-		ng-click="vm.displayFitToWidth = ! vm.displayFitToWidth"
-	>
-		<i class="fa fa-arrows-h"></i>
-	</button>
+<div class="image-controls">
+	<div class="btn-group">
+		<button
+			type="button"
+			class="btn btn-default"
+			ng-class="{
+				active: vm.displayFitToWidth
+			}"
+			tooltip-html="'Toggle Fit-to-Width <strong>(F)</strong>'"
+			ng-click="vm.displayFitToWidth = ! vm.displayFitToWidth"
+		>
+			<i class="fa fa-arrows-h"></i>
+		</button>
 
-	<button
-		type="button"
-		class="btn btn-default"
-		ng-class="{
-			active: vm.magnifier.active
-		}"
-		tooltip-html="'Toggle Magnifier <strong>(M)</strong><br><small>Mousewheel to zoom in/out.</small>'"
-		ng-click="vm.magnifier.toggle()"
-		ng-disabled="vm.overlay.active"
-	>
-		<i class="fa fa-search"></i> {{vm.magnifier.power}}x
-	</button>
+		<button
+			type="button"
+			class="btn btn-default"
+			ng-class="{
+				active: vm.magnifier.active
+			}"
+			tooltip-html="'Toggle Magnifier <strong>(M)</strong><br><small>Mousewheel to zoom in/out.</small>'"
+			ng-click="vm.magnifier.toggle()"
+			ng-disabled="vm.overlay.active"
+		>
+			<i class="fa fa-search"></i> {{vm.magnifier.power}}x
+		</button>
 
-	<button
-		type="button"
-		class="btn btn-default"
-		ng-class="{
-			active: vm.overlay.active
-		}"
-		tooltip-html="'Toggle Overlay <strong>(O)<strong><br><small>Mousewheel to adjust opacity.</small>'"
-		ng-click="vm.overlay.toggle()"
-		ng-disabled="vm.magnifier.active || vm.displayedImage === vm.image"
-	>
-		<i class="fa fa-picture-o"></i> {{vm.overlay.opacity}}%
-	</button>
+		<button
+			type="button"
+			class="btn btn-default"
+			ng-class="{
+				active: vm.overlay.active
+			}"
+			tooltip-html="'Toggle Overlay <strong>(O)<strong><br><small>Mousewheel to adjust opacity.</small>'"
+			ng-click="vm.overlay.toggle()"
+			ng-disabled="vm.magnifier.active || vm.displayedImage === vm.image"
+		>
+			<i class="fa fa-picture-o"></i> {{vm.overlay.opacity}}%
+		</button>
+	</div>
 </div>

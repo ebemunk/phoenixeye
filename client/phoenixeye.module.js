@@ -33,17 +33,15 @@ module
 module.run(appRun);
 
 appRun.$inject = [
+	'debug',
 	'$document',
-	'$rootScope',
-	'$state'
+	'$rootScope'
 ];
 
-function appRun ($document, $rootScope, $state) {
+function appRun (debug, $document, $rootScope) {
+	debug = debug('app:run');
+
 	$rootScope.$on('$viewContentLoaded', function () {
 		$document[0].body.scrollTop = $document[0].documentElement.scrollTop = 0;
 	});
-
-	$rootScope.$state = {
-		is: $state.is
-	};
 }

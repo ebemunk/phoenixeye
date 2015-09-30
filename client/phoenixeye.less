@@ -22,15 +22,21 @@
 @panel-default-border: #ddd;
 @panel-default-heading-bg: @brand-orange;
 
+@input-border-focus: red;
+
 html {
 	position: relative;
 	min-height: 100%;
 }
 
 body {
-	background-image: url(img/pattern.png), linear-gradient(#dedede, #ffffff);
+	background-image: url(img/pattern.png), linear-gradient(#dedede, lighten(#dedede, 10));
 
 	&.modal-open {
 		overflow: auto;
 	}
+}
+
+.btn:focus, .btn:active:focus, .btn.active:focus{
+	outline: none;
 }

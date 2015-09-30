@@ -4,7 +4,4 @@
 - image controls
 	- autolevels?
 - admin stuff??
-- fix up styles
-- prefix every html element by its name as class
-- big header + small header
 - 404 page styles
