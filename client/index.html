@@ -33,7 +33,9 @@ d888 '88%"  9888  888E d888 '88%"   X888  888X '888>    8888  888R     8888  888
 	<body>
 		<toast></toast>
 
-		<div ui-view class="container"></div>
+		<ng-include src="'components/header/header.html'"></ng-include>
+
+		<div class="container" ui-view></div>
 
 		<ng-include src="'components/footer/footer.html'"></ng-include>
 
