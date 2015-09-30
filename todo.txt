@@ -1,12 +1,10 @@
+- proper resource management for db-server
 - monq disconnect issue
 - ENOENT on unlink in worker (??)
-- big header + small header
-- home view styles
-- image view styles
-- about view styles
-- info view styles
-- 404 page styles
-- footer styles
 - image controls
 	- autolevels?
 - admin stuff??
+- fix up styles
+- prefix every html element by its name as class
+- big header + small header
+- 404 page styles
