@@ -1,0 +1,31 @@
+<div class="container header" ng-class="{
+	big: $state.is('home') || $state.is('404')
+}">
+	<div class="logo">
+		<div class="title">
+			<span class="phoenix">PHOENIX</span>
+			<span class="eye">EYE</span>
+		</div>
+	</div>
+
+	<nav class="navbar navbar-default" role="navigation">
+		<ul class="nav navbar-nav">
+			<li ui-sref-active="active"><a href="" ui-sref="home">Home</a></li>
+			<li ui-sref-active="active"><a href="" ui-sref="about">About</a></li>
+			<li class="btn-group" dropdown ui-sref-active="active">
+				<a href="" dropdown-toggle>Information <i class="fa fa-caret-down"></i></a>
+				<ul class="dropdown-menu">
+					<li><a href="">Error Level Analysis</a></li>
+					<li><a href="/info#avgdist">Average Distance</a></li>
+					<li><a href="">Luminance Gradient</a></li>
+					<li><a href="">Copy-Move Detection</a></li>
+					<li class="divider"></li>
+					<li><a href="">HSV Histogram</a></li>
+					<li><a href="">Lab Histogram</a></li>
+					<li class="divider"></li>
+					<li><a href="">Quantization Tables & JPEG Quality</a></li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+</div>

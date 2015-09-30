@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css?family=Lato:900");
+
+.header {
+	& * {
+		transition: all 0.2s ease-in-out;
+	}
+
+	.logo {
+		position: relative;
+		background-image: url(img/eye.png);
+		background-repeat: no-repeat;
+		background-position: 25px 0;
+		background-size: 165px auto;
+		height: 100px;
+
+		.title {
+			display: inline-block;
+			font-size: 4em;
+			font-weight: 900;
+			font-family: 'Lato';
+			color: #f06322;
+			text-shadow: -1px -1px 0 #000,
+				1px -1px 0 #000,
+				-1px 1px 0 #000,
+				1px 1px 0 #000;
+
+			span {
+				position: absolute;
+
+				&.phoenix {
+					top: 5px;
+					left: 165px;
+				}
+
+				&.eye {
+					top: 5px;
+					left: 435px;
+				}
+			}
+		}
+	}
+
+	&.big {
+		.logo {
+			background-position: 100px 0;
+			background-size: 400px auto;
+			height: 300px;
+
+			.title {
+				font-size: 6em;
+				text-shadow: -2px -2px 0 #000,
+					2px -2px 0 #000,
+					-2px 2px 0 #000,
+					2px 2px 0 #000;
+
+				.phoenix {
+					top: 25px;
+					left: 450px;
+				}
+
+				.eye {
+					top: 100px;
+					left: 535px;
+				}
+			}
+		}
+	}
+}
