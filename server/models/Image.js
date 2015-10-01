@@ -8,7 +8,7 @@ var child_process = require('child_process');
 var gm = require('gm').subClass({imageMagick: true});
 var dataobjectParser = require('dataobject-parser');
 
-var config = require('../config.json');
+var config = require('../includes/config.js');
 var queue = require('../includes/queue.js');
 
 module.exports = {

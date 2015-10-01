@@ -1,5 +1,5 @@
 var debug = require('debug')('worker:phoenix');
-var config = require('./config.json');
+var config = require('./includes/config.js');
 
 var monq = require('monq')(config.dbString);
 var worker = monq.worker(['phoenix']);

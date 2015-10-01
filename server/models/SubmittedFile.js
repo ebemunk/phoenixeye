@@ -1,5 +1,5 @@
 var debug = require('debug')('server:models:SubmittedFile');
-var config = require('../config.json');
+var config = require('../includes/config.js');
 
 var Promise = require('bluebird');
 

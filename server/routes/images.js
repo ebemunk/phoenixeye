@@ -1,5 +1,5 @@
 var debug = require('debug')('server:routes:images');
-var config = require('../config.json');
+var config = require('../includes/config.js');
 
 var Promise = require('bluebird');
 

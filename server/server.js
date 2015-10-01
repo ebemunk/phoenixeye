@@ -2,7 +2,7 @@
 /*eslint no-unused-vars: 0*/
 
 var debug = require('debug')('server:main');
-var config = require('./config.json');
+var config = require('./includes/config.js');
 
 var express = require('express');
 var compression = require('compression');

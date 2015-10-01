@@ -1,7 +1,7 @@
 /*eslint no-unused-vars: 0*/
 
 var debug = require('debug')('server:queue');
-var config = require('../config.json');
+var config = require('./config.js');
 
 var monq = require('monq');
 var monqConn;
