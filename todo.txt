@@ -4,4 +4,10 @@
 - image controls
 	- autolevels?
 - admin stuff??
-- 404 page styles
+- seed db
+
+ops
+---
+- frontend js error tracking - rollbar
+- backend logging - rollbar
+- dokku monitoring - logentries
