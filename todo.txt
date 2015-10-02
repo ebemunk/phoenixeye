@@ -1,6 +1,4 @@
-- proper resource management for db-server
-- monq disconnect issue
-- ENOENT on unlink in worker (??)
+- monq disconnect issue: not possible, monskin not maintained, change it at some point
 - image controls
 	- autolevels?
 - admin stuff??
