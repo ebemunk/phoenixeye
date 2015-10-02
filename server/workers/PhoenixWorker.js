@@ -89,7 +89,6 @@ PhoenixWorker.prototype.getJobString = function(params, filePath, fileName) {
 PhoenixWorker.prototype.saveAnalyses = function(imageId, output) {
 	var self = this;
 	var analyses = Object.keys(output);
-	var existingAnalyses;
 
 	return Promise.map(analyses, function (key) {
 		//rename analysis file with param names
@@ -138,12 +137,11 @@ PhoenixWorker.prototype.saveAnalyses = function(imageId, output) {
 		})
 		.then(function (analyses) {
 			debug('existing', analyses);
-			existingAnalyses = analyses;
 
 			//try to save analysis
-			return self.models.analysis.create(analysis);
+			return [self.models.analysis.create(analysis), analyses];
 		})
-		.then(function (analysis) {
+		.spread(function (analysis, existingAnalyses) {
 			if( existingAnalyses.length > 2 ) {
 				existingAnalyses[0].destroy();
 			}
