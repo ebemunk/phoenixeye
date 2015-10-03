@@ -1,8 +1,9 @@
-- monq disconnect issue: not possible, monskin not maintained, change it at some point
+- seed db
+- keyboard shortcuts
 - image controls
 	- autolevels?
 - admin stuff??
-- seed db
+- monq disconnect issue: not possible, monskin not maintained, change it at some point
 
 ops
 ---
