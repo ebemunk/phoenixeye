@@ -35,10 +35,11 @@ function PromiseConfig ($qProvider, Promise) {
 PromiseScheduler.$inject = [
 	'debug',
 	'$rootScope',
-	'Promise'
+	'Promise',
+	'Rollbar',
 ];
 
-function PromiseScheduler (debug, $rootScope, Promise) {
+function PromiseScheduler (debug, $rootScope, Promise, Rollbar) {
 	debug = debug('app:PromiseScheduler');
 
 	Promise.setScheduler(function (callback) {
@@ -61,6 +62,7 @@ function PromiseScheduler (debug, $rootScope, Promise) {
 			});
 		} else {
 			debug(error.stack);
+			Rollbar.error('uncaught promise rejection', error);
 		}
 	});
 }

@@ -9,6 +9,13 @@ var compression = require('compression');
 
 var ORM = require('./includes/ORM.js');
 
+var rollbar = require('rollbar');
+rollbar.init(config.rollbar.serverToken, {
+	environment: config.env,
+	endpoint: 'https://api.rollbar.com/api/1/'
+});
+rollbar.handleUncaughtExceptions();
+
 //init app
 var app = express();
 app.enable('trust proxy');

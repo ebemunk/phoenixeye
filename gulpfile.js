@@ -1,11 +1,13 @@
 var gulp = require('gulp');
-var plumber = require('gulp-plumber');
+var config = require('./server/includes/config.js');
 
 //utility
+var plumber = require('gulp-plumber');
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
 var flatten = require('gulp-flatten');
 var del = require('del');
+var replace = require('gulp-batch-replace');
 
 //js
 var uglify = require('gulp-uglify');
@@ -66,12 +68,16 @@ var files = {
 		workers: [
 			'client/**/*.worker.js'
 		],
+		rollbar: [
+			'client/rollbar.js'
+		],
 		app: [
 			'client/phoenixeye.module.js',
 			'client/config/*.js',
 			'client/**/*.js',
 			'!client/dist/*',
-			'!client/**/*.worker.js'
+			'!client/**/*.worker.js',
+			'!client/rollbar.js'
 		]
 	},
 	less: {
@@ -118,6 +124,19 @@ gulp.task('js-workers', function () {
 	;
 });
 
+gulp.task('js-rollbar', function () {
+	var replacements = [
+		['ROLLBAR_CLIENT_TOKEN', config.rollbar.clientToken],
+		['ROLLBAR_ENV', config.env]
+	];
+
+	return gulp.src(files.js.rollbar)
+		.pipe(replace(replacements))
+		.pipe(uglify())
+		.pipe(gulp.dest('client/dist'))
+	;
+});
+
 gulp.task('js-cli', function () {
 	return gulp.src(files.js.app)
 		.pipe(plumber())
@@ -130,7 +149,7 @@ gulp.task('js-cli', function () {
 	;
 });
 
-gulp.task('js', ['js-deps', 'js-debug', 'js-cli', 'js-workers']);
+gulp.task('js', ['js-deps', 'js-debug', 'js-workers', 'js-rollbar', 'js-cli']);
 
 gulp.task('html', function() {
 	return gulp.src(files.html.app)

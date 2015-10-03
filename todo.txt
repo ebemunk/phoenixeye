@@ -7,6 +7,4 @@
 
 ops
 ---
-- frontend js error tracking - rollbar
-- backend logging - rollbar
 - dokku monitoring - logentries

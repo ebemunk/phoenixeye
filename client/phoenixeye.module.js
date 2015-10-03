@@ -29,6 +29,7 @@ module
 .constant('Fuse', Fuse)
 .constant('THREE', THREE)
 .constant('katex', katex)
+.constant('Rollbar', Rollbar)
 ;
 
 module.run(appRun);
