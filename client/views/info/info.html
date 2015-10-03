@@ -1,14 +1,49 @@
 <div class="row info-view">
 	<div class="col-xs-3">
-		<div class="side-nav" ui-scrollpoint="+150" scrollspy ss-offset="170">
+		<div class="side-nav" ui-scrollpoint="+150">
 			<ul class="nav nav-list">
-				<li><a href="" ui-sref="info({'#': 'ela'})">Error Level Analysis</a></li>
-				<li><a href="" ui-sref="info({'#': 'avgdist'})">Average Distance</a></li>
-				<li><a href="" ui-sref="info({'#': 'lg'})">Luminance Gradient</a></li>
-				<li><a href="" ui-sref="info({'#': 'copymove'})">Copy-Move Detection</a></li>
-				<li><a href="" ui-sref="info({'#': 'hsv'})">HSV Histogram</a></li>
-				<li><a href="" ui-sref="info({'#': 'lab'})">Lab Histogram</a></li>
-				<li><a href="" ui-sref="info({'#': 'qtable'})">QTables & JPEG Quality</a></li>
+				<li
+					du-scrollspy="ela"
+					offset="50"
+				>
+					<a ui-sref="info({'#': 'ela'})">Error Level Analysis</a>
+				</li>
+				<li
+					du-scrollspy="avgdist"
+					offset="50"
+				>
+					<a href="" ui-sref="info({'#': 'avgdist'})">Average Distance</a>
+				</li>
+				<li
+					du-scrollspy="lg"
+					offset="50"
+				>
+					<a href="" ui-sref="info({'#': 'lg'})">Luminance Gradient</a>
+				</li>
+				<li
+					du-scrollspy="copymove"
+					offset="50"
+				>
+					<a href="" ui-sref="info({'#': 'copymove'})">Copy-Move Detection</a>
+				</li>
+				<li
+					du-scrollspy="hsv"
+					offset="50"
+				>
+					<a href="" ui-sref="info({'#': 'hsv'})">HSV Histogram</a>
+				</li>
+				<li
+					du-scrollspy="lab"
+					offset="50"
+				>
+					<a href="" ui-sref="info({'#': 'lab'})">Lab Histogram</a>
+				</li>
+				<li
+					du-scrollspy="qtable"
+					offset="50"
+				>
+					<a href="" ui-sref="info({'#': 'qtable'})">QTables & JPEG Quality</a>
+				</li>
 			</ul>
 		</div>
 	</div>

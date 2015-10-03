@@ -10,7 +10,8 @@ angular.module('phoenixeye-deps', [
 	'ngToast',
 	'ngMap',
 	'angular-loading-bar',
-	'angular.filter'
+	'angular.filter',
+	'duScroll'
 ]);
 
 //module

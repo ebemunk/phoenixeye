@@ -52,7 +52,7 @@ var files = {
 			'node_modules/bluebird/js/browser/bluebird.js',
 			'bower_components/KaTeX/dist/katex.min.js',
 			'bower_components/jquery-mousewheel/jquery.mousewheel.js',
-			'bower_components/bootstrap/js/scrollspy.js',
+			'bower_components/angular-scroll/angular-scroll.js',
 
 			//bootstrap & related
 			'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
