@@ -36,7 +36,7 @@ PromiseScheduler.$inject = [
 	'debug',
 	'$rootScope',
 	'Promise',
-	'Rollbar',
+	'Rollbar'
 ];
 
 function PromiseScheduler (debug, $rootScope, Promise, Rollbar) {

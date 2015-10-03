@@ -69,7 +69,7 @@ var files = {
 			'client/**/*.worker.js'
 		],
 		rollbar: [
-			'client/rollbar.js'
+			'client/vendor/rollbar.js'
 		],
 		app: [
 			'client/phoenixeye.module.js',
@@ -77,7 +77,7 @@ var files = {
 			'client/**/*.js',
 			'!client/dist/*',
 			'!client/**/*.worker.js',
-			'!client/rollbar.js'
+			'!client/vendor/rollbar.js'
 		]
 	},
 	less: {
