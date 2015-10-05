@@ -1,4 +1,3 @@
-- seed db
 - keyboard shortcuts
 - image controls
 	- autolevels?
