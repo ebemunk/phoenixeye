@@ -60,7 +60,10 @@ var files = {
 			'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
 
 			//not in bower
-			'client/vendor/*.js'
+			'client/vendor/*.js',
+
+			//dont include rollbar
+			'!client/vendor/rollbar.js'
 		],
 		debug: [
 			'bower_components/visionmedia-debug/dist/debug.js'
