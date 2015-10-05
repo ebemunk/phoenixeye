@@ -1,4 +1,5 @@
-- keyboard shortcuts
+- about page scrollspy
+- renameSync doesnt work across devices - use mv package
 - image controls
 	- autolevels?
 - admin stuff??
