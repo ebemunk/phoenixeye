@@ -4,7 +4,7 @@
   "private": true,
   "main": "server/server.js",
   "scripts": {
-    "postinstall": "node ./node_modules/bower/bin/bower install && node ./node_modules/gulp/bin/gulp.js",
+    "postinstall": "cp -u ./server/config.json.default ./server/config.json && node ./node_modules/bower/bin/bower install && node ./node_modules/gulp/bin/gulp.js",
     "test-server": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --dir ./test/coverage/server -- --recursive ./test/src/server",
     "test-client": "node ./node_modules/karma/bin/karma start",
     "pretest": "node ./node_modules/eslint/bin/eslint .",
