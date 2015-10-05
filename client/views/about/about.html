@@ -1,11 +1,31 @@
 <div class="row about-view">
 	<div class="col-xs-3">
-		<div class="side-nav" ui-scrollpoint="+150" scrollspy ss-offset="170">
+		<div class="side-nav" ui-scrollpoint="+150">
 			<ul class="nav nav-list">
-				<li><a href="#is">What it is</a></li>
-				<li><a href="#isnot">What it is not</a></li>
-				<li><a href="#story">Story</a></li>
-				<li><a href="#tech">Technologies Used</a></li>
+				<li
+					du-scrollspy="is"
+					offset="50"
+				>
+					<a ui-sref="about({'#': 'is'})">What it is</a>
+				</li>
+				<li
+					du-scrollspy="isnot"
+					offset="50"
+				>
+					<a ui-sref="about({'#': 'isnot'})">What it is not</a>
+				</li>
+				<li
+					du-scrollspy="story"
+					offset="50"
+				>
+					<a ui-sref="about({'#': 'story'})">Story</a>
+				</li>
+				<li
+					du-scrollspy="tech"
+					offset="50"
+				>
+					<a ui-sref="about({'#': 'tech'})">Technologies Used</a>
+				</li>
 			</ul>
 		</div>
 	</div>
