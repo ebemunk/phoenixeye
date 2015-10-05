@@ -66,7 +66,8 @@ var files = {
 			'bower_components/visionmedia-debug/dist/debug.js'
 		],
 		workers: [
-			'client/**/*.worker.js'
+			'client/**/*.worker.js',
+			'!client/dist/*'
 		],
 		rollbar: [
 			'client/vendor/rollbar.js'
