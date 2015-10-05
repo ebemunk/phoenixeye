@@ -13,6 +13,7 @@ module.exports = function(config) {
 
 		// list of files / patterns to load in the browser
 		files: [
+			'client/vendor/rollbar.js',
 			'client/dist/dependencies.js',
 			'client/dist/debug.js',
 			'client/dist/templates.js',
