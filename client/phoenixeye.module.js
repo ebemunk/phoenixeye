@@ -49,7 +49,7 @@ function appRun (debug, $document, $window, $rootScope, $location) {
 		$document[0].body.scrollTop = $document[0].documentElement.scrollTop = 0;
 	});
 
-	$rootScope.$on('$stateChangeSuccess', function (event) {
+	$rootScope.$on('$stateChangeSuccess', function () {
 		if( ! $window.ga ) {
 			return;
 		}
