@@ -37,13 +37,23 @@ module.run(appRun);
 appRun.$inject = [
 	'debug',
 	'$document',
-	'$rootScope'
+	'$window',
+	'$rootScope',
+	'$location'
 ];
 
-function appRun (debug, $document, $rootScope) {
+function appRun (debug, $document, $window, $rootScope, $location) {
 	debug = debug('app:run');
 
 	$rootScope.$on('$viewContentLoaded', function () {
 		$document[0].body.scrollTop = $document[0].documentElement.scrollTop = 0;
+	});
+
+	$rootScope.$on('$stateChangeSuccess', function (event) {
+		if( ! $window.ga ) {
+			return;
+		}
+
+		$window.ga('send', 'pageview', { page: $location.path() });
 	});
 }
