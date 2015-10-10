@@ -5,6 +5,7 @@ var Promise = require('bluebird');
 
 var exec = Promise.promisify(require('child_process').exec);
 var fs = Promise.promisifyAll(require('fs'));
+var mv = require('mv');
 
 var imageSize = Promise.promisify(require('image-size'));
 var md5file = Promise.promisify(require('md5-file'));
@@ -143,11 +144,9 @@ SubmittedFile.prototype.fileChecks = function(imageModel) {
 		image.url = self.url;
 		image.uploaderIP = self.uploaderIP;
 
-		//create folder for image
-		return fs.mkdirAsync(image.path)
 		//move file from tmp to its own folder
-		.then(function () {
-			return fs.renameAsync(self.tmpPath, image.path + '/' + image.fileName);
+		return Promise.fromNode(function (callback) {
+			return mv(self.tmpPath, image.path + '/' + image.fileName, {mkdirp: true}, callback);
 		})
 		//save
 		.then(function () {

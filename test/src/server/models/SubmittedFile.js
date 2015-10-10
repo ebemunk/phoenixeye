@@ -21,8 +21,11 @@ describe('SubmittedFile', function () {
 	var testImage, wrongType, tooLarge;
 	var orm;
 	var models;
+	var unlinkStub;
 
 	before(function (done) {
+		unlinkStub = sinon.stub(fs, 'unlink').returns(true);
+
 		orm = new ORM();
 		orm.init()
 		.then(function (waterline) {
@@ -33,6 +36,7 @@ describe('SubmittedFile', function () {
 	});
 
 	after(function () {
+		unlinkStub.restore();
 		return orm.destroy();
 	});
 
@@ -130,9 +134,8 @@ describe('SubmittedFile', function () {
 
 	describe('prototype.fileChecks', function () {
 		it('should delete the file if any checks fail', function () {
-			var mkdirStub = sinon.stub(fs, 'mkdirAsync').resolves(true);
-			var renameStub = sinon.stub(fs, 'renameAsync').resolves(true);
-			var unlinkStub = sinon.stub(wrongType, 'unlink');
+			var mvStub = sinon.stub().callsArgWith(3, null, true);
+			var restore = SubmittedFile.__set__('mv', mvStub);
 
 			return wrongType.fileChecks(models.image)
 			.catch(function (err) {
@@ -141,15 +144,11 @@ describe('SubmittedFile', function () {
 				}
 			}).should.be.rejected
 			.notify(function () {
-				mkdirStub.restore();
-				renameStub.restore();
-				unlinkStub.restore();
+				restore();
 			});
 		});
 
 		it('should delete the file and return image data if duplicate', function () {
-			var unlinkStub = sinon.stub(testImage, 'unlink');
-
 			return models.image.create({
 				md5: '4aba1a2b880a3760b368c9bbd5acccf1'
 			})
@@ -157,21 +156,18 @@ describe('SubmittedFile', function () {
 				return testImage.fileChecks(models.image)
 			})
 			.then(function (image) {
-				unlinkStub.restore();
-
 				image.should.have.property('duplicate');
 				unlinkStub.called.should.be.true;
 			});
 		});
 
 		it('should save the file if checks are ok', function () {
-			var mkdirStub = sinon.stub(fs, 'mkdirAsync').resolves(true);
-			var renameStub = sinon.stub(fs, 'renameAsync').resolves(true);
+			var mvStub = sinon.stub().callsArgWith(3, null, true);
+			var restore = SubmittedFile.__set__('mv', mvStub);
 
 			return testImage.fileChecks(models.image)
 			.then(function (image) {
-				mkdirStub.restore();
-				renameStub.restore();
+				restore();
 
 				image.should.not.have.property('duplicate');
 			});
