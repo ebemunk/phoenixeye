@@ -62,8 +62,8 @@ var files = {
 			//not in bower
 			'client/vendor/*.js',
 
-			//dont include rollbar
-			'!client/vendor/rollbar.js'
+			//dont include stats
+			'!client/vendor/stats.js'
 		],
 		debug: [
 			'bower_components/visionmedia-debug/dist/debug.js'
@@ -72,8 +72,8 @@ var files = {
 			'client/**/*.worker.js',
 			'!client/dist/*'
 		],
-		rollbar: [
-			'client/vendor/rollbar.js'
+		stats: [
+			'client/vendor/stats.js'
 		],
 		app: [
 			'client/phoenixeye.module.js',
@@ -81,7 +81,7 @@ var files = {
 			'client/**/*.js',
 			'!client/dist/*',
 			'!client/**/*.worker.js',
-			'!client/vendor/rollbar.js'
+			'!client/vendor/stats.js'
 		]
 	},
 	less: {
@@ -128,13 +128,15 @@ gulp.task('js-workers', function () {
 	;
 });
 
-gulp.task('js-rollbar', function () {
+gulp.task('js-stats', function () {
 	var replacements = [
-		['ROLLBAR_CLIENT_TOKEN', config.rollbar.clientToken],
-		['ROLLBAR_ENV', config.env]
+		['ROLLBAR_CLIENT_TOKEN', config.analytics.rollbar.clientToken],
+		['ROLLBAR_ENV', config.env],
+		['GOOGLE_ANALYTICS_ID', config.analytics.google.id],
+		['HEAP_ANALYTICS_ID', config.analytics.heap.id]
 	];
 
-	return gulp.src(files.js.rollbar)
+	return gulp.src(files.js.stats)
 		.pipe(replace(replacements))
 		.pipe(uglify())
 		.pipe(gulp.dest('client/dist'))
@@ -153,7 +155,7 @@ gulp.task('js-cli', function () {
 	;
 });
 
-gulp.task('js', ['js-deps', 'js-debug', 'js-workers', 'js-rollbar', 'js-cli']);
+gulp.task('js', ['js-deps', 'js-debug', 'js-workers', 'js-stats', 'js-cli']);
 
 gulp.task('html', function() {
 	return gulp.src(files.html.app)

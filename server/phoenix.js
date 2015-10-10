@@ -7,7 +7,7 @@ var worker = monq.worker(['phoenix']);
 var PhoenixWorker = require('./workers/PhoenixWorker.js');
 
 var rollbar = require('rollbar');
-rollbar.init(config.rollbar.serverToken, {
+rollbar.init(config.analytics.rollbar.serverToken, {
 	environment: config.env,
 	endpoint: 'https://api.rollbar.com/api/1/'
 });
