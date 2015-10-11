@@ -24,7 +24,8 @@
     "KaTeX": "katex#~0.5.1",
     "angular-ui-scrollpoint": "~1.0.1",
     "angular-scroll": "~0.7.3",
-    "ng-onload": "~0.2.1"
+    "ng-onload": "~0.2.1",
+    "angular-socialshare": "angularjs-socialshare#~0.1.14"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.3"

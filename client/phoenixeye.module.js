@@ -13,7 +13,8 @@ angular.module('phoenixeye-deps', [
 	'cfp.loadingBar',
 	'angular.filter',
 	'duScroll',
-	'ngOnload'
+	'ngOnload',
+	'720kb.socialshare'
 ]);
 
 //module

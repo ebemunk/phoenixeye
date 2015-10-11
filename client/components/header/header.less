@@ -65,4 +65,50 @@
 			}
 		}
 	}
+
+	.social {
+		font-size: 22px;
+		margin-right: 0;
+		margin-top: 10px;
+
+		a {
+			height: 30px;
+			width: 30px;
+			display: inline-block;
+			text-align: center;
+			line-height: 30px;
+			color: #fff;
+
+			&:hover {
+				color: #fff;
+			}
+		}
+
+		.facebook {
+			background-color: #3b5998;
+
+			&:hover {
+				background-color: lighten(#3b5998, 15%);
+			}
+		}
+
+		.twitter {
+			background-color: #55acee;
+
+			&:hover {
+				background-color: lighten(#55acee, 15%);
+			}
+		}
+
+		.github {
+			width: 125px;
+			position: relative;
+
+			iframe {
+				position: absolute;
+				top: 7px;
+				left: 0;
+			}
+		}
+	}
 }
