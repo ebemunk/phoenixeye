@@ -1,5 +1,7 @@
 code
 ----
+- worker status
+- loading bar stuck sometimes
 - toast error if job fails
 - image controls
 	- autolevels?

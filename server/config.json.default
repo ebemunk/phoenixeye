@@ -12,7 +12,7 @@
 			"image/x-png": "png",
 			"image/tiff": "tiff"
 		},
-		"maxDims": 10000000
+		"maxDims": 15000000
 	},
 	"defaultAnalysisOpts": {
 		"ela": {
