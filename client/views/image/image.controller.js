@@ -12,12 +12,13 @@ ImageController.$inject = [
 	'$modal',
 	'ngToast',
 	'localStorageService',
+	'cfpLoadingBar',
 	'ImageService',
 	'PollService',
 	'GPSService'
 ];
 
-function ImageController(debug, $scope, $http, $timeout, $state, $modal, ngToast, localStorageService, ImageService, PollService, GPSService) {
+function ImageController(debug, $scope, $http, $timeout, $state, $modal, ngToast, localStorageService, cfpLoadingBar, ImageService, PollService, GPSService) {
 	debug = debug('app:ImageController');
 
 	debug('state.params', $state.params);
@@ -46,8 +47,12 @@ function ImageController(debug, $scope, $http, $timeout, $state, $modal, ngToast
 	vm.collapsedPanels = localStorageService.get('collapsedPanels') || {};
 
 	vm.requestAnalysis = requestAnalysis;
+	vm.stopLoadingBar = stopLoadingBar;
 
 	$scope.$watch('vm.collapsedPanels', collapsedPanelsWatch, true);
+	$scope.$watch('vm.displayedImage', startLoadingBar);
+	$scope.$watch('vm.displayedHSV', startLoadingBar);
+	$scope.$watch('vm.displayedLab', startLoadingBar);
 
 	initialize();
 
@@ -187,5 +192,13 @@ function ImageController(debug, $scope, $http, $timeout, $state, $modal, ngToast
 		}
 
 		localStorageService.set('collapsedPanels', collapsedPanels);
+	}
+	
+	function startLoadingBar () {
+		cfpLoadingBar.start();
+	}
+
+	function stopLoadingBar () {
+		cfpLoadingBar.complete();
 	}
 }

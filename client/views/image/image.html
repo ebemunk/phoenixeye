@@ -87,6 +87,7 @@
 					></select>
 					<img class="img-responsive"
 						ng-src="{{vm.displayedHSV ? vm.displayedHSV.path + '/' + vm.displayedHSV.fileName : ''}}"
+						ng-onload="vm.stopLoadingBar()"
 					>
 				</div>
 				<div ng-if="! vm.histograms.hsv.length">
@@ -113,6 +114,7 @@
 					></select>
 					<img class="img-responsive"
 						ng-src="{{vm.displayedLab ? vm.displayedLab.path + '/' + vm.displayedLab.fileName : ''}}"
+						ng-onload="vm.stopLoadingBar()"
 					>
 				</div>
 				<div ng-if="! vm.histograms.lab_fast.length">
@@ -177,6 +179,7 @@
 					'img-responsive': vm.displayFitToWidth
 				}"
 				ng-src="{{vm.displayedImage ? vm.displayedImage.path + '/' + vm.displayedImage.fileName : ''}}"
+				ng-onload="vm.stopLoadingBar()"
 			>
 		</div>
 
