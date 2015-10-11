@@ -1,7 +1,12 @@
+code
+----
+- toast error if job fails
+- social share
+- social meta tags in index
 - image controls
 	- autolevels?
 - admin stuff??
-- monq disconnect issue: not possible, monskin not maintained, change it at some point
+- monq disconnect issue: not possible, mongoskin not maintained, change it at some point
 
 ops
 ---
