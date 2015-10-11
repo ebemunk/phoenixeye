@@ -33,7 +33,7 @@
 			}"
 			tooltip-html="'Toggle Overlay<br><small>Mousewheel to adjust opacity.</small>'"
 			ng-click="vm.overlay.toggle()"
-			ng-disabled="vm.magnifier.active || vm.displayedImage === vm.image"
+			ng-disabled="vm.magnifier.active || vm.displayedImage.id === vm.image.id"
 		>
 			<i class="fa fa-picture-o"></i> {{vm.overlay.opacity}}%
 		</button>

@@ -3,6 +3,7 @@ code
 - toast error if job fails
 - social share
 - social meta tags in index
+- loading bar when img loading
 - image controls
 	- autolevels?
 - admin stuff??
