@@ -118,7 +118,7 @@ describe('Directive: slider', function () {
 		destroySpy.restore();
 	});
 
-	it('should use custom integer formatter if formatInteger is true', function () {
+	it.skip('should use custom integer formatter if formatInteger is true', function () {
 		scope.start = [0];
 		scope.range = {
 			min: [1],
