@@ -15,7 +15,6 @@ var iife = require('gulp-iife');
 
 //less
 var less = require('gulp-less');
-var lessPluginGlob = require('less-plugin-glob');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
 var mqpacker = require('css-mqpacker');
@@ -180,11 +179,7 @@ gulp.task('less', function () {
 	return gulp.src(files.less.main)
 		.pipe(plumber())
 		.pipe(sourcemaps.init())
-		.pipe(less({
-			plugins: [
-				lessPluginGlob
-			]
-		}).on('error', function (err) {
+		.pipe(less().on('error', function (err) {
 			console.log(err);
 			this.emit('end');
 		}))
