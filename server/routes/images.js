@@ -124,9 +124,9 @@ router.post('/submit', jsonParser, function (req, res, next) {
 	downloadedImage.url = imageUrl;
 
 	//get preliminary info on url
-	Promise.fromNode(function (callback) {
+	Promise.fromCallback(function (callback) {
 		return request.head(imageUrl, callback);
-	})
+	}, {multiArgs: true})
 	.spread(function (response, body) {
 		//too big
 		if( response.headers['content-length'] > config.upload.sizeLimit) {

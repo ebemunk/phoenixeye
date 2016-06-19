@@ -248,7 +248,7 @@ describe('/api/images', function () {
 			testServer
 			.post('/api/images/testPermalink/analysis')
 			.send({wrong: 'nope', lolo: 'kekek'})
-			.expect(500, done);			
+			.expect(500, done);
 		});
 
 		it('should enqueue job if valid params', function (done) {

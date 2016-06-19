@@ -61,7 +61,7 @@ describe('SubmittedFile', function () {
 
 	describe('prototype.checkType', function () {
 		it('should call `file` with correct arguments', function (done) {
-			var execStub = sinon.stub().resolves(['a: image/jpeg', '']);
+			var execStub = sinon.stub().resolves('a: image/jpeg');
 			var restore = SubmittedFile.__set__('exec', execStub);
 
 			testImage.checkType()

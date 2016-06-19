@@ -29,11 +29,11 @@ SubmittedFile.prototype.checkType = function () {
 	debug('SubmittedFile.prototype.checkType');
 
 	return exec('file --mime-type ' + this.tmpPath)
-	.spread(function (stdout, stderr) {
+	.then(function (stdout) {
 		//parse mime from the output
 		var mime = stdout.match(/.*: (.*)/)[1];
 
-		debug('`file`', stdout, stderr, mime);
+		debug('`file`', stdout, mime);
 
 		//check if file type is allowed
 		if( ! config.upload.acceptedTypes[mime] ) {
