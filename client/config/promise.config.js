@@ -47,7 +47,7 @@ function PromiseScheduler (debug, $rootScope, Promise, Rollbar) {
 	});
 
 	Promise.onPossiblyUnhandledRejection(function (error, promise) {
-		if( error.message.match(/(superseded|prevented|aborted|failed|canceled)/) ) {
+		if( error.message && error.message.match(/(superseded|prevented|aborted|failed|canceled)/) ) {
 			return;
 		}
 
