@@ -7,7 +7,7 @@ const app = supertest(server)
 
 describe('/api', () => {
 	describe('/', () => {
-		it('should reeeturn uptime', async () => {
+		it('should return uptime', async () => {
 			let res = await app.get('/api')
 			expect(res.status).to.equal(200)
 			expect(res.body.status).to.equal('running')

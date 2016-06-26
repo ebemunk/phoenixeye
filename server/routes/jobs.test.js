@@ -18,7 +18,7 @@ describe('/api/jobs', () => {
 		await db.destroy()
 	})
 
-	describe('/:jobId', () => {
+	describe('GET /:jobId', () => {
 		it('should return 404 if no such jobId exists', async () => {
 			const res = await app.get('/api/jobs/zzz')
 			expect(res.status).to.equal(404)

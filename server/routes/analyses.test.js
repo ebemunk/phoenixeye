@@ -18,7 +18,7 @@ describe('/api/analyses', () => {
 		await db.destroy()
 	})
 
-	describe('/:imageId', () => {
+	describe('GET /:imageId', () => {
 		it('should return analyses if imageId has them', async () => {
 			const randomId = 123
 			const analysis = await db.collections.analysis.create({
