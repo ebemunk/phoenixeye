@@ -1,9 +1,2 @@
-bower_components/
+coverage/
 node_modules/
-client/vendor/
-client/dist/
-images/
-server/bin/
-tmp/
-test/coverage/
-test/src/server/

@@ -1,22 +1,20 @@
-var debug = require('debug')('server:routes:analyses');
+import debug from 'debug'
+import {Router} from 'express'
+import wrap from 'express-async-wrap'
 
-var router = require('express').Router();
+import DB from '../../lib/DB'
+
+const log = debug('analyses')
+const router = new Router()
 
 //get analyses by their imageId
-router.get('/:imageId', function (req, res, next) {
-	debug('/analyses/:imageId');
-
-	//try to get analyses by imageId
-	req.app.models.analysis.find({
+router.get('/:imageId', wrap(async (req, res) => {
+	log('/analyses/:imageId')
+	const db = await DB.get()
+	let analyses = await db.collections.analysis.find({
 		imageId: req.params.imageId
 	})
-	.then(function (analyses) {
-		//return analyses
-		return res.json(analyses);
-	})
-	.catch(function (err) {
-		return next(err);
-	});
-});
+	res.json(analyses)
+}))
 
-module.exports = router;
+export default router

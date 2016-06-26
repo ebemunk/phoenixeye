@@ -1,28 +1,24 @@
-var debug = require('debug')('server:routes:jobs');
+import debug from 'debug'
+import {Router} from 'express'
+import wrap from 'express-async-wrap'
+import HTTPError from 'node-http-error'
 
-var router = require('express').Router();
+import DB from '../../lib/DB'
 
-var HTTPError = require('node-http-error');
+const log = debug('jobs')
+const router = new Router()
 
-//get job
-router.get('/:jobId', function (req, res, next) {
-	debug('/jobs/:jobId');
-
-	req.app.models.job.findOne({
+//get jobs by their jobId
+router.get('/:jobId', wrap(async (req, res, next) => {
+	log('/jobs/:jobId')
+	const db = await DB.get()
+	let job = await db.collections.job.findOne({
 		id: req.params.jobId
 	})
-	.then(function (job) {
-		if( ! job ) {
-			throw new HTTPError(404, 'no job found with this id');
-		}
+	if( ! job ) {
+		throw new HTTPError(404, 'no job found with this id')
+	}
+	res.json(job)
+}))
 
-		return res.json({
-			job: job
-		});
-	})
-	.catch(function (err) {
-		return next(err);
-	});
-});
-
-module.exports = router;
+export default router
