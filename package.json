@@ -4,8 +4,8 @@
   "private": true,
   "main": "",
   "scripts": {
-    "test:node": "NODE_ENV=test mocha --compilers js:babel-register --require babel-polyfill './+(lib|models|server)/**/*.test.js'",
-    "test:node:cov": "NODE_ENV=test istanbul cover _mocha --dir ./coverage/node -- --compilers js:babel-register --require babel-polyfill './+(lib|models|server)/**/*.test.js'"
+    "test:node": "NODE_ENV=test mocha",
+    "test:node:cov": "NODE_ENV=test istanbul cover _mocha --dir ./coverage/node"
   },
   "author": "ebemunk <ebemunk@gmail.com>",
   "license": "MIT",
@@ -23,6 +23,7 @@
     "image-size": "^0.5.0",
     "lodash": "^4.13.1",
     "md5-file": "^3.1.1",
+    "monq": "^0.3.4",
     "node-http-error": "^0.2.0",
     "request": "^2.72.0",
     "rollbar": "^0.6.2",

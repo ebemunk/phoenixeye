@@ -177,6 +177,9 @@ describe('/api/images', () => {
 			ImageUtil.__ResetDependency__('S3')
 			expect(res.status).to.equal(200)
 			expect(res.body).to.contain.property('image')
+			expect(res.body).to.have.property('jobId')
+			expect(res.body.image).to.have.property('md5', '4aba1a2b880a3760b368c9bbd5acccf1')
+			expect(res.body.image).to.not.have.property('duplicate')
 			const image = await db.collections.image.findOne({
 				md5: '4aba1a2b880a3760b368c9bbd5acccf1'
 			})

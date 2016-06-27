@@ -15,6 +15,7 @@ let Image = {
 		originalFileName: 'string',
 		originalUrl: 'string',
 		url: 'string',
+		s3key: 'string',
 		size: 'integer',
 		type: 'string',
 		md5: 'string',
