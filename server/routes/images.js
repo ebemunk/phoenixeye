@@ -11,7 +11,7 @@ import wrap from 'express-async-wrap'
 import appConfig from '../../appConfig'
 import DB from '../../lib/DB'
 import SubmittedFile from '../../lib/SubmittedFile'
-import ImageUtil from '../../lib/ImageUtil'
+import {imageSubmission} from '../../lib/ImageUtil'
 
 const request = Promise.promisifyAll(require('request'))
 const log = debug('images')
@@ -81,7 +81,7 @@ router.post('/upload', wrap(async (req, res, next) => {
 		log('  upload OK', uploadedImage)
 		//go ahead with image submission
 		try {
-			const resp = await ImageUtil.imageSubmission(uploadedImage)
+			const resp = await imageSubmission(uploadedImage)
 			return res.json(resp)
 		} catch (err) {
 			return next(err)
@@ -121,7 +121,7 @@ router.post('/submit', jsonParser, wrap(async (req, res, next) => {
 	.on('close', async () => {
 		//go ahead with image submission
 		try {
-			const resp = await ImageUtil.imageSubmission(downloadedImage)
+			const resp = await imageSubmission(downloadedImage)
 			return res.json(resp)
 		} catch (err) {
 			return next(err)
