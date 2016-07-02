@@ -1,7 +1,10 @@
 import Promise from 'bluebird'
 import sinon from 'sinon'
 
+import DB from '../lib/DB'
 import Queue from '../lib/Queue'
+
+let db
 
 //promise config
 Promise.onPossiblyUnhandledRejection(console.log)
@@ -24,6 +27,14 @@ before(() => {
 			})
 		}
 	})
+})
+
+beforeEach(async () => {
+	db = await DB.get()
+})
+
+afterEach(async () => {
+	await db.destroy()
 })
 
 //unmock global stuff

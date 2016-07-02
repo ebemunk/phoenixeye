@@ -37,7 +37,7 @@ export default {
 		autolevels: false
 	},
 	bin: {
-		phoenix: process.env.BIN_PHOENIX || './server/bin/phoenix'
+		phoenix: process.env.BIN_PHOENIX || 'bin/phoenix.exe'
 	},
 	analytics: {
 		rollbar: {

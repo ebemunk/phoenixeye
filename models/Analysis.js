@@ -13,8 +13,7 @@ let Analysis = {
 	attributes: {
 		//data
 		type: 'string',
-		fileName: 'string',
-		path: 'string',
+		s3key: 'string',
 		params: 'json',
 
 		image: {
