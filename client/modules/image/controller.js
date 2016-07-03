@@ -1,6 +1,10 @@
 import _ from 'lodash'
 import debug from 'debug'
 
+//modal
+import RequestAnalysisController from '../../components/requestAnalysis'
+import RequestAnalysisTemplate from '../../components/requestAnalysis/index.html'
+
 const log = debug('cli:modules:image:controller')
 
 let DI
@@ -102,7 +106,8 @@ class ImageController {
 			method: 'get',
 			url: 'api/jobs/' + jobId
 		}, response => {
-			return response.data.job.status == 'complete'
+			const status = _.get(response, 'data.status')
+			return status === 'complete' || status === 'failed'
 		})
 		.then(response => {
 			this.analysisPollActive = false
@@ -150,13 +155,13 @@ class ImageController {
 	requestAnalysis() {
 		const modal = DI.$uibModal.open({
 			animation: true,
-			templateUrl: 'components/requestAnalysis/requestAnalysis.html',
-			controller: 'RequestAnalysisController',
+			template: RequestAnalysisTemplate,
+			controller: RequestAnalysisController,
 			controllerAs: 'vm',
 			backdrop: 'static'
 		})
 		modal.result
-		.then(function (response) {
+		.then((response) => {
 			log('modal response', response)
 			DI.ngToast.success('Analysis request submitted.')
 			this.pollJob(response.data.jobId)

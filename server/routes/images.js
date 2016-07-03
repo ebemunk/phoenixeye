@@ -11,7 +11,7 @@ import wrap from 'express-async-wrap'
 import appConfig from '../../appConfig'
 import DB from '../../lib/DB'
 import SubmittedFile from '../../lib/SubmittedFile'
-import {imageSubmission} from '../../lib/ImageUtil'
+import {imageSubmission, queueAnalysis} from '../../lib/ImageUtil'
 
 const request = Promise.promisifyAll(require('request'))
 const log = debug('images')
@@ -126,6 +126,25 @@ router.post('/submit', jsonParser, wrap(async (req, res, next) => {
 		} catch (err) {
 			return next(err)
 		}
+	})
+}))
+
+router.post('/:permalink/analysis', jsonParser, wrap(async (req, res, next) => {
+	log('/:permalink/analysis')
+	const db = await DB.get()
+	//try to get image by permalink
+	const image = await db.collections.image.findOne({
+		permalink: req.params.permalink
+	})
+	if( ! image ) {
+		throw new HTTPError(404, 'no image with this permalink')
+	}
+	//get requesters ip just in case
+	req.body.requesterIP = req.ip || req.connection.remoteAddress
+	//submit analysis request
+	const job = await queueAnalysis(image.id, req.body)
+	return res.json({
+		jobId: job.data._id
 	})
 }))
 
