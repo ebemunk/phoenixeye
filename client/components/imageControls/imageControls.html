@@ -1,0 +1,41 @@
+<div class="image-controls">
+	<div class="btn-group">
+		<button
+			type="button"
+			class="btn btn-default"
+			ng-class="{
+				active: $ctrl.vm.displayFitToWidth
+			}"
+			tooltip-html="'Toggle Fit-to-Width'"
+			ng-click="$ctrl.vm.displayFitToWidth = ! $ctrl.vm.displayFitToWidth"
+		>
+			<i class="fa fa-arrows-h"></i>
+		</button>
+
+		<button
+			type="button"
+			class="btn btn-default"
+			ng-class="{
+				active: $ctrl.vm.magnifier.active
+			}"
+			tooltip-html="'Toggle Magnifier<br><small>Mousewheel to zoom in/out.</small>'"
+			ng-click="$ctrl.vm.magnifier.toggle()"
+			ng-disabled="$ctrl.vm.overlay.active"
+		>
+			<i class="fa fa-search"></i> {{$ctrl.vm.magnifier.power}}x
+		</button>
+
+		<button
+			type="button"
+			class="btn btn-default"
+			ng-class="{
+				active: $ctrl.vm.overlay.active
+			}"
+			tooltip-html="'Toggle Overlay<br><small>Mousewheel to adjust opacity.</small>'"
+			ng-click="$ctrl.vm.overlay.toggle()"
+			ng-disabled="$ctrl.vm.magnifier.active || $ctrl.vm.displayedImage.id === $ctrl.vm.image.id"
+		>
+			<i class="fa fa-picture-o"></i> {{$ctrl.vm.overlay.opacity}}%
+		</button>
+	</div>
+</div>

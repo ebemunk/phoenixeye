@@ -3,7 +3,7 @@ import ngSanitize from 'angular-sanitize'
 import ngAnimate from 'angular-animate'
 import uiRouter from 'angular-ui-router'
 import ngFileUpload from 'ng-file-upload'
-const ngToast = require('script!ng-toast/dist/ngToast.min.js')
+require('script!ng-toast/dist/ngToast.min.js')
 require('ng-toast/dist/ngToast.min.css')
 require('ng-toast/dist/ngToast-animations.min.css')
 

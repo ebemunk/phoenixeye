@@ -50,18 +50,14 @@ if( process.env.NODE_ENV === 'development' ) {
 
 	server.use(middleware)
 	server.use(webpackHotMiddleware(compiler))
-	server.get('/*', function response(req, res) {
-		res.write(middleware.fileSystem.readFileSync('./dist/index.html'))
-		res.end()
-	})
-} else {
-	// static assets
-	server.use('/', express.static('dist'))
-
-	server.use('/*', (req, res, next) => {
-		res.sendFile('index.html', {root: 'dist'})
-	})
 }
+
+// static assets
+server.use('/', express.static('dist'))
+
+server.use('/*', (req, res, next) => {
+	res.sendFile('index.html', {root: 'dist'})
+})
 
 //error handler
 server.use((err, req, res, next) => {

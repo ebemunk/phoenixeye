@@ -1,7 +1,7 @@
-import template from './home.html'
+import template from './image.html'
 import controller from './controller'
 
-let homeComponent = {
+let imageComponent = {
 	restrict: 'E',
 	bindings: {},
 	template,
@@ -9,4 +9,4 @@ let homeComponent = {
 	controllerAs: 'vm'
 }
 
-export default homeComponent
+export default imageComponent

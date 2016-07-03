@@ -1,0 +1,87 @@
+<div class="row about-view">
+	<div class="col-xs-3">
+		<div class="side-nav" ui-scrollpoint="200">
+			<ul class="nav nav-list">
+				<li
+					du-scrollspy="is"
+					offset="50"
+				>
+					<a ui-sref="about({'#': 'is'})">What it is</a>
+				</li>
+				<li
+					du-scrollspy="isnot"
+					offset="50"
+				>
+					<a ui-sref="about({'#': 'isnot'})">What it is not</a>
+				</li>
+				<li
+					du-scrollspy="story"
+					offset="50"
+				>
+					<a ui-sref="about({'#': 'story'})">Story</a>
+				</li>
+				<li
+					du-scrollspy="tech"
+					offset="50"
+				>
+					<a ui-sref="about({'#': 'tech'})">Technologies Used</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="col-xs-9">
+		<div class="panel panel-default" id="is">
+			<div class="panel-heading">
+				<h1 class="panel-title">What it is</h1>
+			</div>
+			<div class="panel-body">
+				<p>Phoenix Eye is an image forensics tool, it serves as a GUI for <a href="https://github.com/ebemunk/phoenix">phoenix</a>, which you can download and use for free!</p>
+				<p>By examining the outputs from phoenix, one can determine if an image has been digitally altered (photoshopped) or not. The output images will test for certain aspects which we would expect to see on natural (unaltered) images. You can find more information about the analyses in the <a href="" ui-sref="info">Information page</a>.</p>
+				<p>What you <strong>can</strong> do with the Phoenix Eye:</p>
+				<ul>
+					<li>Learn about image forensics algorithms.</li>
+					<li>See if the cat picture your co-worker posted could be photoshopped.</li>
+					<li>Make sure your sext-buddy isn't overly attached to the liquify tool.</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="panel panel-default" id="isnot">
+			<div class="panel-heading">
+				<h1 class="panel-title">What it is not</h1>
+			</div>
+			<div class="panel-body">
+				<p>Phoenix Eye will not place a verdict on the image, but just present the outputs for your own analysis. All of these analyses have false-positives and false-negatives, and should only be used as a piece of information complementing a greater base of knowledge about the particular image.</p>
+				<p>Also please understand that I'm just one guy doing this as a hobby. I've done my best to document and provide references for the algorithms, but this isn't NSA shit we're talking about here.</p>
+				<p>What you <strong>cannot</strong> do with the Phoenix Eye:</p>
+				<ul>
+					<li>Become an image forensics guru.</li>
+					<li>Use it to prove Obama was from the planet Nubunon all along.</li>
+					<li>Uncover a global Illuminati conspiracy by analyzing images found in a forum post back in 2005.</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="panel panel-default" id="story">
+			<div class="panel-heading">
+				<h1 class="panel-title">Story</h1>
+			</div>
+			<div class="panel-body">
+				<p>What was to become the Phoenix Eye today was started back in 2010 when I saw the <a href="http://www.hackerfactor.com/blog/?/archives/322-Body-By-Victoria.html" target="_blank">Body By Victoria</a> analysis by Neal Krawetz of <a href="http://hackerfactor.com/" target="_blank">Hackerfactor</a>. I wanted to implement some of the algorithms in PHP and make a website for the <a href="http://blogs.msdn.com/b/cdndevs/archive/2010/03/25/the-ftw-coding-competition.aspx" target="_blank">FTW! 2010</a> competition, so I did. It was a hard lesson to learn that PHP was far from the best choice to implement image processing algorithms. The code took a pathetically long time to process an image of any reasonable size in PHP (upwards of 1.5 minutes for 3-4 Megapixel image).</p>
+				<p>So I switched to C++, and after starting over many times I decided to name it phoenix. I decided to make a GUI as a website/service, so here we are. Feel free to check out the <a href="https://github.com/ebemunk/phoenix">source on GitHub</a>.</p>
+			</div>
+		</div>
+
+		<div class="panel panel-default" id="tech">
+			<div class="panel-heading">
+				<h1 class="panel-title">Technologies Used</h1>
+			</div>
+			<div class="panel-body">
+				<p>phoenix command tool is programmed in C++ and uses OpenCV and Boost libraries.</p>
+				<p>Phoenix Eye uses Node.js for backend, MongoDB as storage, AngularJS for frontend.</p>
+				<p><a href="https://github.com/ebemunk/phoenixeye">Check the source!</a></p>
+			</div>
+		</div>
+	</div>
+</div>

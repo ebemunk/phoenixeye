@@ -7,7 +7,7 @@
 		ngf-select
 		ngf-multiple="false"
 		ngf-allow-dir="false"
-		ngf-change="vm.upload($files)"
+		ngf-change="vm.upload($files, 'file')"
 
 		ngf-drag-over-class="dragover"
 		accept="image/jpeg,image/pjpeg,image/png,image/x-png,image/tiff"
@@ -18,7 +18,7 @@
 	<div class="url-submit input-group">
 		<input class="form-control" placeholder="http://..." ng-model="url">
 		<span class="input-group-btn">
-			<button class="btn btn-primary" ng-click="vm.submit(url)">Get from URL</button>
+			<button class="btn btn-primary" ng-click="vm.upload(url, 'url')">Get from URL</button>
 		</span>
 	</div>
 

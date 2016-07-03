@@ -1,5 +1,4 @@
 import template from './header.html'
-import './header.less';
 
 let headerComponent = {
 	restrict: 'E',

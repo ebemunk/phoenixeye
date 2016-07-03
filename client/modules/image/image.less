@@ -1,0 +1,72 @@
+.image-view {
+	select {
+		margin-bottom: 0.3em;
+		cursor: pointer;
+
+		&:focus {
+			box-shadow: none !important;
+		}
+	}
+
+	.nowrap {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.panel-title {
+		.fa-question-circle {
+			float: right;
+			margin-right: 3px;
+		}
+	}
+
+	.panel-body {
+		h4 {
+			font-size: 16px;
+			font-weight: bold;
+		}
+
+		.table {
+			margin-bottom: 0;
+		}
+	}
+
+	.centered {
+		text-align: center;
+
+		.img-responsive {
+			display: initial;
+		}
+	}
+
+	.image-display {
+		margin-bottom: @line-height-computed;
+		position: relative;
+	}
+
+	.magnifier {
+		position: absolute;
+		width: 120px;
+		height: 120px;
+		outline: 2px solid gray;
+		left: 0;
+		top: 0;
+		pointer-events: none;
+		background-repeat: no-repeat;
+		background-color: transparent;
+		image-rendering: pixelated;
+		-ms-interpolation-mode: nearest-neighbor;
+	}
+
+	.overlay {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 2;
+	}
+
+	.no-metadata {
+		padding: 1em;
+	}
+}

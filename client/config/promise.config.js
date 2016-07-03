@@ -2,27 +2,28 @@ import Promise from 'bluebird'
 
 //Monkey-path $q with bluebird
 PromiseConfig.$inject = ['$qProvider']
+
 export function PromiseConfig($qProvider) {
-	$qProvider.$get = () => {
-		function QBird(resolver) {
-			return new Promise(resolver)
-		}
-
-		QBird.defer = function() {
-			var deferred = {}
-			deferred.promise = new Promise((resolve, reject) => {
-				deferred.resolve = resolve
-				deferred.reject = reject
-			})
-			return deferred
-		}
-
-		QBird.reject = Promise.reject
-		QBird.when = Promise.resolve
-		QBird.all = Promise.all
-
-		return QBird
-	}
+	// $qProvider.$get = () => {
+	// 	function QBird(resolver) {
+	// 		return new Promise(resolver)
+	// 	}
+	//
+	// 	QBird.defer = function() {
+	// 		var deferred = {}
+	// 		deferred.promise = new Promise((resolve, reject) => {
+	// 			deferred.resolve = resolve
+	// 			deferred.reject = reject
+	// 		})
+	// 		return deferred
+	// 	}
+	//
+	// 	QBird.reject = Promise.reject
+	// 	QBird.when = Promise.resolve
+	// 	QBird.all = Promise.all
+	//
+	// 	return QBird
+	// }
 }
 
 //Scheduler

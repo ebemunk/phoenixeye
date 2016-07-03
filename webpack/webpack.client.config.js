@@ -35,7 +35,7 @@ const config = {
 			{
 				loader: 'raw-loader',
 				test: /\.html$/,
-				exclude: /index.html/
+				exclude: /client\/index.html$/
 			},
 			{
 				test: /\.less$/,

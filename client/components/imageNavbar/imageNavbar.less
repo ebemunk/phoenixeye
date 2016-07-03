@@ -1,0 +1,37 @@
+.image-navbar {
+	background-color: rgba(255, 255, 255, 0.4);
+	margin-bottom: 0;
+
+	a abbr {
+		cursor: pointer;
+	}
+
+	.btn-group {
+		margin-right: 5px;
+	}
+
+	.navbar-right {
+		padding: 0;
+		margin-right: -5px;
+
+		.btn-requestAnalysis {
+			margin-right: 15px;
+		}
+	}
+
+	.navbar-left {
+		padding-right: 0;
+	}
+
+	.active, .open > a, .open > .dropdown-toggle {
+		background-color: lighten(@brand-primary, 5);
+
+		&:hover {
+			background-color: lighten(@brand-primary, 10);
+		}
+	}
+
+	.btn:hover {
+		background-color: lighten(@brand-primary, 10);
+	}
+}

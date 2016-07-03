@@ -15,6 +15,7 @@ let Analysis = {
 		type: 'string',
 		s3key: 'string',
 		params: 'json',
+		url: 'string',
 
 		image: {
 			model: 'image'
