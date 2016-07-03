@@ -1,0 +1,43 @@
+@import "~bootstrap/less/bootstrap.less";
+.home-view {
+	.drop-zone {
+		border: 1px dashed @gray-light;
+		font-size: 1.75em;
+		line-height: 5.5em;
+		text-align: center;
+		text-transform: uppercase;
+
+		cursor: pointer;
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.1);
+		}
+	}
+
+	.url-submit {
+		input {
+			background: #fff;
+			border: 1px solid @gray-light;
+			padding: 0.3rem;
+			padding-left: 0.5em;
+			font-size: 3.5rem;
+			height: auto;
+		}
+
+		.input-group-btn {
+			.btn {
+				height: 7rem;
+			}
+		}
+	}
+
+	.limits {
+		text-align: center;
+		font-size: 0.9em;
+		color: @gray;
+	}
+
+	.panel-title {
+		font-size: 2em;
+	}
+}

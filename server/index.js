@@ -36,10 +36,32 @@ server.use('/api/images', routes.images)
 server.use('/api/analyses', routes.analyses)
 server.use('/api/jobs', routes.jobs)
 
-//static assets
-server.use('/*', (req, res, next) => {
-	res.sendFile('index.html', {root: __dirname + '../'})
-})
+if( process.env.NODE_ENV === 'development' ) {
+	const webpack = require('webpack')
+	const webpackDevMiddleware = require('webpack-dev-middleware')
+	const webpackHotMiddleware = require('webpack-hot-middleware')
+	const clientConfig = require('../webpack/webpack.client.config.js')
+
+	const compiler = webpack(clientConfig)
+	const middleware = webpackDevMiddleware(compiler, {
+		publicPath: clientConfig.output.publicPath,
+		contentBase: 'dist'
+	})
+
+	server.use(middleware)
+	server.use(webpackHotMiddleware(compiler))
+	server.get('/*', function response(req, res) {
+		res.write(middleware.fileSystem.readFileSync('./dist/index.html'))
+		res.end()
+	})
+} else {
+	// static assets
+	server.use('/', express.static('dist'))
+
+	server.use('/*', (req, res, next) => {
+		res.sendFile('index.html', {root: 'dist'})
+	})
+}
 
 //error handler
 server.use((err, req, res, next) => {
@@ -49,8 +71,8 @@ server.use((err, req, res, next) => {
 	})
 })
 
-//run if main
-if( require.main === module ) {
+//run if not test
+if( process.env.NODE_ENV !== 'test' ) {
 	server.listener = server.listen(appConfig.port, () => {
 		log(`server running on port ${appConfig.port}`)
 	})
