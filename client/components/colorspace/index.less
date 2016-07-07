@@ -1,0 +1,24 @@
+colorspace {
+	.image-data {
+		display: none;
+	}
+
+	.renderer {
+		cursor: move;
+	}
+
+	.always-draw {
+		position: absolute;
+		color: white;
+
+		@media (min-width: @screen-md) {
+			bottom: 15px;
+			left: 27px;
+		}
+
+		@media (min-width: @screen-lg) {
+			bottom: 15px;
+			left: 56px;
+		}
+	}
+}

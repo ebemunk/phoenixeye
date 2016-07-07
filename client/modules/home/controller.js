@@ -66,7 +66,7 @@ class HomeController {
 			})
 		} catch (err) {
 			log('err', err)
-			DI.ngToast.danger('Something went wrong :(<br><strong>' + err.messages + '</strong>');
+			DI.ngToast.danger('Something went wrong :(<br><strong>' + err.message + '</strong>');
 		} finally {
 			//tears
 			if( ! DI.$rootScope.$$phase ) DI.$rootScope.$apply()
