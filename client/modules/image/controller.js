@@ -20,6 +20,7 @@ class ImageController {
 		'$http',
 		'$timeout',
 		'$uibModal',
+		'GPSService'
 	]
 
 	constructor() {
@@ -79,7 +80,7 @@ class ImageController {
 			if( this.image.exif ) {
 				this.metaList.exif = this.image.exif
 				if( this.image.exif.GPSInfo ) {
-					// this.gps = GPSService.getCoords(this.image.exif.GPSInfo)
+					this.gps = DI.GPSService.getCoords(this.image.exif.GPSInfo)
 				}
 			}
 			if( this.image.iptc ) this.metaList.iptc = this.image.iptc

@@ -1,13 +1,15 @@
 import angular from 'angular'
 import uiRouter from 'angular-ui-router'
+import ngMap from 'ngmap'
 
 import imageComponent from './component'
 import filters from '../../filters'
 import {collapseWhen, slider, overlay, magnifier} from '../../directives'
-import {PollService, ImageService} from '../../services'
+import {PollService, ImageService, GPSService} from '../../services'
 
 let imageModule = angular.module('image', [
 	uiRouter,
+	ngMap,
 ])
 .config(ImageConfig)
 .component('imagec', imageComponent)
@@ -19,6 +21,7 @@ let imageModule = angular.module('image', [
 .directive('magnifier', magnifier)
 .service('PollService', PollService)
 .service('ImageService', ImageService)
+.service('GPSService', GPSService)
 
 ImageConfig.$inject = [
 	'$stateProvider',
