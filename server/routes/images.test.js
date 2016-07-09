@@ -23,6 +23,12 @@ describe('/api/images', () => {
 	})
 
 	describe('GET /:permalink', () => {
+		it('should return 404 if not found', async () => {
+			let res = await app.get(`/api/images/kekek`)
+			expect(res.status).to.equal(404)
+			expect(res.body).to.be.an('object')
+		})
+
 		it('should return image if it exists', async () => {
 			const permalink = 'herp'
 			const image = await db.collections.image.create({
@@ -32,6 +38,26 @@ describe('/api/images', () => {
 			expect(res.status).to.equal(200)
 			expect(res.body).to.be.an('object')
 			expect(res.body).to.contain({permalink})
+		})
+	})
+
+	describe('POST /:permalink/analysis', () => {
+		it('should return 404 if not found', async () => {
+			let res = await app.post(`/api/images/kekek/analysis`)
+			expect(res.status).to.equal(404)
+			expect(res.body).to.be.an('object')
+		})
+
+		it('should return job if queued', async () => {
+			const permalink = 'herp'
+			const image = await db.collections.image.create({
+				permalink
+			})
+			let res = await app.post(`/api/images/${permalink}/analysis`)
+			.send({ela: {quality: 55}})
+			expect(res.status).to.equal(200)
+			expect(res.body).to.be.an('object')
+			expect(res.body).to.have.property('jobId')
 		})
 	})
 
@@ -215,5 +241,4 @@ describe('/api/images', () => {
 			expect(res.body).to.not.have.property('jobId')
 		})
 	})
-
 })

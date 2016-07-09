@@ -6,7 +6,7 @@
   "scripts": {
     "test:node": "NODE_ENV=test mocha",
     "test:node:watch": "npm run test:node -- --watch",
-    "test:node:cov": "NODE_ENV=test nyc npm run test:node",
+    "test:node:cov": "BABEL_DISABLE_CACHE=1 NODE_ENV=test nyc npm run test:node",
     "build:cli": "NODE_ENV=production webpack --config webpack/webpack.client.config.js -p",
     "build:node": "NODE_ENV=production webpack --config webpack/webpack.node.config.js -p",
     "build": "rm dist/* && npm run build:cli && npm run build:node",

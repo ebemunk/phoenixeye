@@ -17,6 +17,7 @@ const request = Promise.promisifyAll(require('request'))
 const log = debug('images')
 const jsonParser = bodyParser.json()
 const router = new Router()
+export default router
 
 //get image by permalink
 router.get('/:permalink', wrap(async (req, res, next) => {
@@ -29,6 +30,28 @@ router.get('/:permalink', wrap(async (req, res, next) => {
 		throw new HTTPError(404, 'no image with such permalink')
 	}
 	res.json(image)
+}))
+
+router.post('/:permalink/analysis', jsonParser, wrap(async (req, res, next) => {
+	log('/:permalink/analysis')
+	const db = await DB.get()
+	//try to get image by permalink
+	const image = await db.collections.image.findOne({
+		permalink: req.params.permalink
+	})
+	if( ! image ) {
+		throw new HTTPError(404, 'no image with this permalink')
+	}
+	//submit analysis request
+	const job = await queueAnalysis({
+		...appConfig.defaultAnalysisOpts,
+		...req.body,
+		imageId: image.id,
+		uploaderIP: req.ip || req.connection.remoteAddress
+	})
+	return res.json({
+		jobId: job.data._id
+	})
 }))
 
 //upload image
@@ -128,24 +151,3 @@ router.post('/submit', jsonParser, wrap(async (req, res, next) => {
 		}
 	})
 }))
-
-router.post('/:permalink/analysis', jsonParser, wrap(async (req, res, next) => {
-	log('/:permalink/analysis')
-	const db = await DB.get()
-	//try to get image by permalink
-	const image = await db.collections.image.findOne({
-		permalink: req.params.permalink
-	})
-	if( ! image ) {
-		throw new HTTPError(404, 'no image with this permalink')
-	}
-	//get requesters ip just in case
-	req.body.requesterIP = req.ip || req.connection.remoteAddress
-	//submit analysis request
-	const job = await queueAnalysis(image.id, req.body)
-	return res.json({
-		jobId: job.data._id
-	})
-}))
-
-export default router
