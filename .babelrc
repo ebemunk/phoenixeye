@@ -6,7 +6,8 @@
 	"env": {
 		"test": {
 			"plugins": [
-				"rewire"
+				"rewire",
+				"__coverage__"
 			]
 		}
 	}
