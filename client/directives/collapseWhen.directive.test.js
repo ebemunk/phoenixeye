@@ -1,3 +1,4 @@
+import sinon from 'sinon'
 import directive from './collapseWhen.directive'
 angular.module('collapseWhen', []).directive('collapseWhen', directive)
 

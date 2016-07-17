@@ -45,3 +45,29 @@ afterEach(async () => {
 after(() => {
 	Queue.__ResetDependency__('monq')
 })
+
+//prepare jsdom and expose globals for angular stuff
+import {jsdom} from 'jsdom'
+global.document = jsdom('<html><head><script></script></head><body></body></html>')
+global.window = global.document.defaultView
+global.navigator = window.navigator = {}
+global.Node = window.Node
+global.window.mocha = {}
+global.window.beforeEach = beforeEach
+global.window.afterEach = afterEach
+//reload angular errdayy
+delete require.cache[require.resolve('angular')]
+delete require.cache[require.resolve('angular/angular')]
+delete require.cache[require.resolve('angular-mocks')]
+require('angular/angular')
+require('angular-mocks')
+//expose more
+global.angular = window.angular
+//webpack import handling in tests
+import fs from 'fs'
+const noop = () => {}
+require.extensions['.css'] = noop
+require.extensions['.less'] = noop
+require.extensions['.html'] = (module, path) => {
+	module.exports = fs.readFileSync(path).toString()
+}

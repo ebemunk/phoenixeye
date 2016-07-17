@@ -1,3 +1,5 @@
+import sinon from 'sinon'
+import $ from 'jquery'
 import directive from './magnifier.directive'
 angular.module('magnifier', []).directive('magnifier', directive)
 
@@ -52,6 +54,7 @@ describe('magnifier', () => {
 		const img = $compile('<img id="theImage" ng-src="{{imageSrc}}">')($rootScope)
 		angular.element(document).find('body').append(img)
 		const element = $compile('<div magnifier="myMagnifier" target="#theImage"></div>')($rootScope)
+		angular.element(document).find('body').append(element)
 		$rootScope.$digest()
 		$rootScope.myMagnifier.toggle()
 		$rootScope.imageSrc = 'c/d.jpg'
@@ -66,13 +69,14 @@ describe('magnifier', () => {
 		$compile('<div magnifier="myMagnifier" target="#theImage"></div>')($rootScope)
 		$rootScope.$digest()
 		$rootScope.myMagnifier.toggle()
-		const mwEvent = new window.MouseEvent('mousewheel')
-		mwEvent.deltaY = 1
-		document.getElementById('theImage').dispatchEvent(mwEvent)
-		document.getElementById('theImage').dispatchEvent(mwEvent)
+		const wheelEvt = $.Event('mousewheel')
+		wheelEvt.originalEvent = {deltaY: 1}
+		wheelEvt.preventDefault = () => {}
+		$('#theImage').trigger(wheelEvt)
+		$('#theImage').trigger(wheelEvt)
 		expect($rootScope.myMagnifier.power).to.be.equal(8)
-		mwEvent.deltaY = -1
-		document.getElementById('theImage').dispatchEvent(mwEvent)
+		wheelEvt.originalEvent.deltaY = -1
+		$('#theImage').trigger(wheelEvt)
 		expect($rootScope.myMagnifier.power).to.be.equal(4)
 	})
 })

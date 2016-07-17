@@ -2,4 +2,4 @@
 --compilers js:babel-register
 --require babel-polyfill
 test/global
-+(lib|models|server|worker)/**/*.test.js
++(client|lib|models|server|worker)/**/*.test.js

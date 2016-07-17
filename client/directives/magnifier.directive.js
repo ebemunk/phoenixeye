@@ -1,4 +1,5 @@
 import $ from 'jquery'
+require('jquery-mousewheel')
 
 class Magnifier {
 	constructor(scope, element) {
