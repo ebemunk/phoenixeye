@@ -36,6 +36,7 @@ server.use('/api/images', routes.images)
 server.use('/api/analyses', routes.analyses)
 server.use('/api/jobs', routes.jobs)
 
+//webpack dev server
 if( process.env.NODE_ENV === 'development' ) {
 	const webpack = require('webpack')
 	const webpackDevMiddleware = require('webpack-dev-middleware')
@@ -67,7 +68,7 @@ server.use((err, req, res, next) => {
 	})
 })
 
-//run if not test
+//listen if not test
 if( process.env.NODE_ENV !== 'test' ) {
 	server.listener = server.listen(appConfig.port, () => {
 		log(`server running on port ${appConfig.port}`)
