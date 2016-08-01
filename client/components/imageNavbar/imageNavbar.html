@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default image-navbar">
 	<ul class="nav navbar-nav">
 		<form class="navbar-form navbar-left">
-			<li class="btn-group" dropdown>
+			<li class="btn-group" uib-dropdown>
 				<a class="btn btn-default"
 					ng-click="$ctrl.vm.displayedImage = $ctrl.vm.image"
 					ng-class="{active: $ctrl.vm.displayedImage.id === $ctrl.vm.image.id}"
@@ -10,7 +10,7 @@
 				</a>
 			</li>
 
-			<li class="btn-group" dropdown>
+			<li class="btn-group" uib-dropdown>
 				<a class="btn btn-default"
 					ng-click="$ctrl.vm.displayedImage = $ctrl.vm.analyses.ela[0]"
 					ng-class="{
@@ -21,7 +21,7 @@
 					<abbr title="Error Level Analysis">ELA</abbr>
 				</a>
 				<a class="btn btn-default dropdown-toggle"
-					dropdown-toggle
+					uib-dropdown-toggle
 					ng-class="{disabled: $ctrl.vm.analyses.ela.length < 1}"
 				>
 					<i class="fa fa-caret-down"></i>
@@ -40,7 +40,7 @@
 				</ul>
 			</li>
 
-			<li class="btn-group" dropdown>
+			<li class="btn-group" uib-dropdown>
 				<a class="btn btn-default"
 					ng-click="$ctrl.vm.displayedImage = $ctrl.vm.analyses.lg[0]"
 					ng-class="{
@@ -51,7 +51,7 @@
 					<abbr title="Luminance Gradient">LG</abbr>
 				</a>
 				<a class="btn btn-default dropdown-toggle"
-					dropdown-toggle
+					uib-dropdown-toggle
 					ng-class="{disabled: $ctrl.vm.analyses.lg.length < 1}"
 				>
 					<i class="fa fa-caret-down"></i>
@@ -70,7 +70,7 @@
 				</ul>
 			</li>
 
-			<li class="btn-group" dropdown>
+			<li class="btn-group" uib-dropdown>
 				<a class="btn btn-default"
 					ng-click="$ctrl.vm.displayedImage = $ctrl.vm.analyses.avgdist[0]"
 					ng-class="{
@@ -81,7 +81,7 @@
 					<abbr title="Average Distance">AD</abbr>
 				</a>
 				<a class="btn btn-default dropdown-toggle"
-					dropdown-toggle
+					uib-dropdown-toggle
 					ng-class="{disabled: $ctrl.vm.analyses.avgdist.length < 1}"
 				>
 					<i class="fa fa-caret-down"></i>
@@ -100,7 +100,7 @@
 				</ul>
 			</li>
 
-			<li class="btn-group" dropdown>
+			<li class="btn-group" uib-dropdown>
 				<a class="btn btn-default"
 					ng-click="$ctrl.vm.displayedImage = $ctrl.vm.analyses.copymove[0]"
 					ng-class="{
@@ -111,7 +111,7 @@
 					<abbr title="Copy-Move Detection">CM</abbr>
 				</a>
 				<a class="btn btn-default dropdown-toggle"
-					dropdown-toggle
+					uib-dropdown-toggle
 					ng-class="{disabled: $ctrl.vm.analyses.copymove.length < 1}"
 				>
 					<i class="fa fa-caret-down"></i>
