@@ -16,7 +16,7 @@
   "author": "ebemunk <ebemunk@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^3.4.1",
+    "bluebird": "^2.0.0",
     "body-parser": "^1.13.3",
     "busboy": "~0.2.9",
     "compression": "^1.5.2",
