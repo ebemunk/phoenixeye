@@ -57,8 +57,8 @@ export default class PollService {
 		}
 	}
 
-	stateChangeSuccess(event, toState) {
-		if( toState.name === 'image' ) return
+	stateChangeSuccess(event, toState, toParams, fromState, fromParams) {
+		if( toState.name === 'image' && toParams.permalink === fromParams.permalink ) return
 		this.pollers.forEach(poller => poller.stopped = true)
 	}
 }

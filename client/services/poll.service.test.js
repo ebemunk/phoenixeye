@@ -93,7 +93,7 @@ describe('PollService', () => {
 			return expect(p).to.be.resolved
 		})
 
-		it('should not stop poll if new state change is image', () => {
+		it('should not stop poll if new state change is the same image', () => {
 			$httpBackend
 			.expectGET('api/images/permalink')
 			.respond(200, {condition: false})
@@ -107,8 +107,24 @@ describe('PollService', () => {
 			.respond(200, {condition: true})
 			$timeout.flush()
 			$httpBackend.flush()
-			$rootScope.$emit('$stateChangeSuccess', {name: 'image'})
+			$rootScope.$emit('$stateChangeSuccess', {name: 'image'}, {permalink: 'permalink'}, null, {permalink: 'permalink'})
 			return expect(p).to.be.fulfilled
+		})
+
+		it('should stop poll if new state change is a different image', () => {
+			$httpBackend
+			.whenGET('api/images/permalink')
+			.respond(200, {condition: false})
+			const p = PollService.pollUntil({
+				method: 'get',
+				url: 'api/images/permalink'
+			}, resp => resp.data.condition)
+			$httpBackend.flush()
+			$timeout.flush()
+			$rootScope.$emit('$stateChangeSuccess', {name: 'image'}, {permalink: 'permalink'}, null, {permalink: 'no'})
+			$httpBackend.flush()
+			$timeout.flush()
+			return expect(p).to.be.rejected
 		})
 
 		it('should stop poll if new state change is not image', () => {
