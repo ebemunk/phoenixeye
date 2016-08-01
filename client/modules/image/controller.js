@@ -113,7 +113,7 @@ class ImageController {
 		.then(response => {
 			this.analysisPollActive = false
 			DI.ngToast.success('Analyses are ready!')
-			return getAnalyses(this.image.id)
+			return this.getAnalyses(this.image.id)
 		})
 	}
 
