@@ -173,9 +173,9 @@ PhoenixWorker.prototype.handleJob = function(params, callback) {
 
 		var jobString = self.getJobString(params, image.path, image.fileName);
 
-		return Promise.fromNode(function (callback) {
+		return Promise.fromCallback(function (callback) {
 			return child_process.exec(jobString, callback);
-		});
+		}, {multiArgs: true});
 	})
 	.spread(function (stdout, stderr) {
 		return Promise.try(function () {
