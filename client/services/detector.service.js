@@ -19,10 +19,10 @@ export default class DetectorService {
 
 	detectWebGL() {
 		try {
-			var canvas = DO.$document[0].createElement('canvas');
-			return !! DO.$window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+			var canvas = DI.$document[0].createElement('canvas')
+			return !! DI.$window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
 		} catch (e) {
-			return false;
+			return false
 		}
 	}
 }
