@@ -1,4 +1,5 @@
 import Fuse from 'fuse.js'
+import _ from 'lodash'
 import debug from 'debug'
 
 const log = debug('cli:components:fuzzySearch')
