@@ -38,9 +38,11 @@ app.use('/api/analyses', require('./routes/analyses.js'));
 app.use('/api/jobs', require('./routes/jobs.js'));
 
 //static files
-app.use('/images', express.static('images', {index: 'false'}));
-app.use('/img', express.static('client/img', {index: 'false'}));
-app.use(express.static('client/dist'));
+var rootDir = __dirname + '/../';
+
+app.use('/images', express.static(rootDir + 'images', {index: 'false'}));
+app.use('/img', express.static(rootDir + 'client/img', {index: 'false'}));
+app.use(express.static(rootDir + 'client/dist'));
 
 //redirect anything else to index.html
 app.use('/*', function indexRedirect(req, res, next) {
